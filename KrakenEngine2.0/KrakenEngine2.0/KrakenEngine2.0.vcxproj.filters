@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{6942d620-0a4f-41c4-8d07-3a9f8e9817ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools\CodeTests\StringTest\StringTest.cpp" />
+    <ClCompile Include="Tools\String\String.cpp" />
+    <ClCompile Include="BaseEngine\Core\Core.cpp" />
+    <ClCompile Include="BaseEngine\BaseSystems\Reflection\Function.cpp" />
+    <ClCompile Include="BaseEngine\BaseSystems\Serialization\Serialization.cpp" />
+    <ClCompile Include="Tools\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="BaseEngine\BaseSystems\Reflection\MetaType.cpp" />
+    <ClCompile Include="BaseEngine\BaseSystems\Reflection\MetaVariable.cpp" />
+    <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
+    <ClCompile Include="Systems\Factory\ObjectFactory.cpp" />
+    <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ISystem.h" />
+    <ClInclude Include="Tools\CodeTests\StringTest\StringTest.h" />
+    <ClInclude Include="Tools\String\String.h" />
+    <ClInclude Include="Tools\Assert\Assert.h" />
+    <ClInclude Include="BaseEngine\Core\Core.h" />
+    <ClInclude Include="BaseEngine\Entity.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\Function.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Serialization\Serialization.h" />
+    <ClInclude Include="Tools\jsoncpp\json\json.h" />
+    <ClInclude Include="Tools\jsoncpp\json\json-forwards.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaType.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaVariable.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\RemoveQualifier.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaFactory.h" />
+    <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
+    <ClInclude Include="Tools\TextFormator\TextFormator.h" />
+    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaUserInterface.h" />
+    <ClInclude Include="Systems\Factory\ObjectFactory.h" />
+    <ClInclude Include="Systems\Factory\SpaceFactory.h" />
+  </ItemGroup>
+</Project>
