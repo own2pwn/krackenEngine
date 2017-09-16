@@ -48,6 +48,17 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "Systems/Factory/SpaceFactory.h"
 
 
+
+// Editor
+#include "Systems/Editor/EditorModule.h"
+#include "Systems/Editor/ImguiHelper.h"
+#include "Systems/Editor/Editor.h"
+#include "Systems/Editor/Command_Line.h"
+#if _DEBUG
+#include "Systems/Editor/Vars_Viewer.h"
+#endif
+
+
 //////////////////////// unit tests //////////////////
 #if _DEBUG
 #include "Tools/CodeTests/StringTest/StringTest.h"
