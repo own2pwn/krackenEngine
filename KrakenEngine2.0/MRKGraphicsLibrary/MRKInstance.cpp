@@ -36,7 +36,7 @@ vk::Instance Instance::createInstance(createInfo const & info) const
 		.setPNext(nullptr);
 
 	std::vector<const char*> extensions = info.windowSystem.requiredExtensions_;
-    if (validationLayersAreEnabled)
+    if (validationLayersAreEnabled())
     {
         extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     }
@@ -46,8 +46,8 @@ vk::Instance Instance::createInstance(createInfo const & info) const
         .setEnabledExtensionCount(static_cast<uint32_t>(extensions.size()))
         .setPpEnabledExtensionNames(extensions.data())
         .setPApplicationInfo(&appInfo)
-        .setPpEnabledLayerNames(validationLayersAreEnabled ? validationLayers.data() : nullptr)
-        .setEnabledLayerCount(validationLayersAreEnabled ? static_cast<uint32_t>(validationLayers.size()) : 0);
+        .setPpEnabledLayerNames(validationLayersAreEnabled() ? validationLayers.data() : nullptr)
+        .setEnabledLayerCount(validationLayersAreEnabled() ? static_cast<uint32_t>(validationLayers.size()) : 0);
 
     vk::Instance instance;
     MRK_CATCH(instance = vk::createInstance(instanceCreateInfo));
@@ -57,7 +57,7 @@ vk::Instance Instance::createInstance(createInfo const & info) const
 
 void Instance::checkValidationLayers()
 {
-    if (validationLayersAreEnabled == true && validationLayersAreSupported() == false)
+    if (validationLayersAreEnabled() == true && validationLayersAreSupported() == false)
     {
        throw_line("Validation Layers are not supported") 
     }

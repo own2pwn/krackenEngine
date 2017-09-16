@@ -45,6 +45,7 @@ namespace mrk
         mrk::ResourceManager resourceManager_;
         mrk::Pipeline pipeline_;
 	};
-extern mrk::GraphicsSystem g_graphicsSystemSingleton;
+
+    extern mrk::GraphicsSystem g_graphicsSystemSingleton;
 }
 

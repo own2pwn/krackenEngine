@@ -125,6 +125,8 @@ namespace mrk
         resourceManager_.getUniformBuffer().map(data);
         memcpy(data, &ubo, sizeof(ubo));
         resourceManager_.getUniformBuffer().unmap();
+        
+        WindowSystem::update();
 	}
 
 }

@@ -49,7 +49,16 @@ private:
      * https://vulkan.lunarg.com/doc/view/1.0.54.0/windows/LoaderAndLayerInterface.html#user-content-application-layer-usage
      */
     static std::array<char const *, 1> constexpr validationLayers = { "VK_LAYER_LUNARG_standard_validation" };
-    static bool constexpr validationLayersAreEnabled = ifProjectIsBuiltInDebugMode();
+    static bool constexpr validationLayersAreEnabled()
+    {
+        bool enable = false;
+
+    #ifdef _DEBUG
+        enable = true;
+    #endif
+
+        return enable;
+    }
 
     vk::Instance createInstance(createInfo const & info) const;
     static void checkValidationLayers();
