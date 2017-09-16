@@ -29,24 +29,23 @@ namespace Framework
 #define REGISTER_VECTOR_OF_TYPE(TYPE) REGISTER_VECTOR_TYPE(std::vector<TYPE>,TYPE)
 
 	// registers an unordered map of specified type
-/*#define REGISTER_UNORDERED_MAP_OF_TYPE(NAME,TYPE_A,TYPE_B) \
-	do \
-	{ \
-		REGISTER_UNORDERED_MAP( NAME, TYPE_A, TYPE_B); \
+
+#define REGISTER_UNORDERED_MAP_OF_TYPE(TYPE_A,TYPE_B) \
+	do { \
+		std::string name = TURN_TO_STRING(unordered_map<TYPE_A); \
+		name += ","; \
+		name += TURN_TO_STRING(TYPE_B>); \
+		MetaFactory<std::unordered_map<TYPE_A,TYPE_B> > NAME_GENERATOR()(name, sizeof(std::unordered_map<TYPE_A, TYPE_B>)); \
+		void MetaFactory<std::unordered_map<TYPE_A, TYPE_B> >::RegisterMeta(); \
+		GET_TYPE_BY_TEMPLATE(std::unordered_map<TYPE_A COMMA TYPE_B>)->SetSerialize(SerializeUnorderedMapType<TYPE_A, TYPE_B>); \
 	} while(0)
-	*/
+
 	// registers a vector
 #define REGISTER_VECTOR_TYPE(VECTOR, TYPE) \
 	MetaFactory<RemoveQualifier< VECTOR >::Type> NAME_GENERATOR()( #VECTOR , sizeof(VECTOR)); \
 	void MetaFactory<RemoveQualifier< VECTOR >::Type>::RegisterMeta(); \
 	GET_TYPE_BY_TEMPLATE(VECTOR)->SetSerialize(SerializeVectorType< VECTOR , TYPE>)
 
-	//registers an unordered map
-#define REGISTER_UNORDERED_MAP(NAME, TYPE_A, TYPE_B) \
-	MetaFactory<std::unordered_map<TYPE_A,TYPE_B> > NAME_GENERATOR()(NAME, sizeof(std::unordered_map<TYPE_A,TYPE_B>)); \
-	void MetaFactory<std::unordered_map<TYPE_A,TYPE_B> >::RegisterMeta(); \
-	GET_TYPE_BY_STRING(NAME)->SetSerialize(SerializeUnorderedMapType<TYPE_A, TYPE_B>)
-	
 	// adds member to a type(class)
 #define ADD_MEMBER(TYPE, MEMBER) \
 	 GET_TYPE_BY_TEMPLATE(TYPE)->AddMember(new MetaMember(#MEMBER, GET_OFFSET(TYPE, MEMBER), GET_TYPE_BY_TEMPLATE(GET_MEMBER_TYPE(TYPE, MEMBER))))
@@ -66,8 +65,10 @@ namespace Framework
 #define GET_TYPE_BY_STRING(STRING) Framework::AllMetaTypes::Get().find(STRING)->second
 
 	// turns whatever you passed to it into a string
-#define TURN_TO_STRING(T) #T
-
+#define TURN_TO_STRING2(...) #__VA_ARGS__
+#define TURN_TO_STRING(...) TURN_TO_STRING2(__VA_ARGS__)
+	// anables ability to pass unordered_map type to a macro so its not getting confused by ,
+#define COMMA ,
 	/***********************************************
 	*	for debuging purposes
 	***********************************************/
