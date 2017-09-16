@@ -69,7 +69,7 @@ namespace Framework
 
 	SpaceFactory::SpaceFactory() : m_totalSpaces(0)
 	{
-		REGISTER_UNORDERED_MAP("std::unordered_map<unsigned int, ObjectFactory*>",unsigned int, ObjectFactory*);
+		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, ObjectFactory*);
 		REGISTER_TYPE(SpaceFactory);
 		ADD_MEMBER(SpaceFactory, m_spaces);
 	}
