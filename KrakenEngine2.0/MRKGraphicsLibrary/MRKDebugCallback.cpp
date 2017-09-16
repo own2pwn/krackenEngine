@@ -15,7 +15,7 @@
 // This code is here to be defined for vulkan.h so it is easier to use for vulkan.hpp functionality
 #ifdef VK_EXT_debug_report
 static PFN_vkCreateDebugReportCallbackEXT pfn_vkCreateDebugReportCallbackEXT = nullptr;
-VkResult vkCreateDebugReportCallbackEXT(
+VKAPI_ATTR VkResult VKAPI_CALL vkCreateDebugReportCallbackEXT(
     VkInstance                                  instance,
     const VkDebugReportCallbackCreateInfoEXT*   pCreateInfo,
     const VkAllocationCallbacks*                pAllocator,
@@ -30,7 +30,7 @@ VkResult vkCreateDebugReportCallbackEXT(
 }
 
 static PFN_vkDestroyDebugReportCallbackEXT pfn_vkDestroyDebugReportCallbackEXT = nullptr;
-void vkDestroyDebugReportCallbackEXT(
+VKAPI_ATTR void VKAPI_CALL vkDestroyDebugReportCallbackEXT(
     VkInstance                                  instance,
     VkDebugReportCallbackEXT                    callback,
     const VkAllocationCallbacks*                pAllocator)

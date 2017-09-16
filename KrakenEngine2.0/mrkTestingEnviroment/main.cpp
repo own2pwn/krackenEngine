@@ -1,4 +1,4 @@
-#include "mrk.h"
+#include "../MRKGraphicsLibrary/mrk.h"
 
 int main()
 {
@@ -8,6 +8,4 @@ int main()
 
 	while (true)
 		mrk::Draw();
-
-    return 0;
 }

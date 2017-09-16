@@ -70,20 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Lib;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Lib\Lib64;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Lib\Lib64\glfw\Debug64;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Lib;$(SolutionDir)\MRKGraphicsLibrary\Lib\Lib64;$(SolutionDir)\MRKGraphicsLibrary\Lib\Lib64\glfw\Debug64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Include;$(SolutionDir)\MRKGraphicsLibrary\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Include;$(SolutionDir)\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Include;$(SolutionDir)\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Include;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\VulkanSDK\Lib;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Lib\Lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Include;$(SolutionDir)\MRKGraphicsLibrary\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\MRKGraphicsLibrary\VulkanSDK\Lib;D:\Digipen\fall2017\GAM300\Game300\KrakenEngine2.0\MRKGraphicsLibrary\Lib\Lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -69,8 +69,6 @@ namespace Framework
 			}
 			m_previous_time = m_current_time;
 		std::cout << m_FPS << std::endl;
-		std::cout << Meta();
-		break;
 		}
 
 	}
