@@ -20,7 +20,6 @@ namespace mrk
     
     void initializeGraphicsSystem()
     {
-		std::cout << "fucntionCall" << std::endl;
         //g_CreateInfo = createInfo;
     }
 
