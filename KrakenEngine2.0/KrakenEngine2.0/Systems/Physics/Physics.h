@@ -1,27 +1,33 @@
 /******************************************************************************/
 /*!
-\file   PhysicsSystem.h
+\file   Physics.h
 \author Matthew Gilbert
 \par    Copyright 2017, Digipen Institute of Technology
 \brief
 Interface for the physics system.
 */
 /******************************************************************************/
-#ifndef PHYSICS_SYSTEM_H
-#define PHYSICS_SYSTEM_H
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
+#include "../Systems/ISystem.h"
 
 namespace Framework
 {
-	class PhysicsSystem
+	class Physics : public ISystem
 	{
 	public:
-			// all systems need to be initialized, if not specified used empty
+		// TODO - add comment
+		static Physics * Get();
+		// TODO - add comment
 		virtual void Initialize();
-			// all systems need to be updated
+		// TODO - add comment
 		virtual void Update(float dt = 0.0f);
-			// destructor
-		virtual ~PhysicsSystem();
-	}; // ISystem
-}; // Framework
+		// TODO - add comment
+		virtual ~Physics();
+		// TODO - add comment
+
+	}; //end class Physics
+}; // end namespace Framework
 
 #endif
