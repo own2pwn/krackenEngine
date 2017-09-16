@@ -222,20 +222,32 @@ namespace mrk
 		vk::AccessFlags srcAccessMask = {};
 		vk::AccessFlags dstAccessMask;
 
+		vk::PipelineStageFlags sourceStage;
+		vk::PipelineStageFlags destinationStage;
+
 		if (oldLayout == vk::ImageLayout::ePreinitialized && newLayout == vk::ImageLayout::eTransferDstOptimal)
 		{
-			srcAccessMask = vk::AccessFlagBits::eHostWrite;
+			// cant use 0 so do nothing? srcAccessMask = 0;
 			dstAccessMask = vk::AccessFlagBits::eTransferWrite;
+
+			sourceStage = vk::PipelineStageFlagBits::eTopOfPipe;
+			destinationStage = vk::PipelineStageFlagBits::eTransfer;
 		}
 		else if (oldLayout == vk::ImageLayout::eTransferDstOptimal && newLayout == vk::ImageLayout::eShaderReadOnlyOptimal)
 		{
 			srcAccessMask = vk::AccessFlagBits::eTransferWrite;
 			dstAccessMask = vk::AccessFlagBits::eShaderRead;
+
+			sourceStage = vk::PipelineStageFlagBits::eTransfer;
+			destinationStage = vk::PipelineStageFlagBits::eFragmentShader;
 		}
 		else if (oldLayout == vk::ImageLayout::eUndefined && newLayout == vk::ImageLayout::eDepthStencilAttachmentOptimal)
 		{
 			// cant use 0 so do nothing? srcAccessMask = 0;
 			dstAccessMask = vk::AccessFlagBits::eDepthStencilAttachmentRead | vk::AccessFlagBits::eDepthStencilAttachmentWrite;
+
+			sourceStage = vk::PipelineStageFlagBits::eTopOfPipe;
+			destinationStage = vk::PipelineStageFlagBits::eEarlyFragmentTests;
 		}
 		else
 		{
@@ -252,7 +264,7 @@ namespace mrk
 			.setSrcAccessMask(srcAccessMask)
 			.setDstAccessMask(dstAccessMask);
 
-		commandBuffer[0].pipelineBarrier(vk::PipelineStageFlagBits::eTopOfPipe, vk::PipelineStageFlagBits::eTopOfPipe, {}, {}, {}, barrier);
+		commandBuffer[0].pipelineBarrier(sourceStage, destinationStage, {}, {}, {}, barrier);
 
 		//end buffer (submit)
 		this->endSingleTimeCommands(commandBuffer, commandPool, deviceQueue);

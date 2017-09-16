@@ -96,7 +96,7 @@ int main()
 	};
 
 	REGISTER_VECTOR_OF_TYPE(B);
-	REGISTER_UNORDERED_MAP("std::unordered_map<std::string, A>",std::string, A);
+	REGISTER_UNORDERED_MAP_OF_TYPE(std::string, A);
 
 	REGISTER_TYPE(A);
 	ADD_MEMBER(A, b);
@@ -152,7 +152,7 @@ int main()
 	//*/
 	in.close();
 //	std::cout << devar.Name();
-	
+
 	system("PAUSE");
 #endif
 
