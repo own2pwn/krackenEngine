@@ -183,6 +183,8 @@ namespace mrk
 			buffer.begin(beginInfo);
 
 			vk::RenderPassBeginInfo renderPassInfo = g_graphicsSystemSingleton.swapchain_.getRenderPassBeginInfo(i++); // note the i++
+			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+			renderPassInfo.pClearValues = clearValues.data();
 
 			buffer.beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 
