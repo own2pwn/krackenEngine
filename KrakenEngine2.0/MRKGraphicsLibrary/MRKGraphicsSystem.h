@@ -19,6 +19,8 @@ namespace mrk
 		explicit GraphicsSystem(CreateInfo const& createInfo); 
         void loadResources();
 		void draw();
+        static void recreateWindowDependentResources(GLFWwindow * window, int width, int height);
+        ~GraphicsSystem();
 
         // Note: Scott Meyers mentions in his Effective Modern
         //       C++ book, that deleted functions should generally
