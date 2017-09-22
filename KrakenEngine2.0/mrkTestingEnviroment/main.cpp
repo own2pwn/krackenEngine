@@ -7,6 +7,11 @@ int main()
 
 	mrk::LoadResources();
 
-	while (true)
+    int i = 10000;
+	while (i)
+	{
 		mrk::Draw();
+        --i;
+	}
+
 }

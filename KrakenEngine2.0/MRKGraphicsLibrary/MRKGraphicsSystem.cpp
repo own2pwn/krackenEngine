@@ -129,4 +129,17 @@ namespace mrk
         WindowSystem::update();
 	}
 
+    void GraphicsSystem::recreateWindowDependentResources(GLFWwindow* window, int width, int height)
+    {
+        if (width == 0 || height == 0) { return; }
+
+        g_graphicsSystemSingleton.swapchain_.reCreateSwapChain();
+        // ETHAN 
+	    // g_graphicsSystemSingleton.pipeline_.reCreatePipeline();
+    }
+
+    GraphicsSystem::~GraphicsSystem()
+    {
+        device_.logicalDevice_.destroyCommandPool(graphicsPool_);
+    }
 }
