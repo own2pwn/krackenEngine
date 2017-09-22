@@ -19,7 +19,7 @@ namespace Framework
 		cse_paused
 	};
 
-	class Core : public Entity
+	class Core
 	{
 
 	public:

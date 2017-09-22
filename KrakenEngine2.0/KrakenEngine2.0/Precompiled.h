@@ -20,7 +20,6 @@ All the includes are listed here to avoid multiple includes in any other files
 #include <chrono>	// used for FPS
 
 ///////////////////////// other files ////////////////
-#include "Tools/jsoncpp/json/json.h"
 
 ///////////////////////// our files //////////////////
 /////// care of the order they are included //////////
@@ -32,15 +31,14 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "Tools/TextFormator/TextFormator.h"
 
 // base engine
-#include "Systems/ISystem.h"
-#include "BaseEngine/BaseSystems/Reflection/MetaUserInterface.h"
-#include "BaseEngine/BaseSystems/Reflection/RemoveQualifier.h"
-#include "BaseEngine/BaseSystems/Reflection/MetaType.h"
-#include "BaseEngine/BaseSystems/Reflection/MetaFactory.h"
-#include "BaseEngine/BaseSystems/Reflection/MetaVariable.h"
-#include "BaseEngine/BaseSystems/Serialization/Serialization.h"
-#include "BaseEngine/BaseSystems/Reflection/MetaUserInterface.h"
-#include "BaseEngine/Entity.h"
+#include "Systems/Interface/ISystem.h"
+#include "BaseEngine/Reflection/MetaUserInterface.h"
+#include "BaseEngine/Reflection/RemoveQualifier.h"
+#include "BaseEngine/Reflection/MetaType.h"
+#include "BaseEngine/Reflection/MetaFactory.h"
+#include "BaseEngine/Reflection/MetaVariable.h"
+#include "BaseEngine/Serialization/Serialization.h"
+#include "BaseEngine/Reflection/MetaUserInterface.h"
 #include "BaseEngine/Core/Core.h"
 
 // systems
@@ -61,7 +59,7 @@ All the includes are listed here to avoid multiple includes in any other files
 
 //////////////////////// unit tests //////////////////
 #if _DEBUG
-#include "Tools/CodeTests/StringTest/StringTest.h"
+#include "Tools/CodeTests/StringTest.h"
 #endif
 
 #endif

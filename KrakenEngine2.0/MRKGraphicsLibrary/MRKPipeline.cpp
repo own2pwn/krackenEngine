@@ -10,7 +10,14 @@ namespace mrk
         createSemaphores();
     }
 
-    void Pipeline::load()
+	Pipeline::~Pipeline()
+	{
+		cleanUp();
+		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(imageAvailable);
+		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(renderFinished);
+	}
+
+	void Pipeline::load()
     {
 		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager_;
 
@@ -100,7 +107,6 @@ namespace mrk
 			.setLogicOpEnable(VK_FALSE)
 			.setLogicOp(vk::LogicOp::eCopy);
 
-		// TODO use a depth stencil
 		// depth stencil state
 		vk::PipelineDepthStencilStateCreateInfo depthStencil = vk::PipelineDepthStencilStateCreateInfo()
 			.setBack({})
@@ -144,8 +150,22 @@ namespace mrk
 		MRK_CATCH(pipeline_ = g_graphicsSystemSingleton.device_.logicalDevice_.createGraphicsPipelines(vk::PipelineCache(), pipelineInfo)[0]);
 
 		createCommandBuffers();
-		createSemaphores();
     }
+
+	void Pipeline::recreate()
+	{
+		cleanUp();
+		load();
+	}
+
+	void Pipeline::cleanUp()
+	{
+		const vk::Device& dev = g_graphicsSystemSingleton.device_.logicalDevice_;
+
+		dev.freeCommandBuffers(g_graphicsSystemSingleton.graphicsPool_, commandBuffers_);
+		dev.destroyPipeline(pipeline_);
+		dev.destroyPipelineLayout(layout_);
+	}
 
     void Pipeline::createCommandBuffers()
 	{
@@ -194,7 +214,6 @@ namespace mrk
 
 			buffer.bindIndexBuffer(indexBuffers[0], 0, vk::IndexType::eUint32);
 
-			vk::DescriptorSet tempset = resourceManager.getDescriptor().mSet;
 			buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
 			buffer.drawIndexed(indexCount, 1, 0, 0, 0);

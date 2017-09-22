@@ -15,9 +15,12 @@ namespace mrk
 		vk::Semaphore renderFinished;
 
 		Pipeline();
+		~Pipeline();
         void load();
+		void recreate();
 		
     private:
+		void cleanUp();
 		void createCommandBuffers();
 		void createSemaphores();
 	};
