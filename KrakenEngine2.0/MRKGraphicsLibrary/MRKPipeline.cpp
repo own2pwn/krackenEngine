@@ -192,7 +192,7 @@ namespace mrk
 
 			buffer.bindVertexBuffers(0, vertexBuffers, offsets);
 
-			buffer.bindIndexBuffer(indexBuffers[0], 0, vk::IndexType::eUint16);
+			buffer.bindIndexBuffer(indexBuffers[0], 0, vk::IndexType::eUint32);
 
 			vk::DescriptorSet tempset = resourceManager.getDescriptor().mSet;
 			buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
