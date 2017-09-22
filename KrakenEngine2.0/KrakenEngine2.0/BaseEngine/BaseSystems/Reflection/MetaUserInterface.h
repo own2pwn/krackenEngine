@@ -29,7 +29,6 @@ namespace Framework
 #define REGISTER_VECTOR_OF_TYPE(TYPE) REGISTER_VECTOR_TYPE(std::vector<TYPE>,TYPE)
 
 	// registers an unordered map of specified type
-
 #define REGISTER_UNORDERED_MAP_OF_TYPE(TYPE_A,TYPE_B) \
 	do { \
 		std::string name = TURN_TO_STRING(unordered_map<TYPE_A); \

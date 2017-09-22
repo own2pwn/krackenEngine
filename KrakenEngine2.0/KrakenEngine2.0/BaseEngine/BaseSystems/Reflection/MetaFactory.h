@@ -54,7 +54,7 @@ namespace Framework
 			Get()->Initialize(name, size);
 			RegisterMeta();
 		}
-
+		
 		static T* NullCast()
 		{
 			return reinterpret_cast<T*> (NULL);

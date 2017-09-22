@@ -20,12 +20,18 @@ namespace Framework
 
 	void SpaceFactory::Initialize()
 	{
-		
+		for (auto space : m_spaces)
+		{
+			space.second->Initialize();
+		}
 	}
 	
 	void SpaceFactory::Update(float dt)
 	{
-
+		for (auto space : m_spaces)
+		{
+			space.second->Update();
+		}
 	}
 
 	SpaceFactory::~SpaceFactory()
