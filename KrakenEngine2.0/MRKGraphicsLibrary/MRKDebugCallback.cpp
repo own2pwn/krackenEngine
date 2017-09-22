@@ -5,9 +5,9 @@
 *
 *  @author Juan Ramos
 */
-#include "MRKGraphicsSystem.h"
 #ifdef _DEBUG
 
+#include "MRKGraphicsSystem.h"
 #include "vulkan/vulkan.h"
 #include "MRKDebugCallback.h"
 #include "MRKVulkanTools.h"
