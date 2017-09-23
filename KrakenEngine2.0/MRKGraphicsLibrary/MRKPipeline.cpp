@@ -10,13 +10,6 @@ namespace mrk
         createSemaphores();
     }
 
-	Pipeline::~Pipeline()
-	{
-		cleanUp();
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(imageAvailable);
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(renderFinished);
-	}
-
 	void Pipeline::load()
     {
 		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager_;
@@ -155,6 +148,7 @@ namespace mrk
 	void Pipeline::recreate()
 	{
 		cleanUp();
+        createSemaphores();
 		load();
 	}
 
@@ -165,6 +159,9 @@ namespace mrk
 		dev.freeCommandBuffers(g_graphicsSystemSingleton.graphicsPool_, commandBuffers_);
 		dev.destroyPipeline(pipeline_);
 		dev.destroyPipelineLayout(layout_);
+
+		dev.destroySemaphore(imageAvailable);
+		dev.destroySemaphore(renderFinished);
 	}
 
     void Pipeline::createCommandBuffers()
