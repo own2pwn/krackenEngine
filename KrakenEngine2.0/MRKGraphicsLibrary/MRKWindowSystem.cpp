@@ -20,7 +20,7 @@ namespace mrk
         _window(createWindow(info)),
         requiredExtensions_(getExtensions())
     {
-        glfwSetWindowSizeCallback(_window, );
+        glfwSetWindowSizeCallback(_window, GraphicsSystem::recreateWindowDependentResources);
     }
 
     GLFWwindow* WindowSystem::createWindow(createInfo const& info)

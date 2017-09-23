@@ -49,7 +49,7 @@ namespace mrk
 		*
 		* This means destroying the old resources and then creating the new ones accordingly.
 		*/
-		void reCreateSwapChain();
+		void recreate();
 
 		// Getters
 		/**
@@ -80,6 +80,7 @@ namespace mrk
         void createSwapChain();
         void createImageViews();
         void createDepthResources() const;
+        void reCreateDepthResources();
         void createRenderPass();
         void createFrameBuffers();
 
@@ -109,7 +110,6 @@ namespace mrk
         std::vector<vk::Framebuffer> swapchainFramebuffers_;
 
 		vk::Format depthFormat_;
-
 		mrk::Image depthImage_;
 
         
