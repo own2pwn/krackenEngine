@@ -7,97 +7,150 @@
 #include "MRKVulkanTools.h"
 #include "MRKModel.h"
 
+#include <assimp\Importer.hpp>
+#include <assimp\scene.h>
+#include <assimp\postprocess.h>
+
+#define ASSIM
+
 // Needed for hashing vertices parsing for unique vertices using std::unordered_map, this looks like it should be replaced with a lamda
 namespace std {
-    template<> 
-    struct hash<mrk::Model::Vertex> 
-    {
-        size_t operator()(mrk::Model::Vertex const& vertex) const 
-        {
-            return ((hash<glm::vec3>()(vertex.pos) ^
-                (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
-                (hash<glm::vec2>()(vertex.texCoord) << 1);
-        }
-    };
+	template<>
+	struct hash<mrk::Model::Vertex>
+	{
+		size_t operator()(mrk::Model::Vertex const& vertex) const
+		{
+			return ((hash<glm::vec3>()(vertex.pos) ^
+				(hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+				(hash<glm::vec2>()(vertex.texCoord) << 1);
+		}
+	};
 }
 
 namespace mrk
 {
 
-std::vector<Model::Vertex> Model::vertices;
-std::vector<uint32_t> Model::indices;
+	std::vector<Model::Vertex> Model::vertices;
+	std::vector<uint32_t> Model::indices;
 
-void Model::load(char const* modelPath, char const* texturePath) 
-{
-    mTexturePath = texturePath;
+	void Model::load(char const* modelPath, char const* texturePath)
+	{
+		mTexturePath = texturePath;
+		std::unordered_map<Model::Vertex, uint32_t> uniqueVertices = {};
 
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string err;
+#ifdef ASSIM
+		Assimp::Importer importer;
+		const aiScene *scene = importer.ReadFile(modelPath, aiProcessPreset_TargetRealtime_Fast);//aiProcessPreset_TargetRealtime_Fast has the configs you'll need
 
-    /*
-    * An OBJ file consists of positions, normals, texture coordinates and faces.
-    *
-    * Faces consist of an arbitrary amount of vertices, where each vertex refers to a position, normal and/or texture coordinate
-    * by index. This makes it possible to not just reuse entire vertices, but also individual attributes.
-    *
-    * The attrib container holds all of the positions, normals and texture coordinates in its attrib.vertices,
-    * attrib.normals and attrib.texcoords vectors. The shapes container contains all of the separate objects and their faces.
-    * Each face consists of an array of vertices, and each vertex contains the indices of the position,
-    * normal and texture coordinate attributes. OBJ models can also define a material and texture per face, but we
-    * will be ignoring those.
-    *
-    * The err string contains errors and warnings that occurred while loading the file, like a missing material definition.
-    * Loading only really failed if the LoadObj function returns false. As mentioned above, faces in OBJ files can
-    * actually contain an arbitrary number of vertices, whereas our application can only render triangles. Luckily
-    * the LoadObj has an optional parameter to automatically triangulate such faces, which is enabled by default.
-    */
-    if (tinyobj::LoadObj(&attrib, &shapes, &materials, &err, modelPath) == false)
-    {
-        throw_line(err.c_str())
-    }
+		aiMesh *mesh = scene->mMeshes[0]; //assuming you only want the first mesh
 
-    std::unordered_map<Model::Vertex, uint32_t> uniqueVertices = {};
+		for (unsigned int i = 0; i<mesh->mNumFaces; i++)
+		{
+			const aiFace& face = mesh->mFaces[i];
+
+			for (int j = 0; j<3; j++)
+			{
+				Vertex vertex = {};
+
+				aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[j]];
+				aiVector3D normal = mesh->mNormals[face.mIndices[j]];
+				aiVector3D pos = mesh->mVertices[face.mIndices[j]];
+
+				vertex.pos =
+				{
+					pos.x,
+					pos.y,
+					pos.z
+				};
+
+				vertex.texCoord = {
+					uv.x,
+					// The problem is that the origin of texture coordinates in Vulkan is the 
+					// top-left corner, whereas the OBJ format assumes the bottom-left corner. 
+					// Solve this by flipping the vertical component of the texture coordinates:
+					1.0f - uv.y
+				};
+
+				vertex.color = { 1.0f, 1.0f, 1.0f };
+
+				if (uniqueVertices.count(vertex) == 0)
+				{
+					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+					vertices.push_back(vertex);
+				}
+
+				indices.push_back(uniqueVertices[vertex]);
+			}
+		}
+#else
+		tinyobj::attrib_t attrib;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string err;
+
+		/*
+		* An OBJ file consists of positions, normals, texture coordinates and faces.
+		*
+		* Faces consist of an arbitrary amount of vertices, where each vertex refers to a position, normal and/or texture coordinate
+		* by index. This makes it possible to not just reuse entire vertices, but also individual attributes.
+		*
+		* The attrib container holds all of the positions, normals and texture coordinates in its attrib.vertices,
+		* attrib.normals and attrib.texcoords vectors. The shapes container contains all of the separate objects and their faces.
+		* Each face consists of an array of vertices, and each vertex contains the indices of the position,
+		* normal and texture coordinate attributes. OBJ models can also define a material and texture per face, but we
+		* will be ignoring those.
+		*
+		* The err string contains errors and warnings that occurred while loading the file, like a missing material definition.
+		* Loading only really failed if the LoadObj function returns false. As mentioned above, faces in OBJ files can
+		* actually contain an arbitrary number of vertices, whereas our application can only render triangles. Luckily
+		* the LoadObj has an optional parameter to automatically triangulate such faces, which is enabled by default.
+		*/
+
+		if (tinyobj::LoadObj(&attrib, &shapes, &materials, &err, modelPath) == false)
+		{
+			throw_line(err.c_str())
+		}
+
 #ifdef _DEBUG
-    uniqueVertices.reserve(1000000);
-    vertices.reserve(500000);
-    indices.reserve(500000);
+		uniqueVertices.reserve(1000000);
+		vertices.reserve(500000);
+		indices.reserve(500000);
 #endif
 
-    for (auto const & shape : shapes)
-    {
-        for (const auto & index : shape.mesh.indices)
-        {
-            Vertex vertex = {};
+		for (auto const & shape : shapes)
+		{
+			for (const auto & index : shape.mesh.indices)
+			{
+				Vertex vertex = {};
 
-            vertex.pos =
-            {
-                attrib.vertices[3 * index.vertex_index + 0],
-                attrib.vertices[3 * index.vertex_index + 1],
-                attrib.vertices[3 * index.vertex_index + 2]
-            };
+				vertex.pos =
+				{
+					attrib.vertices[3 * index.vertex_index + 0],
+					attrib.vertices[3 * index.vertex_index + 1],
+					attrib.vertices[3 * index.vertex_index + 2]
+				};
 
-            vertex.texCoord = {
-                attrib.texcoords[2 * index.texcoord_index + 0],
-                // The problem is that the origin of texture coordinates in Vulkan is the 
-                // top-left corner, whereas the OBJ format assumes the bottom-left corner. 
-                // Solve this by flipping the vertical component of the texture coordinates:
-                1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-            };
+				vertex.texCoord = {
+					attrib.texcoords[2 * index.texcoord_index + 0],
+					// The problem is that the origin of texture coordinates in Vulkan is the 
+					// top-left corner, whereas the OBJ format assumes the bottom-left corner. 
+					// Solve this by flipping the vertical component of the texture coordinates:
+					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+				};
 
-            vertex.color = { 1.0f, 1.0f, 1.0f };
+				vertex.color = { 1.0f, 1.0f, 1.0f };
 
-            if (uniqueVertices.count(vertex) == 0)
-            {
-                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                vertices.push_back(vertex);
-            }
+				if (uniqueVertices.count(vertex) == 0)
+				{
+					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+					vertices.push_back(vertex);
+				}
 
-            indices.push_back(uniqueVertices[vertex]);
-        }
-    }
-}
+				indices.push_back(uniqueVertices[vertex]);
+			}
+		}
+#endif
+	}
 
 	vk::VertexInputBindingDescription Model::Vertex::getBindingDescription()
 	{
@@ -132,9 +185,9 @@ void Model::load(char const* modelPath, char const* texturePath)
 	}
 
 	bool Model::Vertex::operator==(const Vertex& other) const
-{
-    return pos == other.pos && color == other.color && texCoord == other.texCoord;
-}
+	{
+		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+	}
 
 }
 
