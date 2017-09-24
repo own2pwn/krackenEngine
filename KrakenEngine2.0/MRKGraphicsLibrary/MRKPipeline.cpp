@@ -187,7 +187,6 @@ namespace mrk
 
 		const mrk::Buffer & indexBuffer = resourceManager.getIndexBuffer();
 		std::array<vk::Buffer, 1> indexBuffers = { indexBuffer.buffer_ };
-		uint32_t indexCount = static_cast<uint32_t>(indexBuffer.mSize);
 
 		int i = 0; // end of 'this'
 
@@ -213,7 +212,7 @@ namespace mrk
 
 			buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
-			buffer.drawIndexed(indexCount, 1, 0, 0, 0);
+			commandBuffers_[i].drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
 
 			buffer.endRenderPass();
 
