@@ -212,7 +212,7 @@ namespace mrk
 
 			buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
-			commandBuffers_[i].drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
+			buffer.drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
 
 			buffer.endRenderPass();
 
