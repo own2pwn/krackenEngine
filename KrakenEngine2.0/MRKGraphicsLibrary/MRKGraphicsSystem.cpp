@@ -24,7 +24,7 @@ namespace mrk
         graphicsPool_(device_.createCommandPool(device_.queueFamilyIndices_.graphicsFamilyIndex)),
 		swapchain_({}),
 		resourceManager_(),
-		pipeline_()
+		pipeline_(true)
 	{
 	}
 
