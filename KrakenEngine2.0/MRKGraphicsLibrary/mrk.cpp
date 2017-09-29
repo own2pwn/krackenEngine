@@ -37,4 +37,9 @@ namespace mrk
     {
         g_graphicsSystemSingleton.device_.logicalDevice_.waitIdle();
     }
+
+	GLFWwindow * getWindow()
+	{
+		
+	}
 }
