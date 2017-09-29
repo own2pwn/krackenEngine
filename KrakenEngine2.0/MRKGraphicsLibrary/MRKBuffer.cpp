@@ -49,7 +49,7 @@ namespace mrk
 	 * \brief Convert buffer into a vertex buffer by filling it with vertex data.
 	 * \param vertices - vertex data to put into the buffer
 	 */
-	void Buffer::createVertexBuffer(std::vector<Model::Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue)
+	void Buffer::createVertexBuffer(std::vector<Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue)
 	{
 		vk::DeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 

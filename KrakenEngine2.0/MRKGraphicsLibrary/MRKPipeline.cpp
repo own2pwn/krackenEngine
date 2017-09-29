@@ -28,8 +28,8 @@ namespace mrk
 		std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStages = { vertStageInfo, fragStageInfo };
 
 		// vertex input
-		vk::VertexInputBindingDescription bindingDescription = Model::Vertex::getBindingDescription();
-		std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions = Model::Vertex::getAttributeDescriptions();
+		vk::VertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
+		std::array<vk::VertexInputAttributeDescription, 2> attributeDescriptions = Vertex::getAttributeDescriptions();
 
 		vk::PipelineVertexInputStateCreateInfo vertexInputInfo = vk::PipelineVertexInputStateCreateInfo()
 			.setVertexBindingDescriptionCount(1)

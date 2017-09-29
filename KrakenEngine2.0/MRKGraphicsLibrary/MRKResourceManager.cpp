@@ -23,8 +23,20 @@ namespace mrk
         vertexShader_ = loadShaderModule(info.vertexShaderPath);
         fragmentShader_ = loadShaderModule(info.fragmentShaderPath);
 
-        houseVertexBuffer_.createVertexBuffer(houseModel_.vertices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
-        houseIndexBuffer_.createIndexBuffer(houseModel_.indices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+		std::vector<mrk::Vertex> verts;
+		std::vector<uint32_t> inds;
+
+		for (unsigned i = 0; i < houseModel_.meshes.size(); ++i)
+		{
+			std::vector<mrk::Vertex> & vertRef = houseModel_.meshes[i].vertices;
+			std::vector<uint32_t> & indexRef = houseModel_.meshes[i].indices;
+
+			verts.insert(verts.end(), vertRef.begin(), vertRef.end());
+			inds.insert(inds.end(), indexRef.begin(), indexRef.end());
+		}
+
+        houseVertexBuffer_.createVertexBuffer(verts, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+        houseIndexBuffer_.createIndexBuffer(inds, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
 
         mrk::Image::CreateInfo createInfo = { 
             0, 0, 
