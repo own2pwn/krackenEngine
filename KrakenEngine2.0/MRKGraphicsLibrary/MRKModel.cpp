@@ -14,14 +14,15 @@
 #define ASSIM
 
 // Needed for hashing vertices parsing for unique vertices using std::unordered_map, this looks like it should be replaced with a lamda
-namespace std {
+namespace std
+{
 	template<>
-	struct hash<mrk::Model::Vertex>
+	struct hash<mrk::Vertex>
 	{
-		size_t operator()(mrk::Model::Vertex const& vertex) const
+		size_t operator()(mrk::Vertex const& vertex) const
 		{
 			return ((hash<glm::vec3>()(vertex.pos) ^
-				(hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+				(hash<glm::vec3>()(vertex.normal) << 1)) >> 1) ^
 				(hash<glm::vec2>()(vertex.texCoord) << 1);
 		}
 	};
@@ -29,22 +30,25 @@ namespace std {
 
 namespace mrk
 {
-
-	std::vector<Model::Vertex> Model::vertices;
-	std::vector<uint32_t> Model::indices;
-
 	void Model::load(char const* modelPath, char const* texturePath)
 	{
 		mTexturePath = texturePath;
-		std::unordered_map<Model::Vertex, uint32_t> uniqueVertices = {};
+		std::unordered_map<mrk::Vertex, uint32_t> uniqueVertices = {};
 
 #ifdef ASSIM
 		Assimp::Importer importer;
-		const aiScene *scene = importer.ReadFile(modelPath, aiProcessPreset_TargetRealtime_Fast);//aiProcessPreset_TargetRealtime_Fast has the configs you'll need
+		const aiScene *scene = importer.ReadFile(modelPath, aiProcessPreset_TargetRealtime_Fast);
+
+		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			throw_line(importer.GetErrorString())
+		}
+
+		processNode(scene->mRootNode, scene);
 
 		aiMesh *mesh = scene->mMeshes[0]; //assuming you only want the first mesh
 
-		for (unsigned int i = 0; i<mesh->mNumFaces; i++)
+		for (unsigned i = 0; i < mesh->mNumFaces; i++)
 		{
 			const aiFace& face = mesh->mFaces[i];
 
@@ -71,15 +75,13 @@ namespace mrk
 					1.0f - uv.y
 				};
 
-				vertex.color = { 1.0f, 1.0f, 1.0f };
-
 				if (uniqueVertices.count(vertex) == 0)
 				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
+					uniqueVertices[vertex] = static_cast<uint32_t>(meshes[0].vertices.size());
+					meshes[0].vertices.push_back(vertex);
 				}
 
-				indices.push_back(uniqueVertices[vertex]);
+				meshes[0].indices.push_back(uniqueVertices[vertex]);
 			}
 		}
 #else
@@ -152,42 +154,106 @@ namespace mrk
 #endif
 	}
 
-	vk::VertexInputBindingDescription Model::Vertex::getBindingDescription()
+	void Model::processNode(aiNode const * node, aiScene const * scene)
 	{
-		auto bindingDescription = vk::VertexInputBindingDescription()
-			.setBinding(0)
-			.setStride(sizeof(Vertex))
-			.setInputRate(vk::VertexInputRate::eVertex);
+		for (unsigned i = 0; i < node->mNumMeshes; ++i)
+		{
+			aiMesh * mesh = scene->mMeshes[node->mMeshes[i]];
+			meshes.push_back(processMesh(mesh, scene));
+		}
 
-		return bindingDescription;
+		for (unsigned i = 0; i < node->mNumChildren; ++i)
+		{
+			processNode(node->mChildren[i], scene);
+		}
 	}
 
-	std::array<vk::VertexInputAttributeDescription, 3> Model::Vertex::getAttributeDescriptions()
+	Mesh Model::processMesh(aiMesh const* mesh, aiScene const* scene)
 	{
-		std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions = {};
+		Mesh processedMesh;
 
-		attributeDescriptions[0].binding = 0;
-		attributeDescriptions[0].location = 0;
-		attributeDescriptions[0].format = vk::Format::eR32G32B32Sfloat;
-		attributeDescriptions[0].offset = offsetof(Vertex, pos);
+		for (unsigned i = 0; i < mesh->mNumVertices; ++i)
+		{
+			Vertex vertex = {};
 
-		attributeDescriptions[1].binding = 0;
-		attributeDescriptions[1].location = 1;
-		attributeDescriptions[1].format = vk::Format::eR32G32B32Sfloat;
-		attributeDescriptions[1].offset = offsetof(Vertex, color);
+			// process vertex positions
+			vertex.pos.x = mesh->mVertices[i].x;
+			vertex.pos.y = mesh->mVertices[i].y;
+			vertex.pos.z = mesh->mVertices[i].z;
 
-		attributeDescriptions[2].binding = 0;
-		attributeDescriptions[2].location = 2;
-		attributeDescriptions[2].format = vk::Format::eR32G32B32Sfloat;
-		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+			// normals
+			vertex.normal.x = mesh->mNormals[i].x;
+			vertex.normal.y = mesh->mNormals[i].y;
+			vertex.normal.z = mesh->mNormals[i].z;
 
-		return attributeDescriptions;
+			//textures
+			if(mesh->mTextureCoords[0])
+			{
+				vertex.texCoord.x = mesh->mTextureCoords[0][i].x;
+				vertex.texCoord.y = mesh->mTextureCoords[0][i].y;
+			}
+
+			processedMesh.vertices.push_back(vertex);
+		}
+
+		// process indices
+		for (unsigned i = 0; i < mesh->mNumFaces; ++i)
+		{
+			aiFace const face = mesh->mFaces[i];
+			for (unsigned j = 0; j < face.mNumIndices; ++j)
+			{
+				processedMesh.indices.push_back(face.mIndices[j]);
+			}
+		}
+
+		// process material
+		if (mesh->mMaterialIndex >= 0)
+		{
+			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+
+			std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			processedMesh.textures.insert(processedMesh.textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+			std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			processedMesh.textures.insert(processedMesh.textures.end(), specularMaps.begin(), specularMaps.end());
+		}
+
+		return processedMesh;
 	}
 
-	bool Model::Vertex::operator==(const Vertex& other) const
+	//TODO finish implementing this shit mother fucker!
+	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
-		return pos == other.pos && color == other.color && texCoord == other.texCoord;
-	}
+		std::vector<Texture> textures;
 
+		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+		{
+			aiString str;
+			mat->GetTexture(type, i, &str);
+
+			bool skip = false;
+
+			for (unsigned int j = 0; j < loadedTextures.size(); j++)
+			{
+				if (std::strcmp(loadedTextures[j].path.C_Str(), str.C_Str()) == 0)
+				{
+					textures.push_back(loadedTextures[j]);
+					skip = true;
+					break;
+				}
+			}
+
+			if (!skip)
+			{   // if texture hasn't been loaded already, load it
+				Texture texture;
+				texture.type = typeName;
+				texture.path = str;
+				textures.push_back(texture);
+				loadedTextures.push_back(texture); // add to loaded textures
+			}
+		}
+
+		return textures;
+	}
 }
 

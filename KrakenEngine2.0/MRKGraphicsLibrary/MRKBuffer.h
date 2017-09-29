@@ -16,7 +16,7 @@ namespace mrk
 		Buffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties);
 		~Buffer();
 		void destroy();
-		void createVertexBuffer(std::vector<Model::Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue);
+		void createVertexBuffer(std::vector<Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue);
 		void createIndexBuffer(std::vector<uint32_t> const & indices, vk::CommandPool commandPool, vk::Queue deviceQueue);
 		void copyBuffer(mrk::Buffer & source, vk::DeviceSize size, vk::CommandPool commandPool, vk::Queue deviceQueue);
 	};
