@@ -41,7 +41,7 @@ namespace Framework
 			// appends one string to anohter
 		const String& operator+=(const std::string& lhs);
 			// returns length of the string(how many chars)
-		inline unsigned Size() const;
+		inline size_t Size() const;
 			// returns true if the string is empty
 		bool IsEmpty() const;
 			// converts string to wide string
@@ -57,7 +57,7 @@ namespace Framework
 			// id of the string in the map
 		int m_id;
 			// stores sizer of string(how many chars) to avoid every frame calculation
-		unsigned m_size;
+		size_t m_size;
 			// gets int representation of string
 		int ToInt() const;
 		friend std::ostream& operator<<(std::ostream& os, const String& str);
