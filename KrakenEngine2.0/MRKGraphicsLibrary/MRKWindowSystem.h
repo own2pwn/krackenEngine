@@ -51,6 +51,8 @@ public:
 
     glm::ivec2 getWindowSize() const;
 
+	GLFWwindow * getWindow() const;
+
 	vk::SurfaceKHR createSurface(vk::Instance const& instance) const;
 
     ~WindowSystem();
