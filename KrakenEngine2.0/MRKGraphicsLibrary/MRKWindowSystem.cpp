@@ -12,6 +12,7 @@
 #include "MRKWindowSystem.h"
 #include "MRKVulkanTools.h"
 #include "MRKInstance.h"
+#include "MRKGraphicsSystem.h"
 
 namespace mrk
 {
@@ -19,6 +20,7 @@ namespace mrk
         _window(createWindow(info)),
         requiredExtensions_(getExtensions())
     {
+        glfwSetWindowSizeCallback(_window, GraphicsSystem::recreateWindowDependentResources);
     }
 
     GLFWwindow* WindowSystem::createWindow(createInfo const& info)

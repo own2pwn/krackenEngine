@@ -14,13 +14,15 @@ namespace mrk
 		vk::Semaphore imageAvailable;
 		vk::Semaphore renderFinished;
 
-		Pipeline();
-		~Pipeline();
+		Pipeline(bool dynamic = true);
         void load();
 		void recreate();
-		
-    private:
 		void cleanUp();
+        ~Pipeline();
+
+    private:
+        const bool dynamic_;
+
 		void createCommandBuffers();
 		void createSemaphores();
 	};

@@ -40,6 +40,6 @@ namespace mrk
 
 	GLFWwindow * getWindow()
 	{
-		
+		return g_graphicsSystemSingleton.windowSystem_.getWindow();
 	}
 }

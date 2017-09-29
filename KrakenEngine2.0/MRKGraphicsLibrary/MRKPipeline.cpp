@@ -5,17 +5,10 @@
 
 namespace mrk
 {
-    Pipeline::Pipeline()
+    Pipeline::Pipeline(bool dynamic) : dynamic_(dynamic)
     {
         createSemaphores();
     }
-
-	Pipeline::~Pipeline()
-	{
-		cleanUp();
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(imageAvailable);
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroySemaphore(renderFinished);
-	}
 
 	void Pipeline::load()
     {
@@ -49,6 +42,10 @@ namespace mrk
 			.setTopology(vk::PrimitiveTopology::eTriangleList)
 			.setPrimitiveRestartEnable(VK_FALSE);
 
+        vk::PipelineViewportStateCreateInfo viewportStateInfo = vk::PipelineViewportStateCreateInfo()
+            .setViewportCount(1)
+            .setScissorCount(1);
+
 		// view port and scissor
 		vk::Rect2D scissor = vk::Rect2D()
 			.setOffset({ 0,0 })
@@ -62,11 +59,17 @@ namespace mrk
 			.setMinDepth(0.0f)
 			.setMaxDepth(1.0f);
 
-		vk::PipelineViewportStateCreateInfo viewportStateInfo = vk::PipelineViewportStateCreateInfo()
-			.setViewportCount(1)
-			.setScissorCount(1)
-			.setPViewports(&viewport)
-			.setPScissors(&scissor);
+        if (dynamic_ == false)
+        {
+            viewportStateInfo.pScissors = &scissor;
+            viewportStateInfo.pViewports = &viewport;
+        }
+
+        std::array<vk::DynamicState, 2> states = { vk::DynamicState::eViewport, vk::DynamicState::eScissor };
+
+        auto dynamicStateInfo = vk::PipelineDynamicStateCreateInfo()
+            .setPDynamicStates(states.data())
+            .setDynamicStateCount(static_cast<uint32_t>(states.size()));
 
 		// rasterization state
 		vk::PipelineRasterizationStateCreateInfo rasterInfo = vk::PipelineRasterizationStateCreateInfo()
@@ -135,7 +138,7 @@ namespace mrk
 			.setLayout(layout_)
 			.setPColorBlendState(&colorBlendInfo)
 			.setPDepthStencilState(&depthStencil)
-			.setPDynamicState(nullptr)
+			.setPDynamicState(dynamic_ ? &dynamicStateInfo : nullptr)
 			.setPInputAssemblyState(&inputAssembly)
 			.setPMultisampleState(&multisampleInfo)
 			.setPRasterizationState(&rasterInfo)
@@ -149,13 +152,22 @@ namespace mrk
 
 		MRK_CATCH(pipeline_ = g_graphicsSystemSingleton.device_.logicalDevice_.createGraphicsPipelines(vk::PipelineCache(), pipelineInfo)[0]);
 
-		createCommandBuffers();
+        createCommandBuffers();
     }
 
 	void Pipeline::recreate()
 	{
 		cleanUp();
-		load();
+        createSemaphores();
+
+        if (dynamic_ == false)
+        {
+            load();
+        }
+        else
+        {
+            createCommandBuffers();
+        }
 	}
 
 	void Pipeline::cleanUp()
@@ -163,9 +175,26 @@ namespace mrk
 		const vk::Device& dev = g_graphicsSystemSingleton.device_.logicalDevice_;
 
 		dev.freeCommandBuffers(g_graphicsSystemSingleton.graphicsPool_, commandBuffers_);
-		dev.destroyPipeline(pipeline_);
-		dev.destroyPipelineLayout(layout_);
+        if (dynamic_ == false)
+        {
+            dev.destroyPipeline(pipeline_);
+            dev.destroyPipelineLayout(layout_);
+        }
+
+		dev.destroySemaphore(imageAvailable);
+		dev.destroySemaphore(renderFinished);
 	}
+
+    Pipeline::~Pipeline()
+    {
+		const vk::Device& dev = g_graphicsSystemSingleton.device_.logicalDevice_;
+
+        if (dynamic_ == true)
+        {
+            dev.destroyPipeline(pipeline_);
+            dev.destroyPipelineLayout(layout_);
+        }
+    }
 
     void Pipeline::createCommandBuffers()
 	{
@@ -190,33 +219,48 @@ namespace mrk
 
 		const mrk::Buffer & indexBuffer = resourceManager.getIndexBuffer();
 		std::array<vk::Buffer, 1> indexBuffers = { indexBuffer.buffer_ };
-		uint32_t indexCount = static_cast<uint32_t>(indexBuffer.mSize);
+
+
+        auto beginInfo = vk::CommandBufferBeginInfo()
+            .setFlags(vk::CommandBufferUsageFlagBits::eSimultaneousUse)
+            .setPInheritanceInfo(nullptr);// only for secondary command buffers
 
 		int i = 0; // end of 'this'
-
 		for (const auto& buffer : commandBuffers_)
 		{
-			auto beginInfo = vk::CommandBufferBeginInfo()
-				.setFlags(vk::CommandBufferUsageFlagBits::eSimultaneousUse)
-				.setPInheritanceInfo(nullptr);// only for secondary command buffers
-
 			buffer.begin(beginInfo);
 
 			vk::RenderPassBeginInfo renderPassInfo = g_graphicsSystemSingleton.swapchain_.getRenderPassBeginInfo(i++); // note the i++
 			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 			renderPassInfo.pClearValues = clearValues.data();
 
+            if (dynamic_)
+            {
+		        vk::Rect2D scissor = vk::Rect2D()
+		        	.setOffset({ 0,0 })
+		        	.setExtent(g_graphicsSystemSingleton.swapchain_.getExtent());
+		        vk::Viewport viewport = vk::Viewport()
+		        	.setX(0.0f)
+		        	.setY(0.0f)
+		        	.setWidth(static_cast<float>(scissor.extent.width))
+		        	.setHeight(static_cast<float>(scissor.extent.height))
+		        	.setMinDepth(0.0f)
+		        	.setMaxDepth(1.0f);
+
+                buffer.setViewport(0, 1, &viewport);
+                buffer.setScissor(0, 1, &scissor);
+            }
+
 			buffer.beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 
-			vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_);
+                buffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline_);
 
-			buffer.bindVertexBuffers(0, vertexBuffers, offsets);
+                buffer.bindVertexBuffers(0, vertexBuffers, offsets);
+                buffer.bindIndexBuffer(indexBuffers[0], 0, vk::IndexType::eUint32);
 
-			buffer.bindIndexBuffer(indexBuffers[0], 0, vk::IndexType::eUint32);
+                buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
-			buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
-
-			buffer.drawIndexed(indexCount, 1, 0, 0, 0);
+                buffer.drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
 
 			buffer.endRenderPass();
 

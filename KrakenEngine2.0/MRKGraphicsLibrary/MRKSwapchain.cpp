@@ -26,7 +26,7 @@ namespace mrk
     {
         auto &logicalDevice = g_graphicsSystemSingleton.device_.logicalDevice_; // Just to write less code
 
-		//depthImage_.destroy();
+		depthImage_.destroy();
 
         for (auto & frameBuffer : swapchainFramebuffers_)
         {
@@ -39,8 +39,6 @@ namespace mrk
         }
 
         logicalDevice.destroySwapchainKHR(swapChain_);
-
-        logicalDevice.destroyRenderPass(renderPass_);
     }
 
     void Swapchain::createMRKSwapChain()
@@ -104,6 +102,8 @@ namespace mrk
             .setFormat(swapChainSurfaceFormat_.format)
             .setSubresourceRange(vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1));
 
+        swapChainImageViews_.clear();
+
         vk::ImageView tempView;
         for (auto const & image : swapChainImages_)
         {
@@ -127,6 +127,23 @@ namespace mrk
 		// transition its layout
 		depthImage_.transitionLayout(depthFormat_, vk::ImageLayout::eUndefined, vk::ImageLayout::eDepthStencilAttachmentOptimal,
 			                   g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+    }
+
+    void Swapchain::reCreateDepthResources()
+    {
+    mrk::Image::CreateInfo createInfo = { swapChainExtent_.width,
+                 swapChainExtent_.height,
+                 depthFormat_,
+                 vk::ImageTiling::eOptimal,
+                 vk::ImageUsageFlagBits::eDepthStencilAttachment,
+                 vk::MemoryPropertyFlagBits::eDeviceLocal,
+                 vk::ImageAspectFlagBits::eDepth};
+
+        depthImage_.info_ = createInfo;
+        depthImage_.createImage(createInfo);
+        depthImage_.createImageView(createInfo.format, createInfo.aspectFlags);
+
+        createDepthResources();
     }
 
     void Swapchain::createRenderPass()
@@ -429,7 +446,11 @@ namespace mrk
         renderBeginPassInfo_(createRenderPassInfo())
     {
 		(void)info;
-        createMRKSwapChain();
+        createSwapChain();
+        createImageViews();
+        createDepthResources();
+        createRenderPass();
+        createFrameBuffers();
     }
 
     /**
@@ -439,6 +460,8 @@ namespace mrk
     Swapchain::~Swapchain()
 	{
         cleanUp();
+
+        g_graphicsSystemSingleton.device_.logicalDevice_.destroyRenderPass(renderPass_);
 	}
 
     /**
@@ -448,7 +471,7 @@ namespace mrk
      * 
      * This means destroying the old resources and then creating the new ones accordingly.
      */
-    void Swapchain::reCreateSwapChain()
+    void Swapchain::recreate()
     {
         cleanUp();
 
@@ -458,9 +481,13 @@ namespace mrk
         presentMode_ = chooseSwapPresentMode();
         maxImageCount_ = chooseMaxImageCount();
         depthFormat_ = g_graphicsSystemSingleton.device_.findDepthFormat();
+        reCreateDepthResources();
         renderBeginPassInfo_ = createRenderPassInfo();
 
-        createMRKSwapChain();
+        createSwapChain();
+        createImageViews();
+        createDepthResources();
+        createFrameBuffers();
     }
 
     /**
@@ -478,4 +505,5 @@ namespace mrk
 
         return renderBeginPassInfo_;
     }
+
 }

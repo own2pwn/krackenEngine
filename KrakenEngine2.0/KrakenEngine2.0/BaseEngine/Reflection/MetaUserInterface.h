@@ -31,10 +31,10 @@ namespace Framework
 	// registers an unordered map of specified type
 #define REGISTER_UNORDERED_MAP_OF_TYPE(TYPE_A,TYPE_B) \
 	do { \
-		std::string name = TURN_TO_STRING(unordered_map<TYPE_A); \
-		name += ","; \
-		name += TURN_TO_STRING(TYPE_B>); \
-		MetaFactory<std::unordered_map<TYPE_A,TYPE_B> > NAME_GENERATOR()(name, sizeof(std::unordered_map<TYPE_A, TYPE_B>)); \
+		std::string NAME = TURN_TO_STRING(unordered_map<TYPE_A); \
+		NAME += ","; \
+		NAME += TURN_TO_STRING(TYPE_B>); \
+		MetaFactory<std::unordered_map<TYPE_A,TYPE_B> > NAME_GENERATOR()(NAME, sizeof(std::unordered_map<TYPE_A, TYPE_B>)); \
 		void MetaFactory<std::unordered_map<TYPE_A, TYPE_B> >::RegisterMeta(); \
 		GET_TYPE_BY_TEMPLATE(std::unordered_map<TYPE_A COMMA TYPE_B>)->SetSerialize(SerializeUnorderedMapType<TYPE_A, TYPE_B>); \
 	} while(0)
@@ -55,7 +55,7 @@ namespace Framework
 	
 	// Finds the offset of a member of a specified type.
 #define GET_OFFSET(TYPE, MEMBER) \
-	(unsigned)(&(((TYPE*) NULL)->MEMBER))
+	(size_t)(&(((TYPE*) NULL)->MEMBER))
 
 	// Gets type info by template. Use example: Metatype* type = GET_TYPE_BY_TEMPLATE(int)
 #define GET_TYPE_BY_TEMPLATE(T) MetaFactory<T>::Get()

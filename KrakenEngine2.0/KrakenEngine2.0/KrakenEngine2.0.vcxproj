@@ -93,6 +93,8 @@
       <LanguageStandard>
       </LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)\KrakenEngine2.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>../../Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -101,6 +103,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\KrakenEngine2.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>../../Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,40 +136,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseEngine\BaseSystems\Reflection\Function.cpp" />
-    <ClCompile Include="BaseEngine\BaseSystems\Reflection\MetaVariable.cpp" />
-    <ClCompile Include="BaseEngine\BaseSystems\Reflection\MetaType.cpp" />
-    <ClCompile Include="BaseEngine\BaseSystems\Serialization\Serialization.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\Function.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaVariable.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaType.cpp" />
+    <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
     <ClCompile Include="BaseEngine\Core\Core.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Precompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Precompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Systems\Factory\GameObject.cpp" />
     <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
-    <ClCompile Include="Systems\Factory\ObjectFactory.cpp" />
-    <ClCompile Include="Tools\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="Systems\Factory\Space.cpp" />
     <ClCompile Include="Tools\String\String.cpp" />
-    <ClCompile Include="Tools\CodeTests\StringTest\StringTest.cpp" />
+    <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\Function.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaFactory.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaVariable.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaType.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\RemoveQualifier.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Reflection\MetaUserInterface.h" />
-    <ClInclude Include="BaseEngine\BaseSystems\Serialization\Serialization.h" />
+    <ClInclude Include="BaseEngine\Reflection\Function.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaFactory.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaVariable.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaType.h" />
+    <ClInclude Include="BaseEngine\Reflection\RemoveQualifier.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaUserInterface.h" />
+    <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
     <ClInclude Include="BaseEngine\Core\Core.h" />
-    <ClInclude Include="BaseEngine\Entity.h" />
     <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="Systems\Factory\GameObject.h" />
     <ClInclude Include="Systems\Factory\SpaceFactory.h" />
-    <ClInclude Include="Systems\Factory\ObjectFactory.h" />
-    <ClInclude Include="Systems\ISystem.h" />
+    <ClInclude Include="Systems\Factory\Space.h" />
+    <ClInclude Include="Systems\Interface\ISystem.h" />
     <ClInclude Include="Tools\Assert\Assert.h" />
-    <ClInclude Include="Tools\jsoncpp\json\json-forwards.h" />
-    <ClInclude Include="Tools\jsoncpp\json\json.h" />
     <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
     <ClInclude Include="Tools\String\String.h" />
-    <ClInclude Include="Tools\CodeTests\StringTest\StringTest.h" />
+    <ClInclude Include="Tools\CodeTests\StringTest.h" />
     <ClInclude Include="Tools\TextFormator\TextFormator.h" />
+    <ClInclude Include="Tools\uniqueID\UniqueID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

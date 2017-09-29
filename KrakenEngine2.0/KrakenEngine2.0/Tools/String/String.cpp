@@ -16,13 +16,13 @@ namespace Framework
 	std::unordered_map<std::string, int> String::m_strToInt;
 
 	String::String() : m_str(""), m_id(0), m_size(0) {}
-
+	
 	String::String(const std::string& text)
 	{
 		*this = text;
 		m_size = text.size();
 	}
-
+	
 	String::String(const String& string)
 	{
 		m_str = string.m_str;
@@ -109,7 +109,7 @@ namespace Framework
 		return *this;
 	}
 
-	inline unsigned String::Size() const
+	inline size_t String::Size() const
 	{
 		return m_size;
 	}
@@ -144,6 +144,6 @@ namespace Framework
 
 	std::ostream& operator<<(std::ostream& os, const String& str)
 	{
-		return os << str.Get();
+		return os << str.Get().c_str();
 	}
 }; // Framework

@@ -19,7 +19,7 @@ namespace Framework
 		cse_paused
 	};
 
-	class Core : public Entity
+	class Core
 	{
 
 	public:
@@ -55,7 +55,7 @@ namespace Framework
 		std::chrono::time_point<std::chrono::system_clock> m_previous_time; // time for previous frame
 
 			// updates FPS
-		void UpdateFPS(float& dt);
+		time_t UpdateFPS(float& dt);
 	};
 } // Framework
 

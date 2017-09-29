@@ -1,26 +1,26 @@
 /******************************************************************************/
 /*!
-\file   Entity.h
+\file   UniqueID.h
 \author Aleksey Perfilev
 \par    Copyright 2017, Digipen Institute of Technology
 \brief
-everything made out of entity in the engine
+Unique ID generator by type
 */
 /******************************************************************************/
-#ifndef ENTITY_H
-#define ENTITY_H
+#ifndef UNIQUE_ID_H
+#define UNIQUE_ID_H
 
 namespace Framework
 {
-	class Entity
-	{	
-	public:
-		//virtual Variable* GetVariable() = 0;// { return nullptr; }
-	private:
-		
-		//Json::Value m_Setup;
-	}; // Entity
+	template <typename TYPE>
+	class UniqueID
+	{
+		static int AssignID()
+		{
+			static int id = 0;
+			return ++id;
+		}
+	};
 
-}; // Framework
-
+} // Framework
 #endif

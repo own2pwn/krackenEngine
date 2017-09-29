@@ -15,25 +15,27 @@ namespace Framework
 	class SpaceFactory : public ISystem
 	{
 	public:
+			// Gets the SpaceFactory
 		static SpaceFactory * Get();
-
+			// initializes SpaceFactory
 		virtual void Initialize();
-
+			// Updates Factory
 		virtual void Update(float dt = 0.0f);
-
-		// destructor
+			// destructor
 		virtual ~SpaceFactory();
-
-		ObjectFactory* AddSpace(std::string name);
-		
-		unsigned int Size() const;
-		std::unordered_map<unsigned int, ObjectFactory*> GetSpaces();
-		ObjectFactory* GetSpace(unsigned int id);
+			// add a new space
+		Space* AddSpace(std::string name);
+			// how many spaces are there
+		size_t Size() const;
+			// gets all the spaces
+		std::unordered_map<unsigned int, Space*>* GetSpaces();
+			// get a specific space
+		Space* GetSpace(unsigned int id);
 	private:
 
-		std::unordered_map<unsigned int, ObjectFactory*> m_spaces;
-		unsigned int m_totalSpaces;
-
+		std::unordered_map<unsigned int, Space*> m_spaces;
+		unsigned int m_uniqueFactoryID;
+			// hiden constructor (forces to use Get())
 		SpaceFactory();
 	};
 
