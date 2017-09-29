@@ -151,8 +151,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Systems\Factory\GameObject.cpp" />
     <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
-    <ClCompile Include="Systems\Factory\ObjectFactory.cpp" />
+    <ClCompile Include="Systems\Factory\Space.cpp" />
     <ClCompile Include="Tools\String\String.cpp" />
     <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
@@ -167,14 +168,16 @@
     <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
     <ClInclude Include="BaseEngine\Core\Core.h" />
     <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="Systems\Factory\GameObject.h" />
     <ClInclude Include="Systems\Factory\SpaceFactory.h" />
-    <ClInclude Include="Systems\Factory\ObjectFactory.h" />
+    <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Interface\ISystem.h" />
     <ClInclude Include="Tools\Assert\Assert.h" />
     <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
     <ClInclude Include="Tools\String\String.h" />
     <ClInclude Include="Tools\CodeTests\StringTest.h" />
     <ClInclude Include="Tools\TextFormator\TextFormator.h" />
+    <ClInclude Include="Tools\uniqueID\UniqueID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
