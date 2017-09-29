@@ -5,6 +5,7 @@
 *  @author Juan Ramos 
 */
 #pragma once
+#include "MRKWindowSystem.h"
 
 namespace mrk
 {
@@ -29,4 +30,5 @@ namespace mrk
     void LoadResources();
     void Draw();
     void StopDrawing();
+	GLFWwindow * getWindow();
 }
