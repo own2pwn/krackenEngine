@@ -21,6 +21,8 @@
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Systems\Factory\Space.cpp" />
     <ClCompile Include="Systems\Factory\GameObject.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Component.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -44,5 +46,7 @@
     <ClInclude Include="Tools\uniqueID\UniqueID.h" />
     <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Factory\GameObject.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Component.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
   </ItemGroup>
 </Project>

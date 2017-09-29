@@ -43,6 +43,8 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "BaseEngine/Core/Core.h"
 
 // systems
+#include "Systems/ScriptingSystem/ComponentID.h"
+#include "Systems/ScriptingSystem/Component.h"
 #include "Systems/Factory/GameObject.h"
 #include "Systems/Factory/Space.h"
 #include "Systems/Factory/SpaceFactory.h"

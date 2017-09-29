@@ -66,8 +66,8 @@ namespace Framework
 			m_previous_time = m_current_time;
 			std::cout << m_FPS << std::endl;
 
-			MetaTypesMap map = AllMetaTypes::Get();
-			break;
+		//	MetaTypesMap map = AllMetaTypes::Get();
+			//break;
 		}
 
 	}
