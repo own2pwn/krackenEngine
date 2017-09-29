@@ -24,7 +24,7 @@ namespace mrk
         graphicsPool_(device_.createCommandPool(device_.queueFamilyIndices_.graphicsFamilyIndex)),
 		swapchain_({}),
 		resourceManager_(),
-		pipeline_()
+		pipeline_(true)
 	{
 	}
 
@@ -42,11 +42,47 @@ namespace mrk
 
 	void GraphicsSystem::draw()
 	{
+        WindowSystem::update();
+
+        // UPDATING UNIFORM BUFFER
+
+        // Rotation Timing Logic
+        using namespace std::chrono;
+        static auto startTime = high_resolution_clock::now();
+
+        auto currentTime = high_resolution_clock::now();
+        float time = duration_cast<milliseconds>(currentTime - startTime).count() / 1000.0f;
+
+        UniformBufferObject ubo;
+        // Third parameter: Rotating about z axis
+        ubo.model = glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), // cameraPosition
+            glm::vec3(0.0f, 0.0f, 0.0f), // cameraTarget
+            glm::vec3(0.0f, 0.0f, 1.0f) // cameraUp
+        );
+
+        vk::Extent2D extent = swapchain_.getExtent();
+        const float nearPlane = 0.1f;
+        const float farPlane = 10.0f;
+
+        ubo.proj = glm::perspective(glm::radians(45.0f),
+            static_cast<float>(extent.width) / static_cast<float>(extent.height),
+            nearPlane, farPlane);
+        // GLM was originally designed for opengl where the y coordinate of the clip coordinates is inverted
+        ubo.proj[1][1] *= -1;
+
+        void *data;
+        resourceManager_.getUniformBuffer().map(data);
+        memcpy(data, &ubo, sizeof(ubo));
+        resourceManager_.getUniformBuffer().unmap();
+
+        // Drawing Logic
+
 		vk::ResultValue<uint32_t> result = device_.logicalDevice_.acquireNextImageKHR(swapchain_.getSwapChain(), std::numeric_limits<uint64_t>::max(), pipeline_.imageAvailable, {});
 
 		if (result.result == vk::Result::eErrorOutOfDateKHR)
 		{
-			swapchain_.reCreateSwapChain();
+			swapchain_.recreate();
 			return;
 		}
 		else if (result.result != vk::Result::eSuccess && result.result != vk::Result::eSuboptimalKHR)
@@ -85,7 +121,7 @@ namespace mrk
 
 		if (result.result == vk::Result::eErrorOutOfDateKHR || result.result == vk::Result::eSuboptimalKHR)
 		{
-			swapchain_.reCreateSwapChain();
+			swapchain_.recreate();
 		}
 		else if (result.result != vk::Result::eSuccess)
 		{
@@ -93,40 +129,20 @@ namespace mrk
 		}
 
 		presentQueue_.waitIdle();
-
-        // UPDATING UNIFORM BUFFER
-
-        // Rotation Timing Logic
-        using namespace std::chrono;
-        static auto startTime = high_resolution_clock::now();
-
-        auto currentTime = high_resolution_clock::now();
-        float time = duration_cast<milliseconds>(currentTime - startTime).count() / 1000.0f;
-
-        UniformBufferObject ubo;
-        // Third parameter: Rotating about z axis
-        ubo.model = glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), // cameraPosition
-            glm::vec3(0.0f, 0.0f, 0.0f), // cameraTarget
-            glm::vec3(0.0f, 0.0f, 1.0f) // cameraUp
-        );
-
-        vk::Extent2D extent = swapchain_.getExtent();
-        const float nearPlane = 0.1f;
-        const float farPlane = 10.0f;
-
-        ubo.proj = glm::perspective(glm::radians(45.0f),
-            static_cast<float>(extent.width) / static_cast<float>(extent.height),
-            nearPlane, farPlane);
-        // GLM was originally designed for opengl where the y coordinate of the clip coordinates is inverted
-        ubo.proj[1][1] *= -1;
-
-        void *data;
-        resourceManager_.getUniformBuffer().map(data);
-        memcpy(data, &ubo, sizeof(ubo));
-        resourceManager_.getUniformBuffer().unmap();
-        
-        WindowSystem::update();
 	}
 
+    void GraphicsSystem::recreateWindowDependentResources(GLFWwindow* window, int width, int height)
+    {
+        if (width == 0 || height == 0) { return; }
+        (void)window;
+
+        g_graphicsSystemSingleton.swapchain_.recreate();
+        g_graphicsSystemSingleton.pipeline_.recreate();
+    }
+
+    GraphicsSystem::~GraphicsSystem()
+    {
+        pipeline_.cleanUp();
+        device_.logicalDevice_.destroyCommandPool(graphicsPool_);
+    }
 }

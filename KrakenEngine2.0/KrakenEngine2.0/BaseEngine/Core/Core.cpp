@@ -60,13 +60,9 @@ namespace Framework
 				m_Systems.at(i)->Update(dt);
 
 				// updating dt and FPS
-			UpdateFPS(dt);
-
 				// locking FPS to 60(wait if more)
-			while (m_FPS > 60)
-			{
-				UpdateFPS(dt);
-			}
+			while (UpdateFPS(dt) > 60) {}
+
 			m_previous_time = m_current_time;
 			std::cout << m_FPS << std::endl;
 
@@ -132,7 +128,7 @@ namespace Framework
 		return m_FPS;
 	}
 
-	void Core::UpdateFPS(float & dt)
+	time_t Core::UpdateFPS(float & dt)
 	{
 		using namespace std::chrono;
 
@@ -144,5 +140,6 @@ namespace Framework
 		dt = elapsed_seconds.count();
 			// update FPS
 		m_FPS = int(1 / dt + 0.5f);
+		return m_FPS;
 	}
 }; // Framework
