@@ -18,9 +18,9 @@ namespace Framework
 			// Gets the SpaceFactory
 		static SpaceFactory * Get();
 			// initializes SpaceFactory
-		virtual void Initialize();
+		void Initialize() override;
 			// Updates Factory
-		virtual void Update(float dt = 0.0f);
+		void Update(float dt = 0.0f) override;
 			// destructor
 		virtual ~SpaceFactory();
 			// add a new space

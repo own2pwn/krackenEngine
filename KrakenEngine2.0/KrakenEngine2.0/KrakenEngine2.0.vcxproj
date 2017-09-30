@@ -151,9 +151,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Systems\ScriptingSystem\Component.cpp" />
     <ClCompile Include="Systems\Factory\GameObject.cpp" />
     <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
     <ClCompile Include="Systems\Factory\Space.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
     <ClCompile Include="Tools\String\String.cpp" />
     <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
@@ -168,10 +172,14 @@
     <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
     <ClInclude Include="BaseEngine\Core\Core.h" />
     <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Component.h" />
     <ClInclude Include="Systems\Factory\GameObject.h" />
     <ClInclude Include="Systems\Factory\SpaceFactory.h" />
     <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Interface\ISystem.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Script.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
     <ClInclude Include="Tools\Assert\Assert.h" />
     <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
     <ClInclude Include="Tools\String\String.h" />

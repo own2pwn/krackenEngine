@@ -16,13 +16,7 @@ namespace Framework
 	{
 		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, GameObject*);
 		REGISTER_TYPE(Space);
-	//	ADD_MEMBER(Space, m_objects);
-		MetaType* type = GET_TYPE_BY_TEMPLATE(Space);
-		unsigned offset = ((size_t)(&(((Space*)NULL)->m_objects)));// GET_OFFSET(Space, m_objects);
-		MetaType* mem = GET_TYPE_BY_TEMPLATE(GET_MEMBER_TYPE(Space, m_objects));
-		MetaMember* member = new MetaMember("m_objects", offset, mem);
-		type->AddMember(member);
-
+		ADD_MEMBER(Space, m_objects);
 	}
 
 	Space::Space(std::string name) : m_uniqueObjectID(0), m_name(name)
@@ -42,7 +36,7 @@ namespace Framework
 
 	}
 
-	void Space::Update(float dt)
+	void Space::Update(float) // not using dt
 	{
 		for (auto id : m_objectsIDsToDestroy)
 		{
@@ -81,11 +75,14 @@ namespace Framework
 		return m_objects.size();
 	}
 
-	GameObject* Space::AddObject(GameObject* obj)
+	GameObject* Space::AddObject()
 	{
 		m_uniqueObjectID++;
-		m_objects[m_uniqueObjectID] = obj;
+		GameObject* gameObject = new GameObject; 
+		gameObject->SetID(m_uniqueObjectID);
+		m_objects[m_uniqueObjectID] = gameObject;
 		ASSERT(m_objects.at(m_uniqueObjectID) != nullptr); // fail to create
+		
 		return m_objects.at(m_uniqueObjectID);
 	}
 

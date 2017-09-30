@@ -30,7 +30,7 @@ namespace Framework
 			// how many objects in this space
 		size_t TotalObjects() const;
 			// addds an object to this space
-		GameObject* AddObject(GameObject* obj);
+		GameObject* AddObject();
 			// removes an object from this space
 		void RemoveObject(const int id);
 			// gets all objects in this space
