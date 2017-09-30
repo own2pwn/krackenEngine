@@ -3,6 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# User Specific
+
+# Juan Ramos
+clocCodeCount.txt
+cloc.exe
+clocJuan.bat
+clocJuanFiles.txt
+clocLanguageDefinitions.txt
+
 # User-specific files
 *.suo
 *.user

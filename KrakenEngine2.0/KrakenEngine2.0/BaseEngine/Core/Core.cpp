@@ -67,6 +67,7 @@ namespace Framework
 			std::cout << m_FPS << std::endl;
 
 			MetaTypesMap map = AllMetaTypes::Get();
+			break;
 		}
 
 	}

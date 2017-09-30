@@ -39,8 +39,6 @@ namespace mrk
         }
 
         logicalDevice.destroySwapchainKHR(swapChain_);
-
-        logicalDevice.destroyRenderPass(renderPass_);
     }
 
     void Swapchain::createMRKSwapChain()
@@ -448,7 +446,11 @@ namespace mrk
         renderBeginPassInfo_(createRenderPassInfo())
     {
 		(void)info;
-        createMRKSwapChain();
+        createSwapChain();
+        createImageViews();
+        createDepthResources();
+        createRenderPass();
+        createFrameBuffers();
     }
 
     /**
@@ -458,6 +460,8 @@ namespace mrk
     Swapchain::~Swapchain()
 	{
         cleanUp();
+
+        g_graphicsSystemSingleton.device_.logicalDevice_.destroyRenderPass(renderPass_);
 	}
 
     /**
@@ -477,12 +481,13 @@ namespace mrk
         presentMode_ = chooseSwapPresentMode();
         maxImageCount_ = chooseMaxImageCount();
         depthFormat_ = g_graphicsSystemSingleton.device_.findDepthFormat();
-
         reCreateDepthResources();
-
         renderBeginPassInfo_ = createRenderPassInfo();
 
-        createMRKSwapChain();
+        createSwapChain();
+        createImageViews();
+        createDepthResources();
+        createFrameBuffers();
     }
 
     /**

@@ -76,6 +76,11 @@ namespace mrk
         return windowSize;
     }
 
+	GLFWwindow * WindowSystem::getWindow() const
+	{
+		return _window;
+	}
+
 	vk::SurfaceKHR WindowSystem::createSurface(vk::Instance const& instance) const
 	{
 		VkSurfaceKHR surf = {};

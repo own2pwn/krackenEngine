@@ -18,6 +18,7 @@ namespace Framework
 		return &spaceFactory;
 	}
 
+
 	void SpaceFactory::Initialize()
 	{
 		for (auto space : m_spaces)
@@ -30,7 +31,7 @@ namespace Framework
 	{
 		for (auto space : m_spaces)
 		{
-			space.second->Update();
+			space.second->Update(dt);
 		}
 	}
 
@@ -42,40 +43,40 @@ namespace Framework
 			delete space.second;
 		}
 		m_spaces.clear();
-		m_totalSpaces = 0;
 	}
 
-	ObjectFactory* SpaceFactory::AddSpace(std::string name)
+	Space* SpaceFactory::AddSpace(std::string name)
 	{
-		m_totalSpaces++;
-		m_spaces[m_totalSpaces] = new ObjectFactory(name);
-		ASSERT(m_spaces.at(m_totalSpaces) != nullptr); // fail to create
-		return m_spaces.at(m_totalSpaces);
+		m_uniqueFactoryID++;
+		m_spaces[m_uniqueFactoryID] = new Space(name);
+		ASSERT(m_spaces.at(m_uniqueFactoryID) != nullptr); // fail to create
+		return m_spaces.at(m_uniqueFactoryID);
 	}
 
-	unsigned int SpaceFactory::Size() const
+	size_t SpaceFactory::Size() const
 	{
-		return m_totalSpaces;
+		return m_spaces.size();
 	}
 
-	std::unordered_map<unsigned int, ObjectFactory*> SpaceFactory::GetSpaces()
+	std::unordered_map<unsigned int, Space*>* SpaceFactory::GetSpaces()
 	{
-		return m_spaces;
+		return &m_spaces;
 	}
 
-	ObjectFactory* SpaceFactory::GetSpace(unsigned int id)
+	Space* SpaceFactory::GetSpace(unsigned int id)
 	{
-		ObjectFactory* spaceInst = nullptr;
-		if (m_spaces.find(id) != m_spaces.end())
+#if _DEBUG
+		if (m_spaces.find(id) == m_spaces.end())
 		{
-			spaceInst = m_spaces.at(id);
+			return nullptr;
 		}
-		return spaceInst;
+#endif
+		return m_spaces.at(id);
 	}
 
-	SpaceFactory::SpaceFactory() : m_totalSpaces(0)
+	SpaceFactory::SpaceFactory() : m_uniqueFactoryID(0)
 	{
-		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, ObjectFactory*);
+		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, Space*);
 		REGISTER_TYPE(SpaceFactory);
 		ADD_MEMBER(SpaceFactory, m_spaces);
 	}

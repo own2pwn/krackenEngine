@@ -1,18 +1,26 @@
 /******************************************************************************/
 /*!
-\file   GameObject.cpp
+\file   UniqueID.h
 \author Aleksey Perfilev
 \par    Copyright 2017, Digipen Institute of Technology
 \brief
-Implementation of GameObject
+Unique ID generator by type
 */
 /******************************************************************************/
-#include "../../Precompiled.h"
+#ifndef UNIQUE_ID_H
+#define UNIQUE_ID_H
 
 namespace Framework
 {
-	void GameObject::ClearComponents()
+	template <typename TYPE>
+	class UniqueID
 	{
+		static int AssignID()
+		{
+			static int id = 0;
+			return ++id;
+		}
+	};
 
-	}
 } // Framework
+#endif
