@@ -224,7 +224,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Descriptor.h" />
+    <ClInclude Include="MRKDescriptor.h" />
     <ClInclude Include="MRKModel.h" />
     <ClInclude Include="MRKDebugCallback.h" />
     <ClInclude Include="MRKGraphicsSystem.h" />
@@ -241,7 +241,7 @@
     <ClInclude Include="MRKWindowSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Descriptor.cpp" />
+    <ClCompile Include="MRKDescriptor.cpp" />
     <ClCompile Include="MRKModel.cpp" />
     <ClCompile Include="MRKDebugCallback.cpp" />
     <ClCompile Include="MRKGraphicsSystem.cpp" />

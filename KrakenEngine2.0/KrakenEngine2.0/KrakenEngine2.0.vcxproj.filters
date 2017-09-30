@@ -12,7 +12,6 @@
     <ClCompile Include="Tools\String\String.cpp" />
     <ClCompile Include="BaseEngine\Core\Core.cpp" />
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
-    <ClCompile Include="Systems\Factory\ObjectFactory.cpp" />
     <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
     <ClCompile Include="BaseEngine\Reflection\Function.cpp" />
     <ClCompile Include="BaseEngine\Reflection\MetaType.cpp" />
@@ -20,6 +19,8 @@
     <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
     <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
     <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="Systems\Factory\Space.cpp" />
+    <ClCompile Include="Systems\Factory\GameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -30,7 +31,6 @@
     <ClInclude Include="BaseEngine\Core\Core.h" />
     <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
     <ClInclude Include="Tools\TextFormator\TextFormator.h" />
-    <ClInclude Include="Systems\Factory\ObjectFactory.h" />
     <ClInclude Include="Systems\Factory\SpaceFactory.h" />
     <ClInclude Include="BaseEngine\Reflection\Function.h" />
     <ClInclude Include="BaseEngine\Reflection\MetaFactory.h" />
@@ -41,5 +41,8 @@
     <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
     <ClInclude Include="Systems\Interface\ISystem.h" />
     <ClInclude Include="Tools\CodeTests\StringTest.h" />
+    <ClInclude Include="Tools\uniqueID\UniqueID.h" />
+    <ClInclude Include="Systems\Factory\Space.h" />
+    <ClInclude Include="Systems\Factory\GameObject.h" />
   </ItemGroup>
 </Project>

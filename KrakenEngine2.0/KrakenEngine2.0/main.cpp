@@ -36,10 +36,9 @@ int main()
 	std::string x = "hello";
 	MetaVariable var;
 	std::cout << var.Set(x, TURN_TO_STRING(x));
-
 	PRINT_TYPE_BY_STRING("std::string");
 
-	std::cout << var.Data<std::string>() << std::endl;
+	std::cout << var << std::endl;
 	std::cout << GET_TYPE_BY_STRING("int");
 	
 										  // Register a structure

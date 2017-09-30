@@ -27,6 +27,7 @@ All the includes are listed here to avoid multiple includes in any other files
 // tools
 #include "Tools/NameGenerator/NameGenerator.h"
 #include "Tools/Assert/Assert.h"
+#include "Tools/uniqueID/UniqueID.h"
 #include "Tools/String/String.h"
 #include "Tools/TextFormator/TextFormator.h"
 
@@ -42,7 +43,8 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "BaseEngine/Core/Core.h"
 
 // systems
-#include "Systems/Factory/ObjectFactory.h"
+#include "Systems/Factory/GameObject.h"
+#include "Systems/Factory/Space.h"
 #include "Systems/Factory/SpaceFactory.h"
 
 

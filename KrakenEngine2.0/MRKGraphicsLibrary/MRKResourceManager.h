@@ -11,7 +11,7 @@
  * This is done in the Visual Studio pre-processor settings
  */
 #include "glm/glm.hpp"
-#include "Descriptor.h"
+#include "MRKDescriptor.h"
 
 namespace mrk
 {
