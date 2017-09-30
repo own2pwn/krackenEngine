@@ -156,6 +156,8 @@
     <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
     <ClCompile Include="Systems\Factory\Space.cpp" />
     <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
     <ClCompile Include="Tools\String\String.cpp" />
     <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
@@ -176,6 +178,8 @@
     <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Interface\ISystem.h" />
     <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Script.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
     <ClInclude Include="Tools\Assert\Assert.h" />
     <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
     <ClInclude Include="Tools\String\String.h" />

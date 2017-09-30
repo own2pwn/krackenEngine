@@ -11,7 +11,14 @@ Implementation of GameObject
 
 namespace Framework
 {
-	GameObject::GameObject() : m_ID(0) {}
+	GameObject::GameObject() : m_ID(0)
+	{		
+		REGISTER_UNORDERED_MAP_OF_TYPE(int, Component*);
+		REGISTER_TYPE(GameObject);
+		ADD_MEMBER(GameObject, m_ID);
+		ADD_MEMBER(GameObject, m_name);
+		ADD_MEMBER(GameObject, m_components);
+	}
 
 	void GameObject::ClearComponents()
 	{

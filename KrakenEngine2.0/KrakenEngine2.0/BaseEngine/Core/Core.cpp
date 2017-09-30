@@ -31,14 +31,17 @@ namespace Framework
 		// AddSystem(Windows::Get());
 		// AddSystem(GameLogic::Get()); // next semester
 		// AddSystem(Graphics::Get());
-		// AddSystem(Scripting::Get());
+		 AddSystem(ScriptingSystem::Get());
 		// AddSystem(EventSystem::Get());
 		// AddSystem(MenuSystem::Get());
 		// AddSystem(Physics::Get());
 		// AddSystem(ParticleSystem::Get());
 		 AddSystem(SpaceFactory::Get()); // factory have to be last due update function in it
 		// AddSystem(Serialization::Get()); // have to go after serialization
-
+		for (auto system : m_Systems)
+		{
+			system->Initialize();
+		}
 	}
 
 	void Core::Run()
@@ -67,7 +70,7 @@ namespace Framework
 			std::cout << m_FPS << std::endl;
 
 		//	MetaTypesMap map = AllMetaTypes::Get();
-			//break;
+			break;
 		}
 
 	}

@@ -49,6 +49,10 @@ namespace Framework
 #define ADD_MEMBER(TYPE, MEMBER) \
 	 GET_TYPE_BY_TEMPLATE(TYPE)->AddMember(new MetaMember(#MEMBER, GET_OFFSET(TYPE, MEMBER), GET_TYPE_BY_TEMPLATE(GET_MEMBER_TYPE(TYPE, MEMBER))))
 
+	// example of how to access data out of MetaMember (for now use this line below and modify names)
+	// MetaVariable name_for_new_metavariable("member_name", ((member_type*)((char*)Meta_Variable_Name.GetRowData() + GET_OFFSET(Type_of_class_in_which_the_member_in, member_name))), GET_TYPE_BY_STRING("class_name_again"));
+	
+
 	// gets the type of a member
 #define GET_MEMBER_TYPE(TYPE, MEMBER) \
 	RemoveQualifier<decltype(TYPE::MEMBER)>::Type

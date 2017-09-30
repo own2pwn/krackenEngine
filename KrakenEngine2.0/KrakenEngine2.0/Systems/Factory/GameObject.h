@@ -42,11 +42,19 @@ namespace Framework
 ///////////////////////////////////////////
 	template <typename T>
 	void GameObject::AddComponent()
-	{
+	{	
+			// getting unque id corresponding to this type of component
 		int id = ComponentID<T>::GetID();
 
-		m_components[id] = new T;
-		ASSERT(m_components.at(id) != nullptr);
+			// creation
+		Component* component = new T;
+		ASSERT(component != nullptr); // did not allocate
+		m_components[id] = component;
+
+			// initialization
+		component->SetID(id);
+		component->SetOwner(this);
+		component->Initialize();
 
 	}
 
