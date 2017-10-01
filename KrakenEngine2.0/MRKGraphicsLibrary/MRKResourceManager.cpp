@@ -18,7 +18,7 @@ namespace mrk
 
     void ResourceManager::load(loadInfo const& info)
     {
-        houseModel_.load(info.houseModelPath, info.houseModelTexturePath);
+        houseModel_.load(info.houseModelPath);
 
         vertexShader_ = loadShaderModule(info.vertexShaderPath);
         fragmentShader_ = loadShaderModule(info.fragmentShaderPath);
@@ -45,7 +45,7 @@ namespace mrk
             vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, 
             vk::MemoryPropertyFlagBits::eDeviceLocal, 
             vk::ImageAspectFlagBits::eColor, 
-            houseModel_.mTexturePath };
+            info.houseModelTexturePath};
 
 		houseTexture_.info_ = createInfo;
 		houseTexture_.createImage(createInfo);

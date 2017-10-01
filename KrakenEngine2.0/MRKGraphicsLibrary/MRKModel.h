@@ -93,7 +93,7 @@ class Model
 public:
 	std::vector<Mesh> meshes;
 
-    void load(char const * modelPath, char const * texturePath);
+    void load(char const * modelPath);
     const char * mTexturePath;
 
     // JUAN IDEALLY THESE SHOULD BE ARRAYS IN THE FUTURE NOT VECTORS
@@ -103,6 +103,7 @@ private:
 	void processNode(aiNode const * node, aiScene const * scene);
 	Mesh processMesh(aiMesh const * mesh, aiScene const * scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+public:
 	std::vector<Texture> loadedTextures;
 };
 

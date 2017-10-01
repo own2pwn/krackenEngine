@@ -30,9 +30,8 @@ namespace std
 
 namespace mrk
 {
-	void Model::load(char const* modelPath, char const* texturePath)
+	void Model::load(char const* modelPath)
 	{
-		mTexturePath = texturePath;
 		std::unordered_map<mrk::Vertex, uint32_t> uniqueVertices = {};
 
 #ifdef ASSIM
@@ -46,44 +45,6 @@ namespace mrk
 
 		processNode(scene->mRootNode, scene);
 
-		aiMesh *mesh = scene->mMeshes[0]; //assuming you only want the first mesh
-
-		for (unsigned i = 0; i < mesh->mNumFaces; i++)
-		{
-			const aiFace& face = mesh->mFaces[i];
-
-			for (int j = 0; j<3; j++)
-			{
-				Vertex vertex = {};
-
-				aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[j]];
-				aiVector3D normal = mesh->mNormals[face.mIndices[j]];
-				aiVector3D pos = mesh->mVertices[face.mIndices[j]];
-
-				vertex.pos =
-				{
-					pos.x,
-					pos.y,
-					pos.z
-				};
-
-				vertex.texCoord = {
-					uv.x,
-					// The problem is that the origin of texture coordinates in Vulkan is the 
-					// top-left corner, whereas the OBJ format assumes the bottom-left corner. 
-					// Solve this by flipping the vertical component of the texture coordinates:
-					1.0f - uv.y
-				};
-
-				if (uniqueVertices.count(vertex) == 0)
-				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(meshes[0].vertices.size());
-					meshes[0].vertices.push_back(vertex);
-				}
-
-				meshes[0].indices.push_back(uniqueVertices[vertex]);
-			}
-		}
 #else
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -190,7 +151,7 @@ namespace mrk
 			if(mesh->mTextureCoords[0])
 			{
 				vertex.texCoord.x = mesh->mTextureCoords[0][i].x;
-				vertex.texCoord.y = mesh->mTextureCoords[0][i].y;
+				vertex.texCoord.y = 1.0f - mesh->mTextureCoords[0][i].y;
 			}
 
 			processedMesh.vertices.push_back(vertex);
@@ -221,9 +182,9 @@ namespace mrk
 		return processedMesh;
 	}
 
-	//TODO finish implementing this shit mother fucker!
 	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
+		aiString dir("Assets/textures");
 		std::vector<Texture> textures;
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -231,11 +192,13 @@ namespace mrk
 			aiString str;
 			mat->GetTexture(type, i, &str);
 
+			dir.Append(str.C_Str());
+
 			bool skip = false;
 
 			for (unsigned int j = 0; j < loadedTextures.size(); j++)
 			{
-				if (std::strcmp(loadedTextures[j].path.C_Str(), str.C_Str()) == 0)
+				if (std::strcmp(loadedTextures[j].path.C_Str(), dir.C_Str()) == 0)
 				{
 					textures.push_back(loadedTextures[j]);
 					skip = true;
@@ -247,7 +210,7 @@ namespace mrk
 			{   // if texture hasn't been loaded already, load it
 				Texture texture;
 				texture.type = typeName;
-				texture.path = str;
+				texture.path = dir;
 				textures.push_back(texture);
 				loadedTextures.push_back(texture); // add to loaded textures
 			}
