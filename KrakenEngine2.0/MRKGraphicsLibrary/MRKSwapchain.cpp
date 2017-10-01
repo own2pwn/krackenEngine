@@ -24,7 +24,7 @@ namespace mrk
 {
     void Swapchain::cleanUp()
     {
-        auto &logicalDevice = g_graphicsSystemSingleton.device_.logicalDevice_; // Just to write less code
+        auto &logicalDevice = g_graphicsSystemSingleton.device.logicalDevice_; // Just to write less code
 
 		depthImage_.destroy();
 
@@ -52,8 +52,8 @@ namespace mrk
 
     void Swapchain::createSwapChain()
     {
-        auto const &device = g_graphicsSystemSingleton.device_;
-        auto const &surface = g_graphicsSystemSingleton.surface_;
+        auto const &device = g_graphicsSystemSingleton.device;
+        auto const &surface = g_graphicsSystemSingleton.surface;
 
         // If true then the family supports graphics and presentation
         // http://vulkan.gpuinfo.org/displayreport.php?id=1706#queuefamilies
@@ -109,7 +109,7 @@ namespace mrk
         {
             viewInfo.image = image;
 
-            MRK_CATCH(tempView = g_graphicsSystemSingleton.device_.logicalDevice_.createImageView(viewInfo))
+            MRK_CATCH(tempView = g_graphicsSystemSingleton.device.logicalDevice_.createImageView(viewInfo))
 
             swapChainImageViews_.push_back(tempView);
         }
@@ -126,7 +126,7 @@ namespace mrk
 
 		// transition its layout
 		depthImage_.transitionLayout(depthFormat_, vk::ImageLayout::eUndefined, vk::ImageLayout::eDepthStencilAttachmentOptimal,
-			                   g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+			                   g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
     }
 
     void Swapchain::reCreateDepthResources()
@@ -202,7 +202,7 @@ namespace mrk
             .setAttachmentCount(static_cast<uint32_t>(attachments.size()))
             .setPAttachments(attachments.data());
 
-        MRK_CATCH(renderPass_ = g_graphicsSystemSingleton.device_.logicalDevice_.createRenderPass(renderPassCreateInfo));
+        MRK_CATCH(renderPass_ = g_graphicsSystemSingleton.device.logicalDevice_.createRenderPass(renderPassCreateInfo));
 
 		renderBeginPassInfo_.renderPass = renderPass_;
     }
@@ -225,7 +225,7 @@ namespace mrk
                 .setPAttachments(attachements.data())
                 .setLayers(1);
 
-            MRK_CATCH(swapchainFramebuffers_[i] = g_graphicsSystemSingleton.device_.logicalDevice_.createFramebuffer(framebufferInfo))
+            MRK_CATCH(swapchainFramebuffers_[i] = g_graphicsSystemSingleton.device.logicalDevice_.createFramebuffer(framebufferInfo))
         }
     }
 
@@ -238,8 +238,8 @@ namespace mrk
     Swapchain::SwapChainSupportDetails Swapchain::getSwapChainSupportDetails() const
     {
         SwapChainSupportDetails details;
-        auto const & device = g_graphicsSystemSingleton.device_;
-        auto const & surface = g_graphicsSystemSingleton.surface_;
+        auto const & device = g_graphicsSystemSingleton.device;
+        auto const & surface = g_graphicsSystemSingleton.surface;
 
         device.physicalDevice_.getSurfaceCapabilitiesKHR(surface, &details.capabilities);
 
@@ -316,7 +316,7 @@ namespace mrk
         // This means the current extent has the ability to be smaller or bigger than it currently is
         if (capabilities.currentExtent.width == std::numeric_limits<uint32_t>::max())
         {
-            glm::ivec2 windowSize = g_graphicsSystemSingleton.windowSystem_.getWindowSize();
+            glm::ivec2 windowSize = g_graphicsSystemSingleton.windowSystem.getWindowSize();
             actualExtent = vk::Extent2D{ static_cast<uint32_t>(windowSize.x), static_cast<uint32_t>(windowSize.y) };
 
             // The max and min functions are used here to clamp the value of WIDTH and HEIGHT between the allowed minimum and 
@@ -435,7 +435,7 @@ namespace mrk
         swapChainExtent_(chooseSwapExtent()),
         presentMode_(chooseSwapPresentMode()),
         maxImageCount_(chooseMaxImageCount()),
-        depthFormat_(g_graphicsSystemSingleton.device_.findDepthFormat()),
+        depthFormat_(g_graphicsSystemSingleton.device.findDepthFormat()),
 		depthImage_({ swapChainExtent_.width,
 				 swapChainExtent_.height,
 				 depthFormat_,
@@ -461,7 +461,7 @@ namespace mrk
 	{
         cleanUp();
 
-        g_graphicsSystemSingleton.device_.logicalDevice_.destroyRenderPass(renderPass_);
+        g_graphicsSystemSingleton.device.logicalDevice_.destroyRenderPass(renderPass_);
 	}
 
     /**
@@ -480,7 +480,7 @@ namespace mrk
         swapChainExtent_ = chooseSwapExtent();
         presentMode_ = chooseSwapPresentMode();
         maxImageCount_ = chooseMaxImageCount();
-        depthFormat_ = g_graphicsSystemSingleton.device_.findDepthFormat();
+        depthFormat_ = g_graphicsSystemSingleton.device.findDepthFormat();
         reCreateDepthResources();
         renderBeginPassInfo_ = createRenderPassInfo();
 

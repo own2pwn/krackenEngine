@@ -23,7 +23,7 @@ namespace mrk
 			.setSharingMode(vk::SharingMode::eExclusive);
 
 		// device_ is coming from the resource
-		MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+		MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 		vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 		this->allocateMemory(memReqs, properties);
@@ -41,7 +41,7 @@ namespace mrk
 	 */
 	void Buffer::destroy()
 	{
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroyBuffer(buffer_);
+		g_graphicsSystemSingleton.device.logicalDevice_.destroyBuffer(buffer_);
 		this->freeMemory();
 	}
 
@@ -72,7 +72,7 @@ namespace mrk
 				.setSharingMode(vk::SharingMode::eExclusive);
 
 			// device_ is coming from the resource
-			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 			vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 			this->allocateMemory(memReqs, vk::MemoryPropertyFlagBits::eDeviceLocal);
@@ -135,7 +135,7 @@ namespace mrk
 				.setSharingMode(vk::SharingMode::eExclusive);
 
 			// device_ is coming from the resource
-			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 			vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 			this->allocateMemory(memReqs, vk::MemoryPropertyFlagBits::eDeviceLocal);

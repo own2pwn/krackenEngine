@@ -15,13 +15,16 @@ namespace mrk
     class DebugCallback
     {
     public:
-        explicit DebugCallback(vk::Instance const & instance);
+        explicit DebugCallback(vk::Instance instance);
+        DebugCallback() = default;
+
         ~DebugCallback();
+        DebugCallback &operator=(DebugCallback const &other);
     private:
         vk::DebugReportCallbackEXT createCallback() const;
 
-        vk::Instance const & _instance;
-        vk::DebugReportCallbackEXT const _callback;
+        vk::Instance _instance;
+        vk::DebugReportCallbackEXT _callback;
     };
 }
 

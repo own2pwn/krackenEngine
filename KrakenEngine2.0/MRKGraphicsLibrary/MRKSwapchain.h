@@ -42,6 +42,8 @@ namespace mrk
 		*/
 		explicit Swapchain(createInfo const &info);
 
+        Swapchain() = default;
+
 		/**
 		* \brief
 		* If the window size changes or goes to a different monitor, etc.

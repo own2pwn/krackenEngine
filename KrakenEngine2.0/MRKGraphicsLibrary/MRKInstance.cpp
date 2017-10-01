@@ -12,7 +12,7 @@ namespace mrk
 {
 Instance::Instance(createInfo const& info) : mInstance(createInstance(info)) 
 #ifdef _DEBUG
-    , _callback(static_cast<vk::Instance>(mInstance))
+    , _callback(mInstance)
 #endif
 {
 }
@@ -22,7 +22,18 @@ Instance::operator vk::Instance const &() const
     return mInstance;
 }
 
-vk::Instance Instance::createInstance(createInfo const & info) const
+Instance& Instance::operator=(Instance&& other) noexcept
+{
+    mInstance = other.mInstance;
+
+#ifdef _DEBUG
+    this->_callback = other._callback;
+#endif
+
+    return *this;
+}
+
+    vk::Instance Instance::createInstance(createInfo const & info) const
 {
     checkValidationLayers();
     printOutAvailableExtensions();
@@ -35,7 +46,7 @@ vk::Instance Instance::createInstance(createInfo const & info) const
 		.setApiVersion(VK_API_VERSION_1_0)
 		.setPNext(nullptr);
 
-	std::vector<const char*> extensions = info.windowSystem.requiredExtensions_;
+	std::vector<const char*> extensions = info.windowSystem.mRequiredExtensions;
     if (validationLayersAreEnabled())
     {
         extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);

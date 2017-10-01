@@ -35,12 +35,14 @@ public:
     };
 
     explicit Instance(createInfo const & info);
+    Instance() = default;
     explicit operator vk::Instance const &() const;
+    Instance& operator=(Instance && other) noexcept;
 
-    vk::Instance const mInstance;
+    vk::Instance mInstance;
 private:
 #ifdef _DEBUG
-    mrk::DebugCallback const _callback;
+    mrk::DebugCallback _callback;
 #endif
 
     /**

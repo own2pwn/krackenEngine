@@ -4,27 +4,24 @@
 
 namespace mrk
 {
-    ResourceManager::ResourceManager() : 
-        houseUniformBuffer_(sizeof(UniformBufferObject), vk::BufferUsageFlagBits::eUniformBuffer, 
-            vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent)
-    {
-    }
-
     ResourceManager::~ResourceManager()
     {
-        g_graphicsSystemSingleton.device_.logicalDevice_.destroyShaderModule(vertexShader_);
-        g_graphicsSystemSingleton.device_.logicalDevice_.destroyShaderModule(fragmentShader_);
+        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(vertexShader_);
+        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(fragmentShader_);
     }
 
     void ResourceManager::load(loadInfo const& info)
     {
+        houseUniformBuffer_ = mrk::Buffer(sizeof(UniformBufferObject), vk::BufferUsageFlagBits::eUniformBuffer,
+            vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+
         houseModel_.load(info.houseModelPath, info.houseModelTexturePath);
 
         vertexShader_ = loadShaderModule(info.vertexShaderPath);
         fragmentShader_ = loadShaderModule(info.fragmentShaderPath);
 
-        houseVertexBuffer_.createVertexBuffer(houseModel_.vertices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
-        houseIndexBuffer_.createIndexBuffer(houseModel_.indices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+        houseVertexBuffer_.createVertexBuffer(houseModel_.vertices, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
+        houseIndexBuffer_.createIndexBuffer(houseModel_.indices, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
 
         mrk::Image::CreateInfo createInfo = { 
             0, 0, 
@@ -99,7 +96,7 @@ namespace mrk
 
         vk::ShaderModule shaderModule;
 
-        MRK_CATCH(shaderModule = g_graphicsSystemSingleton.device_.logicalDevice_.createShaderModule(createInfo))
+        MRK_CATCH(shaderModule = g_graphicsSystemSingleton.device.logicalDevice_.createShaderModule(createInfo))
 
         return shaderModule;
     }

@@ -32,6 +32,18 @@ namespace mrk
 	{
 	}
 
+    Device& Device::operator=(Device&& other) noexcept
+    {
+        physicalDevice_ = other.physicalDevice_;
+        queueFamilyIndices_ = other.queueFamilyIndices_;
+        physicalDeviceProperties_ = other.physicalDeviceProperties_;
+        physicalDeviceMemoryProperties_ = other.physicalDeviceMemoryProperties_;
+        physicalDeviceFeatures_ = other.physicalDeviceFeatures_;
+        logicalDevice_ = other.logicalDevice_;
+
+        return *this;
+    }
+
     Device::~Device()
 	{
 		logicalDevice_.destroy();

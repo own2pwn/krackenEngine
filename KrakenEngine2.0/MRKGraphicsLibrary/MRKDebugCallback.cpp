@@ -47,14 +47,22 @@ namespace mrk
 {
 VKAPI_ATTR VkBool32 VKAPI_CALL messageCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t srcObject, size_t location, int32_t msgCode, const char* pLayerPrefix, const char* pMsg, void* pUserData);
 
-DebugCallback::DebugCallback(vk::Instance const & instance) : _instance(instance), _callback(createCallback()) {}
+DebugCallback::DebugCallback(vk::Instance instance) : _instance(instance), _callback(createCallback()) {}
 
 DebugCallback::~DebugCallback()
 {
-    g_graphicsSystemSingleton.instance_.mInstance.destroyDebugReportCallbackEXT(_callback);
+    g_graphicsSystemSingleton.instance.mInstance.destroyDebugReportCallbackEXT(_callback);
 }
 
-vk::DebugReportCallbackEXT DebugCallback::createCallback() const
+DebugCallback& DebugCallback::operator=(DebugCallback const& other)
+{
+    _instance = other._instance;
+    _callback = other._callback;
+    
+    return *this;
+}
+
+    vk::DebugReportCallbackEXT DebugCallback::createCallback() const
 {
 #ifdef VK_EXT_debug_report
     pfn_vkCreateDebugReportCallbackEXT = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(vkGetInstanceProcAddr(_instance, "vkCreateDebugReportCallbackEXT"));
