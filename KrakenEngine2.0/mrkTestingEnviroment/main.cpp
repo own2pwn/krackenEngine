@@ -15,5 +15,7 @@ int main()
 		mrk::Draw();
         --i;
 	}
+    mrk::StopDrawing();
 
+    mrk::CleanUp();
 }

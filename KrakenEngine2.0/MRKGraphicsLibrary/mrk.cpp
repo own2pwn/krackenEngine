@@ -12,6 +12,7 @@
 
 namespace mrk
 {
+
     GraphicsSystem g_graphicsSystemSingleton;
 
     void initializeGraphicsSystem(GraphicsSystemCreateInfo  const & createInfo)
@@ -161,7 +162,6 @@ namespace mrk
 
     void CleanUp()
     {
-        g_graphicsSystemSingleton.~GraphicsSystem();
         WindowSystem::clean();
     }
 
@@ -169,4 +169,5 @@ namespace mrk
 	{
 		return g_graphicsSystemSingleton.windowSystem.getWindow();
 	}
+
 }

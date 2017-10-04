@@ -29,5 +29,6 @@ namespace mrk
     void LoadResources();
     void Draw();
     void StopDrawing();
+    void CleanUp();
 	GLFWwindow * getWindow();
 }
