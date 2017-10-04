@@ -30,8 +30,8 @@ namespace mrk
 
     void GraphicsSystem::loadResources()
     {
-        char const * const MODEL_PATH = "Assets/models/chalet.obj";
-        char const * const TEXTURE_PATH = "Assets/textures/chalet.jpg";
+        char const * const MODEL_PATH = "Assets/models/barrel.obj";
+        char const * const TEXTURE_PATH = "Assets/textures/barrelUV.01.jpg";
         char const * const VERTEX_SHADER_PATH = "Assets/shaders/vert.spv";
         char const * const FRAGMENT_SHADER_PATH = "Assets/shaders/frag.spv";
 		
@@ -55,7 +55,7 @@ namespace mrk
 
         UniformBufferObject ubo;
         // Third parameter: Rotating about z axis
-        ubo.model = glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::translate(glm::mat4(1), glm::vec3(-3.0f,-3.0f,-3.0f)) * glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), // cameraPosition
             glm::vec3(0.0f, 0.0f, 0.0f), // cameraTarget
             glm::vec3(0.0f, 0.0f, 1.0f) // cameraUp

@@ -184,7 +184,7 @@ namespace mrk
 
 	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
-		aiString dir("Assets/textures");
+		aiString dir("Assets/textures/");
 		std::vector<Texture> textures;
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
