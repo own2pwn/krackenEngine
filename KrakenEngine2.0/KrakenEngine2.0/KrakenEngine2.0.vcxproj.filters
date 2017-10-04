@@ -21,6 +21,12 @@
     <ClCompile Include="Precompiled.cpp" />
     <ClCompile Include="Systems\Factory\Space.cpp" />
     <ClCompile Include="Systems\Factory\GameObject.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Component.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
+    <ClCompile Include="Systems\Physics\Physics.cpp" />
+    <ClCompile Include="Systems\Input\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -44,5 +50,11 @@
     <ClInclude Include="Tools\uniqueID\UniqueID.h" />
     <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Factory\GameObject.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Component.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Script.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
+    <ClInclude Include="Systems\Physics\Physics.h" />
+    <ClInclude Include="Systems\Input\Input.h" />
   </ItemGroup>
 </Project>

@@ -113,10 +113,19 @@ int main()
 	ADD_MEMBER(C, map);
 	
 	C c;
+	B b;
+	MetaVariable varB;
 	MetaVariable varC;
+	varB.Set(b, "b");
 	varC.Set(c, "c");
-
 	std::cout << varC;
+	
+	std::cout << "BLAAAAHHHH " << std::endl;
+	// example of how to get data out of member in a class
+	MetaVariable member_b("b", ((float*)((char*)varC.GetRowData() + GET_OFFSET(C, b))), GET_TYPE_BY_STRING("B"));
+	std::cout << member_b << std::endl;
+	
+
 
 	std::ofstream out("test.txt", std::ofstream::out);
 	ASSERT(out.is_open());	
