@@ -28,13 +28,13 @@ namespace Framework
 		m_MetaCore.Set(Get(), "m_MetaCore");
 
 		// AddSystem(AudioSystem::Get());
-		// AddSystem(Windows::Get());
+		// AddSystem(Input::Get());
 		// AddSystem(GameLogic::Get()); // next semester
 		// AddSystem(Graphics::Get());
 		 AddSystem(ScriptingSystem::Get());
 		// AddSystem(EventSystem::Get());
 		// AddSystem(MenuSystem::Get());
-		// AddSystem(Physics::Get());
+		 AddSystem(Physics::Get());
 		// AddSystem(ParticleSystem::Get());
 		 AddSystem(SpaceFactory::Get()); // factory have to be last due update function in it
 		// AddSystem(Serialization::Get()); // have to go after serialization
@@ -70,7 +70,7 @@ namespace Framework
 			std::cout << m_FPS << std::endl;
 
 		//	MetaTypesMap map = AllMetaTypes::Get();
-			break;
+			//break;
 		}
 
 	}
