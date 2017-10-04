@@ -464,6 +464,33 @@ namespace mrk
         g_graphicsSystemSingleton.device.logicalDevice_.destroyRenderPass(renderPass_);
 	}
 
+    mrk::Swapchain & Swapchain::operator=(mrk::Swapchain && other) noexcept
+    {
+        swapChainSupport_ = other.swapChainSupport_;
+        swapChainSurfaceFormat_ = other.swapChainSurfaceFormat_;
+        swapChainExtent_ = other.swapChainExtent_;
+        presentMode_ = other.presentMode_;
+        maxImageCount_ = other.maxImageCount_;
+
+        swapChain_ = other.swapChain_;
+        other.swapChain_ = nullptr;
+
+        swapChainImages_ = std::move(other.swapChainImages_);
+        swapChainImageViews_ = std::move(other.swapChainImageViews_);
+
+        renderPass_ = other.renderPass_;
+        other.renderPass_ = nullptr;
+
+        swapchainFramebuffers_ = std::move(other.swapchainFramebuffers_);
+
+        depthFormat_ = other.depthFormat_;
+        depthImage_ = std::move(other.depthImage_);
+
+        renderBeginPassInfo_ = other.renderBeginPassInfo_;
+
+        return *this;
+    }
+
     /**
      * \brief 
      * If the window size changes or goes to a different monitor, etc.

@@ -41,6 +41,9 @@ namespace mrk
         physicalDeviceFeatures_ = other.physicalDeviceFeatures_;
         logicalDevice_ = other.logicalDevice_;
 
+        other.physicalDevice_ = nullptr;
+        other.logicalDevice_ = nullptr;
+
         return *this;
     }
 

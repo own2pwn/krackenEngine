@@ -22,12 +22,17 @@ Instance::operator vk::Instance const &() const
     return mInstance;
 }
 
+Instance::~Instance()
+{
+}
+
 Instance& Instance::operator=(Instance&& other) noexcept
 {
     mInstance = other.mInstance;
+    other.mInstance = nullptr;
 
 #ifdef _DEBUG
-    this->_callback = other._callback;
+    this->_callback = std::move(other._callback);
 #endif
 
     return *this;

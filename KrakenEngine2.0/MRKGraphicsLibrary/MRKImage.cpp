@@ -26,6 +26,21 @@ namespace mrk
 	{
 	}
 
+    Image& Image::operator=(Image&& other) noexcept
+    {
+        mSampler = other.mSampler;
+        mImageView = other.mImageView;
+        mImage = other.mImage;
+        mMemory = other.mMemory;
+        mSize = other.mSize;
+
+        other.mSampler = nullptr;
+        other.mImageView = nullptr;
+        other.mImage = nullptr;
+        other.mMemory = nullptr;
+
+        return *this;
+    }
 
 	Image::~Image()
 	{

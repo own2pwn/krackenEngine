@@ -60,11 +60,8 @@ namespace mrk
 		mrk::Swapchain swapChain;
         mrk::ResourceManager resourceManager;
         mrk::Pipeline pipeline;
-
 	};
 
     extern GraphicsSystem g_graphicsSystemSingleton;
-
-    void recreateWindowDependentResources(GLFWwindow* /*window*/, int width, int height);
 }
 

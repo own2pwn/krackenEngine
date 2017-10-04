@@ -41,7 +41,7 @@ namespace mrk
         graphicsQueue = device.logicalDevice_.getQueue(device.queueFamilyIndices_.graphicsFamilyIndex, 0);
         presentQueue  = device.logicalDevice_.getQueue(device.queueFamilyIndices_.presentFamilyIndex, 0);
         graphicsPool = device.createCommandPool(device.queueFamilyIndices_.graphicsFamilyIndex);
-        swapChain = mrk::Swapchain({});
+        swapChain = mrk::Swapchain(mrk::Swapchain::createInfo{});
 
         // As of now the default constructor does nothing for the resource manager or pipeline
         //resourceManager = mrk::ResourceManager();

@@ -14,6 +14,7 @@ namespace mrk
 		//functions
 		Buffer();
 		Buffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties);
+        Buffer & operator=(Buffer && other) noexcept;
 		~Buffer();
 		void destroy();
 		void createVertexBuffer(std::vector<Model::Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue);

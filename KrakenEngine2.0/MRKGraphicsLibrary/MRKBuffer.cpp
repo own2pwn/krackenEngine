@@ -30,7 +30,20 @@ namespace mrk
 		this->bindMemory(buffer_);
 	}
 
-	Buffer::~Buffer()
+    Buffer& Buffer::operator=(Buffer&& other) noexcept
+    {
+        this->buffer_ = other.buffer_;
+        other.buffer_ = nullptr;
+
+        this->mMemory = other.mMemory;
+        other.mMemory = nullptr;
+
+        this->mSize = other.mSize;
+
+        return *this;
+    }
+
+    Buffer::~Buffer()
 	{
 		if (mSize > 0)
 			destroy();

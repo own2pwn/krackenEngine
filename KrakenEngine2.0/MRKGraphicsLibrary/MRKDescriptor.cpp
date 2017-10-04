@@ -15,9 +15,9 @@ Descriptor::Descriptor(createInfo const & info) :
 
 void Descriptor::setup(createInfo const& info)
 {
-	createPool();
-	createLayout();
-	createSets(info);
+	mPool = createPool();
+	mLayout = createLayout();
+	mSet = createSets(info);
 }
 
 vk::DescriptorPool Descriptor::createPool()

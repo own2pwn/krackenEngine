@@ -19,7 +19,7 @@ namespace mrk
         DebugCallback() = default;
 
         ~DebugCallback();
-        DebugCallback &operator=(DebugCallback const &other);
+        DebugCallback &operator=(DebugCallback &&other);
     private:
         vk::DebugReportCallbackEXT createCallback() const;
 

@@ -9,7 +9,6 @@
 
 namespace mrk
 {
-
     struct WindowSystemCreateInfo
     {
         char *title;

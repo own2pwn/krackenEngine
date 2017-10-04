@@ -38,6 +38,7 @@ public:
     Instance() = default;
     explicit operator vk::Instance const &() const;
     Instance& operator=(Instance && other) noexcept;
+    ~Instance();
 
     vk::Instance mInstance;
 private:

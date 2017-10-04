@@ -51,18 +51,22 @@ DebugCallback::DebugCallback(vk::Instance instance) : _instance(instance), _call
 
 DebugCallback::~DebugCallback()
 {
-    g_graphicsSystemSingleton.instance.mInstance.destroyDebugReportCallbackEXT(_callback);
+    if (static_cast<bool>(_callback))
+    {
+        _instance.destroyDebugReportCallbackEXT(_callback);
+    }
 }
 
-DebugCallback& DebugCallback::operator=(DebugCallback const& other)
+DebugCallback& DebugCallback::operator=(DebugCallback && other)
 {
     _instance = other._instance;
     _callback = other._callback;
+    other._callback = nullptr;
     
     return *this;
 }
 
-    vk::DebugReportCallbackEXT DebugCallback::createCallback() const
+vk::DebugReportCallbackEXT DebugCallback::createCallback() const
 {
 #ifdef VK_EXT_debug_report
     pfn_vkCreateDebugReportCallbackEXT = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(vkGetInstanceProcAddr(_instance, "vkCreateDebugReportCallbackEXT"));
