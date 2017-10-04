@@ -41,8 +41,8 @@ namespace mrk
 		std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStages = { vertStageInfo, fragStageInfo };
 
 		// vertex input
-		vk::VertexInputBindingDescription bindingDescription = Model::Vertex::getBindingDescription();
-		std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions = Model::Vertex::getAttributeDescriptions();
+		vk::VertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
+		std::array<vk::VertexInputAttributeDescription, 2> attributeDescriptions = Vertex::getAttributeDescriptions();
 
 		vk::PipelineVertexInputStateCreateInfo vertexInputInfo = vk::PipelineVertexInputStateCreateInfo()
 			.setVertexBindingDescriptionCount(1)
@@ -273,7 +273,7 @@ namespace mrk
 
                 buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
-                buffer.drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
+                buffer.drawIndexed(static_cast<uint32_t>(indexBuffer.mSize), 1, 0, 0, 0);
 
 			buffer.endRenderPass();
 

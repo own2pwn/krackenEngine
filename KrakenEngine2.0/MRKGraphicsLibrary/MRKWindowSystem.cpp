@@ -97,7 +97,7 @@ namespace mrk
 
 	GLFWwindow * WindowSystem::getWindow() const
 	{
-		return window_;
+		return _window;
 	}
 
 	vk::SurfaceKHR WindowSystem::createSurface(vk::Instance const& instance) const
@@ -132,3 +132,9 @@ namespace mrk
 }
 
 
+
+    }
+
+	GLFWwindow * WindowSystem::getWindow() const
+	{
+		return window_;
