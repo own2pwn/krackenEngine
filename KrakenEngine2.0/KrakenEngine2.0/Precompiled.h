@@ -18,8 +18,10 @@ All the includes are listed here to avoid multiple includes in any other files
 #include <direct.h> // mkdir in serialization
 #include <ctime>	// used by FPS in Core
 #include <chrono>	// used for FPS
+//#include <Xinput.h> // Controller input
 
 ///////////////////////// other files ////////////////
+#include "include/physx/PxPhysicsAPI.h" // PhysX library
 
 ///////////////////////// our files //////////////////
 /////// care of the order they are included //////////
@@ -43,6 +45,8 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "BaseEngine/Core/Core.h"
 
 // systems
+					// Input System
+#include "Systems/Input/Input.h"
 					// Scripting system
 #include "Systems/ScriptingSystem/ComponentID.h"
 #include "Systems/ScriptingSystem/Component.h"
@@ -52,6 +56,8 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "Systems/Factory/GameObject.h"
 #include "Systems/Factory/Space.h"
 #include "Systems/Factory/SpaceFactory.h"
+					// Physics
+#include "Systems/Physics/Physics.h"
 
 
 
