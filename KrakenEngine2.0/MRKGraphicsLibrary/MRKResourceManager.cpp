@@ -31,8 +31,8 @@ namespace mrk
 			inds.insert(inds.end(), indexRef.begin(), indexRef.end());
 		}
 
-        houseVertexBuffer_.createVertexBuffer(verts, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
-        houseIndexBuffer_.createIndexBuffer(inds, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+        houseVertexBuffer_.createVertexBuffer(verts, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
+        houseIndexBuffer_.createIndexBuffer(inds, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
 
         mrk::Image::CreateInfo createInfo = { 
             0, 0, 
