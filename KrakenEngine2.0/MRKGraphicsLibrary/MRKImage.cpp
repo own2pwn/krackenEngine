@@ -26,6 +26,21 @@ namespace mrk
 	{
 	}
 
+    Image& Image::operator=(Image&& other) noexcept
+    {
+        mSampler = other.mSampler;
+        mImageView = other.mImageView;
+        mImage = other.mImage;
+        mMemory = other.mMemory;
+        mSize = other.mSize;
+
+        other.mSampler = nullptr;
+        other.mImageView = nullptr;
+        other.mImage = nullptr;
+        other.mMemory = nullptr;
+
+        return *this;
+    }
 
 	Image::~Image()
 	{
@@ -69,7 +84,7 @@ namespace mrk
 			.setSamples(vk::SampleCountFlagBits::e1)
 			.setSharingMode(vk::SharingMode::eExclusive);
 
-		MRK_CATCH(mImage = g_graphicsSystemSingleton.device_.logicalDevice_.createImage(imageInfo));
+		MRK_CATCH(mImage = g_graphicsSystemSingleton.device.logicalDevice_.createImage(imageInfo));
 
 		vk::MemoryRequirements memRequirements = this->getImageMemoryRequirements(mImage);
 
@@ -92,8 +107,8 @@ namespace mrk
 
 			stbi_image_free(pixels);
 
-			vk::CommandPool commandPool = g_graphicsSystemSingleton.graphicsPool_;
-			vk::Queue deviceQueue = g_graphicsSystemSingleton.graphicsQueue_;
+			vk::CommandPool commandPool = g_graphicsSystemSingleton.graphicsPool;
+			vk::Queue deviceQueue = g_graphicsSystemSingleton.graphicsQueue;
 
 			this->transitionLayout(vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::ePreinitialized, vk::ImageLayout::eTransferDstOptimal, commandPool, deviceQueue);
 
@@ -116,7 +131,7 @@ namespace mrk
 			.setComponents({})
 			.setSubresourceRange({aspectFlags, 0, 1, 0, 1});
 
-		MRK_CATCH(mImageView = g_graphicsSystemSingleton.device_.logicalDevice_.createImageView(viewInfo));
+		MRK_CATCH(mImageView = g_graphicsSystemSingleton.device.logicalDevice_.createImageView(viewInfo));
 
 		return mImageView;
 	}
@@ -142,7 +157,7 @@ namespace mrk
 				.setMinLod(0.0f)
 				.setMaxLod(0.0f);
 
-			MRK_CATCH(mSampler = g_graphicsSystemSingleton.device_.logicalDevice_.createSampler(samplerInfo, nullptr))
+			MRK_CATCH(mSampler = g_graphicsSystemSingleton.device.logicalDevice_.createSampler(samplerInfo, nullptr))
 		}
 
 		return mSampler;
@@ -150,7 +165,7 @@ namespace mrk
 
 	void Image::createImageViews(vk::Format format, vk::ImageAspectFlags aspectFlags, std::vector<vk::Image>& images, std::vector<vk::ImageView>& views) 
 	{
-		vk::Device const& device = g_graphicsSystemSingleton.device_.logicalDevice_;
+		vk::Device const& device = g_graphicsSystemSingleton.device.logicalDevice_;
 
 		auto viewInfo = vk::ImageViewCreateInfo()
 			.setViewType(vk::ImageViewType::e2D)
@@ -170,7 +185,7 @@ namespace mrk
 
 	void Image::destroy()
 	{
-		vk::Device const& device = g_graphicsSystemSingleton.device_.logicalDevice_;
+		vk::Device const& device = g_graphicsSystemSingleton.device.logicalDevice_;
 
 		// if image sampler was used
 		if ((info_.usage & vk::ImageUsageFlagBits::eSampled) == vk::ImageUsageFlagBits::eSampled)

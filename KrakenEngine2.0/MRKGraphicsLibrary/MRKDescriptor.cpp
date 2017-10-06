@@ -15,9 +15,9 @@ Descriptor::Descriptor(createInfo const & info) :
 
 void Descriptor::setup(createInfo const& info)
 {
-	createPool();
-	createLayout();
-	createSets(info);
+	mPool = createPool();
+	mLayout = createLayout();
+	mSet = createSets(info);
 }
 
 vk::DescriptorPool Descriptor::createPool()
@@ -33,7 +33,7 @@ vk::DescriptorPool Descriptor::createPool()
         .setPPoolSizes(poolSizes.data())
         .setMaxSets(1);
 
-    MRK_CATCH(mPool = g_graphicsSystemSingleton.device_.logicalDevice_.createDescriptorPool(poolInfo))
+    MRK_CATCH(mPool = g_graphicsSystemSingleton.device.logicalDevice_.createDescriptorPool(poolInfo))
     return mPool;
 }
 
@@ -58,7 +58,7 @@ vk::DescriptorSetLayout Descriptor::createLayout()
         .setBindingCount(static_cast<uint32_t>(bindings.size()))
         .setPBindings(bindings.data());
 
-    MRK_CATCH(mLayout = g_graphicsSystemSingleton.device_.logicalDevice_.createDescriptorSetLayout(layoutInfo))
+    MRK_CATCH(mLayout = g_graphicsSystemSingleton.device.logicalDevice_.createDescriptorSetLayout(layoutInfo))
 
     return mLayout;
 }
@@ -73,7 +73,7 @@ vk::DescriptorSet Descriptor::createSets(createInfo const & info)
         .setPSetLayouts(layouts);
 
     std::vector<vk::DescriptorSet> sets;
-    MRK_CATCH(sets = g_graphicsSystemSingleton.device_.logicalDevice_.allocateDescriptorSets(allocInfo))
+    MRK_CATCH(sets = g_graphicsSystemSingleton.device.logicalDevice_.allocateDescriptorSets(allocInfo))
     vk::DescriptorSet set = sets[0];
 
     auto bufferInfo = vk::DescriptorBufferInfo()
@@ -105,15 +105,15 @@ vk::DescriptorSet Descriptor::createSets(createInfo const & info)
         descriptorWrites[1].pImageInfo = &imageInfo;
         descriptorWrites[1].pTexelBufferView = nullptr;
 
-    g_graphicsSystemSingleton.device_.logicalDevice_.updateDescriptorSets(descriptorWrites, nullptr);
+    g_graphicsSystemSingleton.device.logicalDevice_.updateDescriptorSets(descriptorWrites, nullptr);
 	mSet = set;
     return set;
 }
 
 Descriptor::~Descriptor()
 {
-    g_graphicsSystemSingleton.device_.logicalDevice_.destroyDescriptorPool(mPool);
-    g_graphicsSystemSingleton.device_.logicalDevice_.destroyDescriptorSetLayout(mLayout);
+    g_graphicsSystemSingleton.device.logicalDevice_.destroyDescriptorPool(mPool);
+    g_graphicsSystemSingleton.device.logicalDevice_.destroyDescriptorSetLayout(mLayout);
 }
 
 }
