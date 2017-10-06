@@ -37,6 +37,8 @@ namespace Framework
 		std::unordered_map<unsigned int, GameObject*>* GetObjects();
 			// gets an object with specified id
 		GameObject* GetObject(unsigned int id);
+			// get a specific space
+		GameObject* operator[](unsigned int id);
 
 	private:
 		Space();

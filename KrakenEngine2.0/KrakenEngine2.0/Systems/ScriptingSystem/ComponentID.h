@@ -19,14 +19,22 @@ namespace Framework
 	};
 
 	template <typename T>
-	class ComponentID
+	class ComponentID : public ComponentIDcounter
 	{
 	public:
-		static int GetID()
-		{
-			static int id = ComponentIDcounter::m_counter++;
-			return id;
-		}
+			// gets an unique ID for a component/script
+		static int GetID();
 	};
+
+	///////////////////////////////////////
+	// implementation of templated class // 
+	///////////////////////////////////////
+	template <typename T>
+	int ComponentID<typename T>::GetID()
+	{
+		static int id = m_counter++;
+		return id;
+	}
+
 } // Framework
 #endif

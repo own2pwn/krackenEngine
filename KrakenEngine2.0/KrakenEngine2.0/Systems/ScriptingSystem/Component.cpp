@@ -11,7 +11,13 @@ Implementation of Component
 
 namespace Framework
 {
-	Component::Component() : m_ID(-1), m_owner(nullptr) {}
+	Component::Component() : m_ID(-1), m_owner(nullptr)
+	{
+		REGISTER_TYPE(Component);
+		ADD_MEMBER(Component, m_ID);
+		ADD_MEMBER(Component, m_owner);
+		ADD_MEMBER(Component, m_name);
+	}
 
 	void Component::Initialize() {}
 	

@@ -36,7 +36,7 @@ namespace Framework
 
 	}
 
-	void Space::Update(float dt)
+	void Space::Update(float) // not using dt
 	{
 		for (auto id : m_objectsIDsToDestroy)
 		{
@@ -106,6 +106,11 @@ namespace Framework
 		}
 #endif
 		return m_objects.at(id);
+	}
+
+	GameObject* Space::operator[](unsigned int id)
+	{
+		return GetObject(id);
 	}
 
 } // Framework

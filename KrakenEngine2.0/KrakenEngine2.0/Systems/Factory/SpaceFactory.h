@@ -18,9 +18,9 @@ namespace Framework
 			// Gets the SpaceFactory
 		static SpaceFactory * Get();
 			// initializes SpaceFactory
-		virtual void Initialize();
+		void Initialize() override;
 			// Updates Factory
-		virtual void Update(float dt = 0.0f);
+		void Update(float dt = 0.0f) override;
 			// destructor
 		virtual ~SpaceFactory();
 			// add a new space
@@ -31,6 +31,8 @@ namespace Framework
 		std::unordered_map<unsigned int, Space*>* GetSpaces();
 			// get a specific space
 		Space* GetSpace(unsigned int id);
+			// get a specific space
+		Space* operator[](unsigned int id);
 	private:
 
 		std::unordered_map<unsigned int, Space*> m_spaces;
