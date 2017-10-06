@@ -48,8 +48,8 @@ namespace mrk
 
    void LoadResources()
     {
-        char const * const MODEL_PATH = "Assets/models/barrel.obj";
-        char const * const TEXTURE_PATH = "Assets/textures/barrelUV.01.jpg";
+        char const * const MODEL_PATH = "Assets/models/chalet.obj";
+        char const * const TEXTURE_PATH = "Assets/textures/chalet.jpg";
         char const * const VERTEX_SHADER_PATH = "Assets/shaders/vert.spv";
         char const * const FRAGMENT_SHADER_PATH = "Assets/shaders/frag.spv";
 		

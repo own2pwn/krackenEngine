@@ -52,3 +52,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <glm/gtx/hash.hpp>
 
+#include <assimp/material.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>

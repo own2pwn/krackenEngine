@@ -1,13 +1,12 @@
 #pragma once
 #include "Precompiled.h"
 
+struct aiMaterial;
 //predeclared
 struct aiScene;
 struct aiNode;
 struct aiMesh;
 struct aiString;
-
-	
 
 namespace mrk
 {

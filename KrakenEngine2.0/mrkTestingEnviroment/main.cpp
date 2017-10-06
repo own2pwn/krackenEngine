@@ -13,7 +13,7 @@ int main()
 	while (i)
 	{
 		mrk::Draw();
-       // --i;
+        --i;
 	}
     mrk::StopDrawing();
 

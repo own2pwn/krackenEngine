@@ -2,10 +2,6 @@
 #include "MRKVulkanTools.h"
 #include "MRKModel.h"
 
-#include <assimp\Importer.hpp>
-#include <assimp\scene.h>
-#include <assimp\postprocess.h>
-
 #define ASSIM
 
 #define TINYOBJLOADER_IMPLEMENTATION
@@ -42,7 +38,6 @@ namespace mrk
 		}
 
 		processNode(scene->mRootNode, scene);
-
 #else
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -184,10 +179,6 @@ namespace mrk
 	{
 		aiString dir("Assets/textures/");
 		std::vector<Texture> textures;
-bool Model::Vertex::operator==(const Vertex& other) const
-{
-    return (pos == other.pos) && (color == other.color) && (texCoord == other.texCoord);
-}
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{
