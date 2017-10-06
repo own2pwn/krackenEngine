@@ -4,27 +4,35 @@
 
 namespace mrk
 {
-    ResourceManager::ResourceManager() : 
-        houseUniformBuffer_(sizeof(UniformBufferObject), vk::BufferUsageFlagBits::eUniformBuffer, 
-            vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent)
-    {
-    }
-
     ResourceManager::~ResourceManager()
     {
-        g_graphicsSystemSingleton.device_.logicalDevice_.destroyShaderModule(vertexShader_);
-        g_graphicsSystemSingleton.device_.logicalDevice_.destroyShaderModule(fragmentShader_);
+        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(vertexShader_);
+        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(fragmentShader_);
     }
 
     void ResourceManager::load(loadInfo const& info)
     {
-        houseModel_.load(info.houseModelPath, info.houseModelTexturePath);
+        houseUniformBuffer_ = mrk::Buffer(sizeof(UniformBufferObject), vk::BufferUsageFlagBits::eUniformBuffer,
+            vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+        houseModel_.load(info.houseModelPath);
 
         vertexShader_ = loadShaderModule(info.vertexShaderPath);
         fragmentShader_ = loadShaderModule(info.fragmentShaderPath);
 
-        houseVertexBuffer_.createVertexBuffer(houseModel_.vertices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
-        houseIndexBuffer_.createIndexBuffer(houseModel_.indices, g_graphicsSystemSingleton.graphicsPool_, g_graphicsSystemSingleton.graphicsQueue_);
+		std::vector<mrk::Vertex> verts;
+		std::vector<uint32_t> inds;
+
+		for (unsigned i = 0; i < houseModel_.meshes.size(); ++i)
+		{
+			std::vector<mrk::Vertex> & vertRef = houseModel_.meshes[i].vertices;
+			std::vector<uint32_t> & indexRef = houseModel_.meshes[i].indices;
+
+			verts.insert(verts.end(), vertRef.begin(), vertRef.end());
+			inds.insert(inds.end(), indexRef.begin(), indexRef.end());
+		}
+
+        houseVertexBuffer_.createVertexBuffer(verts, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
+        houseIndexBuffer_.createIndexBuffer(inds, g_graphicsSystemSingleton.graphicsPool, g_graphicsSystemSingleton.graphicsQueue);
 
         mrk::Image::CreateInfo createInfo = { 
             0, 0, 
@@ -33,7 +41,7 @@ namespace mrk
             vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, 
             vk::MemoryPropertyFlagBits::eDeviceLocal, 
             vk::ImageAspectFlagBits::eColor, 
-            houseModel_.mTexturePath };
+            info.houseModelTexturePath};
 
 		houseTexture_.info_ = createInfo;
 		houseTexture_.createImage(createInfo);
@@ -99,7 +107,7 @@ namespace mrk
 
         vk::ShaderModule shaderModule;
 
-        MRK_CATCH(shaderModule = g_graphicsSystemSingleton.device_.logicalDevice_.createShaderModule(createInfo))
+        MRK_CATCH(shaderModule = g_graphicsSystemSingleton.device.logicalDevice_.createShaderModule(createInfo))
 
         return shaderModule;
     }

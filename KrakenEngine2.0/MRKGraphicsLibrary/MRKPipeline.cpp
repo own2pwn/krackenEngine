@@ -5,14 +5,27 @@
 
 namespace mrk
 {
-    Pipeline::Pipeline(bool dynamic) : dynamic_(dynamic)
+    Pipeline::Pipeline()
     {
-        createSemaphores();
+        commandBuffers_.reserve(10);
     }
 
-	void Pipeline::load()
+    Pipeline& Pipeline::operator=(Pipeline&& other) noexcept
     {
-		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager_;
+        layout_ = other.layout_;
+        pipeline_ = other.pipeline_;
+        commandBuffers_ = std::move(other.commandBuffers_);
+        imageAvailable = other.imageAvailable;
+        renderFinished = other.renderFinished;
+
+        return *this;
+    }
+
+    void Pipeline::load()
+    {
+        createSemaphores();
+
+		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager;
 
 		// create shader stages
 		vk::PipelineShaderStageCreateInfo vertStageInfo = vk::PipelineShaderStageCreateInfo()
@@ -28,8 +41,8 @@ namespace mrk
 		std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStages = { vertStageInfo, fragStageInfo };
 
 		// vertex input
-		vk::VertexInputBindingDescription bindingDescription = Model::Vertex::getBindingDescription();
-		std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions = Model::Vertex::getAttributeDescriptions();
+		vk::VertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
+		std::array<vk::VertexInputAttributeDescription, 2> attributeDescriptions = Vertex::getAttributeDescriptions();
 
 		vk::PipelineVertexInputStateCreateInfo vertexInputInfo = vk::PipelineVertexInputStateCreateInfo()
 			.setVertexBindingDescriptionCount(1)
@@ -49,7 +62,7 @@ namespace mrk
 		// view port and scissor
 		vk::Rect2D scissor = vk::Rect2D()
 			.setOffset({ 0,0 })
-			.setExtent(g_graphicsSystemSingleton.swapchain_.getExtent());
+			.setExtent(g_graphicsSystemSingleton.swapChain.getExtent());
 
 		vk::Viewport viewport = vk::Viewport()
 			.setX(0.0f)
@@ -130,7 +143,7 @@ namespace mrk
 			.setPushConstantRangeCount(0)
 			.setPPushConstantRanges(nullptr);
 
-		MRK_CATCH(layout_ = g_graphicsSystemSingleton.device_.logicalDevice_.createPipelineLayout(pipelineLayoutInfo));
+		MRK_CATCH(layout_ = g_graphicsSystemSingleton.device.logicalDevice_.createPipelineLayout(pipelineLayoutInfo));
 
 		vk::GraphicsPipelineCreateInfo pipelineInfo = vk::GraphicsPipelineCreateInfo()
 			.setBasePipelineHandle(vk::Pipeline())
@@ -147,10 +160,10 @@ namespace mrk
 			.setPTessellationState(nullptr)
 			.setPVertexInputState(&vertexInputInfo)
 			.setPViewportState(&viewportStateInfo)
-			.setRenderPass(g_graphicsSystemSingleton.swapchain_.getRenderPass())
+			.setRenderPass(g_graphicsSystemSingleton.swapChain.getRenderPass())
 			.setSubpass(0);
 
-		MRK_CATCH(pipeline_ = g_graphicsSystemSingleton.device_.logicalDevice_.createGraphicsPipelines(vk::PipelineCache(), pipelineInfo)[0]);
+		MRK_CATCH(pipeline_ = g_graphicsSystemSingleton.device.logicalDevice_.createGraphicsPipelines(vk::PipelineCache(), pipelineInfo)[0]);
 
         createCommandBuffers();
     }
@@ -158,7 +171,6 @@ namespace mrk
 	void Pipeline::recreate()
 	{
 		cleanUp();
-        createSemaphores();
 
         if (dynamic_ == false)
         {
@@ -166,15 +178,16 @@ namespace mrk
         }
         else
         {
+            createSemaphores();
             createCommandBuffers();
         }
 	}
 
 	void Pipeline::cleanUp()
 	{
-		const vk::Device& dev = g_graphicsSystemSingleton.device_.logicalDevice_;
+		const vk::Device& dev = g_graphicsSystemSingleton.device.logicalDevice_;
 
-		dev.freeCommandBuffers(g_graphicsSystemSingleton.graphicsPool_, commandBuffers_);
+		dev.freeCommandBuffers(g_graphicsSystemSingleton.graphicsPool, commandBuffers_);
         if (dynamic_ == false)
         {
             dev.destroyPipeline(pipeline_);
@@ -187,7 +200,7 @@ namespace mrk
 
     Pipeline::~Pipeline()
     {
-		const vk::Device& dev = g_graphicsSystemSingleton.device_.logicalDevice_;
+		const vk::Device& dev = g_graphicsSystemSingleton.device.logicalDevice_;
 
         if (dynamic_ == true)
         {
@@ -198,16 +211,16 @@ namespace mrk
 
     void Pipeline::createCommandBuffers()
 	{
-		commandBuffers_.resize(g_graphicsSystemSingleton.swapchain_.getFrameBufferSize());
+		commandBuffers_.resize(g_graphicsSystemSingleton.swapChain.getFrameBufferSize());
 
 		vk::CommandBufferAllocateInfo allocInfo = vk::CommandBufferAllocateInfo()
 			.setCommandBufferCount(static_cast<uint32_t>(commandBuffers_.size()))
-			.setCommandPool(g_graphicsSystemSingleton.graphicsPool_)
+			.setCommandPool(g_graphicsSystemSingleton.graphicsPool)
 			.setLevel(vk::CommandBufferLevel::ePrimary);
 
-		MRK_CATCH(commandBuffers_ = g_graphicsSystemSingleton.device_.logicalDevice_.allocateCommandBuffers(allocInfo));
+		MRK_CATCH(commandBuffers_ = g_graphicsSystemSingleton.device.logicalDevice_.allocateCommandBuffers(allocInfo));
 
-		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager_;
+		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager;
 
 		// all of 'this' is used in the loop below
 		std::array<vk::ClearValue, 2> clearValues = {};
@@ -230,7 +243,7 @@ namespace mrk
 		{
 			buffer.begin(beginInfo);
 
-			vk::RenderPassBeginInfo renderPassInfo = g_graphicsSystemSingleton.swapchain_.getRenderPassBeginInfo(i++); // note the i++
+			vk::RenderPassBeginInfo renderPassInfo = g_graphicsSystemSingleton.swapChain.getRenderPassBeginInfo(i++); // note the i++
 			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 			renderPassInfo.pClearValues = clearValues.data();
 
@@ -238,7 +251,7 @@ namespace mrk
             {
 		        vk::Rect2D scissor = vk::Rect2D()
 		        	.setOffset({ 0,0 })
-		        	.setExtent(g_graphicsSystemSingleton.swapchain_.getExtent());
+		        	.setExtent(g_graphicsSystemSingleton.swapChain.getExtent());
 		        vk::Viewport viewport = vk::Viewport()
 		        	.setX(0.0f)
 		        	.setY(0.0f)
@@ -260,7 +273,7 @@ namespace mrk
 
                 buffer.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, layout_, 0, resourceManager.getDescriptor().mSet, {/* this should be 0 */});
 
-                buffer.drawIndexed(static_cast<uint32_t>(Model::indices.size()), 1, 0, 0, 0);
+                buffer.drawIndexed(static_cast<uint32_t>(indexBuffer.mSize), 1, 0, 0, 0);
 
 			buffer.endRenderPass();
 
@@ -272,7 +285,7 @@ namespace mrk
 	{
 		vk::SemaphoreCreateInfo createInfo = {};
 
-		MRK_CATCH(imageAvailable = g_graphicsSystemSingleton.device_.logicalDevice_.createSemaphore(createInfo));
-		MRK_CATCH(renderFinished = g_graphicsSystemSingleton.device_.logicalDevice_.createSemaphore(createInfo));
+		MRK_CATCH(imageAvailable = g_graphicsSystemSingleton.device.logicalDevice_.createSemaphore(createInfo));
+		MRK_CATCH(renderFinished = g_graphicsSystemSingleton.device.logicalDevice_.createSemaphore(createInfo));
 	}
 }
