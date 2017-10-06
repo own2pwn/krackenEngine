@@ -8,11 +8,7 @@
 #include "MRKVulkanTools.h"
 #include "MRKDebugCallback.h"
 
-#include <set>
-#include <iostream>
-#include <vector>
-#include <array>
-#include <string>
+#include "Precompiled.h"
 #include "MRKGraphicsSystem.h"
 
 namespace

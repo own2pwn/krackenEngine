@@ -10,7 +10,6 @@
  * 
  * This is done in the Visual Studio pre-processor settings
  */
-#include "glm/glm.hpp"
 #include "MRKDescriptor.h"
 
 namespace mrk

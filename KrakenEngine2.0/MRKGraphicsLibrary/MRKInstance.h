@@ -5,8 +5,7 @@
 *  @author Juan Ramos 
 */
 #pragma once
-#include <vulkan/vulkan.hpp>
-#include <array>
+#include "Precompiled.h"
 #include "MRKVulkanTools.h"
 
 #ifdef _DEBUG

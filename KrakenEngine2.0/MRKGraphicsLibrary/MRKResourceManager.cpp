@@ -1,6 +1,6 @@
+#include "Precompiled.h"
 #include "MRKResourceManager.h"
 #include "MRKGraphicsSystem.h"
-#include <fstream>
 
 namespace mrk
 {

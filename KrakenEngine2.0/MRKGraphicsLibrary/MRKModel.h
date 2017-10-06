@@ -1,8 +1,5 @@
 #pragma once
-#include <vector>
-#include <vulkan/vulkan.hpp>
-#include <glm/glm.hpp>
-#include <assimp/material.h>
+#include "Precompiled.h"
 
 //predeclared
 struct aiScene;

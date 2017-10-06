@@ -1,7 +1,7 @@
+#include "Precompiled.h"
 #include "MRKGraphicsSystem.h"
 #include "MRKPipeline.h"
 #include "MRKVulkanTools.h"
-#include <array>
 
 namespace mrk
 {

@@ -5,7 +5,7 @@
 #include "MRKInstance.h"
 #include "MRKResourceManager.h"
 #include "MRKPipeline.h"
-#include <vulkan/vulkan.hpp>
+#include "Precompiled.h"
 
 namespace mrk
 {
@@ -20,25 +20,13 @@ namespace mrk
         //       be public as it results in better error messages
         //       due to the compilers behavior to check accessibility
         //       before deleted status
-        //GraphicsSystem(GraphicsSystem const &) = delete;
-        //GraphicsSystem& operator=(GraphicsSystem const &) = delete;
-        //GraphicsSystem(GraphicsSystem &&) = delete;
-        //GraphicsSystem& operator=(GraphicsSystem &&) = delete;
+        GraphicsSystem(GraphicsSystem const &) = delete;
+        GraphicsSystem& operator=(GraphicsSystem const &) = delete;
+        GraphicsSystem(GraphicsSystem &&) = delete;
+        GraphicsSystem& operator=(GraphicsSystem &&) = delete;
 
         // Needed for singleton
-        //GraphicsSystem() = default;
-        GraphicsSystem() :
-            windowSystem(),
-            instance(),
-            surface(),
-            device(),
-            graphicsQueue(),
-            presentQueue(),
-            graphicsPool(),
-            swapChain(),
-            resourceManager(),
-            pipeline()
-        {}
+        GraphicsSystem() = default;
 
         ~GraphicsSystem()
         {

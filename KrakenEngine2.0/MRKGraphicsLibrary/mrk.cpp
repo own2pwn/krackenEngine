@@ -6,9 +6,6 @@
 */
 #include "mrk.h"
 #include "MRKGraphicsSystem.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include <iostream>
 
 namespace mrk
 {

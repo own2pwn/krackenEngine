@@ -1,9 +1,4 @@
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyobjloader-master/tiny_obj_loader.h>
-#include <glm/gtx/hash.hpp>
-
-#include <unordered_map>
-
+#include "Precompiled.h"
 #include "MRKVulkanTools.h"
 #include "MRKModel.h"
 
@@ -12,6 +7,9 @@
 #include <assimp\postprocess.h>
 
 #define ASSIM
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tinyobjloader-master/tiny_obj_loader.h>
 
 // Needed for hashing vertices parsing for unique vertices using std::unordered_map, this looks like it should be replaced with a lamda
 namespace std
@@ -186,6 +184,10 @@ namespace mrk
 	{
 		aiString dir("Assets/textures/");
 		std::vector<Texture> textures;
+bool Model::Vertex::operator==(const Vertex& other) const
+{
+    return (pos == other.pos) && (color == other.color) && (texCoord == other.texCoord);
+}
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{

@@ -8,7 +8,7 @@
 #pragma once
 #ifdef _DEBUG
 
-#include <vulkan/vulkan.hpp>
+#include "Precompiled.h"
 
 namespace mrk
 {

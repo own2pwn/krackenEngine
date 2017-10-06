@@ -5,13 +5,9 @@
 *
 *  @author Juan Ramos
 */
-#include <stdexcept>
-#include <iostream>
-
 #include "mrk.h"
 #include "MRKWindowSystem.h"
 #include "MRKVulkanTools.h"
-#include "MRKInstance.h"
 #include "MRKGraphicsSystem.h"
 
 namespace Callbacks // callbacks
