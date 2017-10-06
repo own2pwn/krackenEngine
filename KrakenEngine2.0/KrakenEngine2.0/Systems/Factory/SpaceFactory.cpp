@@ -74,6 +74,12 @@ namespace Framework
 		return m_spaces.at(id);
 	}
 
+	Space* SpaceFactory::operator[](unsigned int id)
+	{
+		return GetSpace(id);
+	}
+
+
 	SpaceFactory::SpaceFactory() : m_uniqueFactoryID(0)
 	{
 		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, Space*);
