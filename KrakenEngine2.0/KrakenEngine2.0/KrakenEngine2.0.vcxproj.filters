@@ -52,5 +52,7 @@
     <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
     <ClInclude Include="Systems\ScriptingSystem\Script.h" />
     <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
+    <ClInclude Include="BaseEngine\Core\CoreStates.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
   </ItemGroup>
 </Project>
