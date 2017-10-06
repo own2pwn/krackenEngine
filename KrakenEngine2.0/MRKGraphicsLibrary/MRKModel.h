@@ -1,7 +1,5 @@
 #pragma once
-#include <vector>
-#include <vulkan/vulkan.hpp>
-#include <glm/glm.hpp>
+#include "Precompiled.h"
 
 namespace mrk
 {

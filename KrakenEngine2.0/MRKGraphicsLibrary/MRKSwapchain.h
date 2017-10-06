@@ -5,8 +5,7 @@
 *  @author Juan Ramos 
 */
 #pragma once
-#include <vulkan/vulkan.hpp>
-#include <vector>
+#include "Precompiled.h"
 #include "MRKImage.h"
 
 namespace mrk

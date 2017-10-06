@@ -1,8 +1,7 @@
 #include "MRKDescriptor.h"
 #include "MRKVulkanTools.h"
 #include "MRKGraphicsSystem.h"
-#include <array>
-#include <vector>
+#include "Precompiled.h"
 
 namespace mrk
 {

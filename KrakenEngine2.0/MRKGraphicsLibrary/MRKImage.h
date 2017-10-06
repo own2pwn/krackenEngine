@@ -1,6 +1,6 @@
 #pragma once
-#include <vulkan/vulkan.hpp>
 #include "MRKResource.h"
+#include "Precompiled.h"
 
 namespace mrk
 {
