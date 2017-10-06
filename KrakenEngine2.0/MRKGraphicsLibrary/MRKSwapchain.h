@@ -42,6 +42,10 @@ namespace mrk
 		*/
 		explicit Swapchain(createInfo const &info);
 
+        Swapchain() = default;
+
+        mrk::Swapchain & operator=(mrk::Swapchain && other) noexcept;
+
 		/**
 		* \brief
 		* If the window size changes or goes to a different monitor, etc.
@@ -111,7 +115,6 @@ namespace mrk
 
 		vk::Format depthFormat_;
 		mrk::Image depthImage_;
-
         
         vk::RenderPassBeginInfo renderBeginPassInfo_;
         vk::RenderPassBeginInfo createRenderPassInfo() const;	

@@ -18,6 +18,9 @@ namespace Framework
 			// adds a new component by template
 		template <typename T>
 		void AddComponent();
+			// adds a new component by template
+		template <typename T>
+		void AddComponent(Component* component);
 			// get a component by template
 		template <typename T>
 		T* GetComponent();
@@ -37,6 +40,7 @@ namespace Framework
 		std::unordered_map<int, Component*> m_components;
 	};
 
+
 ///////////////////////////////////////////
 // implementation of templated functions // 
 ///////////////////////////////////////////
@@ -55,7 +59,20 @@ namespace Framework
 		component->SetID(id);
 		component->SetOwner(this);
 		component->Initialize();
+	}
 
+	template <typename T>
+	void GameObject::AddComponent(Component* component)
+	{
+		// getting unque id corresponding to this type of component
+		int id = ComponentID<T>::GetID();
+
+		// creation
+		m_components[id] = component;
+
+		// initialization
+		component->SetID(id);
+		component->SetOwner(this);
 	}
 
 	template <typename T>

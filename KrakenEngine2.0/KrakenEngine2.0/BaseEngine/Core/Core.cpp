@@ -25,7 +25,6 @@ namespace Framework
 		REGISTER_TYPE(Core);
 		ADD_MEMBER(Core, m_Systems);
 
-		m_MetaCore.Set(Get(), "m_MetaCore");
 
 		// AddSystem(AudioSystem::Get());
 		// AddSystem(Input::Get());
@@ -42,6 +41,7 @@ namespace Framework
 		{
 			system->Initialize();
 		}
+		m_MetaCore.Set(Get(), "m_MetaCore");
 	}
 
 	void Core::Run()

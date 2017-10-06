@@ -3,7 +3,9 @@
 
 int main()
 {
-	mrk::initializeGraphicsSystem();
+    mrk::WindowSystemCreateInfo wInfo = {"Testing Window", nullptr, nullptr, 800, 600};
+    mrk::GraphicsSystemCreateInfo gInfo = {"Testing Environment", "Kracken Engine", wInfo };
+	mrk::initializeGraphicsSystem(gInfo);
 
 	mrk::LoadResources();
 
@@ -11,7 +13,9 @@ int main()
 	while (i)
 	{
 		mrk::Draw();
-        --i;
+       // --i;
 	}
+    mrk::StopDrawing();
 
+    mrk::CleanUp();
 }

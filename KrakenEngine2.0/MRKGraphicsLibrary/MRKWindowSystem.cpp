@@ -14,19 +14,28 @@
 #include "MRKInstance.h"
 #include "MRKGraphicsSystem.h"
 
+namespace Callbacks // callbacks
+{
+    void recreateWindowDependentResources(GLFWwindow* /*window*/, int width, int height)
+    {
+        if (width == 0 || height == 0) { return; }
+
+        mrk::g_graphicsSystemSingleton.swapChain.recreate();
+        mrk::g_graphicsSystemSingleton.pipeline.recreate();
+    }
+}
+
 namespace mrk
 {
     WindowSystem::WindowSystem(createInfo const& info) :
-        _window(createWindow(info)),
-        requiredExtensions_(getExtensions())
+        window_(createWindow(info)),
+        mRequiredExtensions(getExtensions())
     {
-        glfwSetWindowSizeCallback(_window, GraphicsSystem::recreateWindowDependentResources);
+        glfwSetWindowSizeCallback(window_, Callbacks::recreateWindowDependentResources);
     }
 
     GLFWwindow* WindowSystem::createWindow(createInfo const& info)
     {
-        glfwInit();
-
         // Tells GLFW that the application is using Vulkan
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
@@ -62,6 +71,16 @@ namespace mrk
         return requiredExtensions;
     }
 
+    void WindowSystem::init()
+    {
+        glfwInit();
+    }
+
+    void WindowSystem::clean()
+    {
+        glfwTerminate();
+    }
+
     void WindowSystem::update()
     {
         glfwPollEvents();
@@ -71,32 +90,43 @@ namespace mrk
     {
         glm::ivec2 windowSize;
 
-        glfwGetWindowSize(_window, &windowSize.x, &windowSize.y);
+        glfwGetWindowSize(window_, &windowSize.x, &windowSize.y);
 
         return windowSize;
     }
 
 	GLFWwindow * WindowSystem::getWindow() const
 	{
-		return _window;
+		return window_;
 	}
 
 	vk::SurfaceKHR WindowSystem::createSurface(vk::Instance const& instance) const
 	{
 		VkSurfaceKHR surf = {};
 
-		if (glfwCreateWindowSurface(static_cast<VkInstance>(instance), _window, nullptr, &surf) != VK_SUCCESS)
+		if (glfwCreateWindowSurface(static_cast<VkInstance>(instance), window_, nullptr, &surf) != VK_SUCCESS)
+		{
 			throw_line("Failed to create Surface!");
+		}
 
 		return surf;
 	}
 
 	WindowSystem::~WindowSystem()
     {
-        glfwDestroyWindow(_window);
-        glfwTerminate();
+        if (window_)
+        {
+            glfwDestroyWindow(window_);
+        }
     }
 
+    WindowSystem& WindowSystem::operator=(WindowSystem&& other) noexcept
+    {
+        window_ = other.window_;
+        other.window_ = nullptr;
+
+        mRequiredExtensions = std::move(other.mRequiredExtensions);
+
+        return *this;
+    }
 }
-
-

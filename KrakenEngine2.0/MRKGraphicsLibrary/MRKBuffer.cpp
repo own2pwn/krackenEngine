@@ -23,14 +23,27 @@ namespace mrk
 			.setSharingMode(vk::SharingMode::eExclusive);
 
 		// device_ is coming from the resource
-		MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+		MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 		vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 		this->allocateMemory(memReqs, properties);
 		this->bindMemory(buffer_);
 	}
 
-	Buffer::~Buffer()
+    Buffer& Buffer::operator=(Buffer&& other) noexcept
+    {
+        this->buffer_ = other.buffer_;
+        other.buffer_ = nullptr;
+
+        this->mMemory = other.mMemory;
+        other.mMemory = nullptr;
+
+        this->mSize = other.mSize;
+
+        return *this;
+    }
+
+    Buffer::~Buffer()
 	{
 		if (mSize > 0)
 			destroy();
@@ -41,7 +54,7 @@ namespace mrk
 	 */
 	void Buffer::destroy()
 	{
-		g_graphicsSystemSingleton.device_.logicalDevice_.destroyBuffer(buffer_);
+		g_graphicsSystemSingleton.device.logicalDevice_.destroyBuffer(buffer_);
 		this->freeMemory();
 	}
 
@@ -49,7 +62,7 @@ namespace mrk
 	 * \brief Convert buffer into a vertex buffer by filling it with vertex data.
 	 * \param vertices - vertex data to put into the buffer
 	 */
-	void Buffer::createVertexBuffer(std::vector<Model::Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue)
+	void Buffer::createVertexBuffer(std::vector<Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue)
 	{
 		vk::DeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -72,7 +85,7 @@ namespace mrk
 				.setSharingMode(vk::SharingMode::eExclusive);
 
 			// device_ is coming from the resource
-			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 			vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 			this->allocateMemory(memReqs, vk::MemoryPropertyFlagBits::eDeviceLocal);
@@ -135,7 +148,7 @@ namespace mrk
 				.setSharingMode(vk::SharingMode::eExclusive);
 
 			// device_ is coming from the resource
-			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device_.logicalDevice_.createBuffer(createInfo));
+			MRK_CATCH(buffer_ = g_graphicsSystemSingleton.device.logicalDevice_.createBuffer(createInfo));
 
 			vk::MemoryRequirements memReqs = this->getBufferMemoryRequirements(buffer_);
 			this->allocateMemory(memReqs, vk::MemoryPropertyFlagBits::eDeviceLocal);

@@ -25,7 +25,7 @@ namespace mrk
 		allocInfo.allocationSize = memRequirements.size;
 		allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
-		MRK_CATCH(mMemory = g_graphicsSystemSingleton.device_.logicalDevice_.allocateMemory(allocInfo));
+		MRK_CATCH(mMemory = g_graphicsSystemSingleton.device.logicalDevice_.allocateMemory(allocInfo));
 
 		mSize = memRequirements.size;
 	}
@@ -39,7 +39,7 @@ namespace mrk
 		allocInfo.allocationSize = memRequirements.size;
 		allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
-		MRK_CATCH(memory = g_graphicsSystemSingleton.device_.logicalDevice_.allocateMemory(allocInfo));
+		MRK_CATCH(memory = g_graphicsSystemSingleton.device.logicalDevice_.allocateMemory(allocInfo));
 	}
 
 	/**
@@ -52,7 +52,7 @@ namespace mrk
 	{
 		uint32_t memoryType = static_cast<uint32_t>(-1);
 
-		vk::PhysicalDeviceMemoryProperties memProps = g_graphicsSystemSingleton.device_.physicalDevice_.getMemoryProperties();
+		vk::PhysicalDeviceMemoryProperties memProps = g_graphicsSystemSingleton.device.physicalDevice_.getMemoryProperties();
 
 		for (uint32_t i = 0; memProps.memoryTypeCount; ++i)
 		{
@@ -72,7 +72,7 @@ namespace mrk
 
 	void Resource::bindMemory(vk::Buffer const& buffer) const // BUG LOOK HERE? (constant ref)
 	{
-		g_graphicsSystemSingleton.device_.logicalDevice_.bindBufferMemory(buffer, mMemory, 0);
+		g_graphicsSystemSingleton.device.logicalDevice_.bindBufferMemory(buffer, mMemory, 0);
 	}
 
 	void Resource::bindMemory(vk::Image const& image, vk::DeviceMemory const* memory) const
@@ -80,17 +80,17 @@ namespace mrk
 		if (memory == nullptr)
 			memory = &mMemory;
 
-		g_graphicsSystemSingleton.device_.logicalDevice_.bindImageMemory(image, *memory, 0);
+		g_graphicsSystemSingleton.device.logicalDevice_.bindImageMemory(image, *memory, 0);
 	}
 
 	vk::MemoryRequirements Resource::getBufferMemoryRequirements(vk::Buffer const& buffer)
 	{
-		return g_graphicsSystemSingleton.device_.logicalDevice_.getBufferMemoryRequirements(buffer);
+		return g_graphicsSystemSingleton.device.logicalDevice_.getBufferMemoryRequirements(buffer);
 	}
 
 	vk::MemoryRequirements Resource::getImageMemoryRequirements(vk::Image const & image)
 	{
-		return g_graphicsSystemSingleton.device_.logicalDevice_.getImageMemoryRequirements(image);
+		return g_graphicsSystemSingleton.device.logicalDevice_.getImageMemoryRequirements(image);
 	}
 
 	/**
@@ -106,7 +106,7 @@ namespace mrk
 			.setCommandPool(commandPool)
 			.setCommandBufferCount(1);
 ;
-		MRK_CATCH(commandBuffer = g_graphicsSystemSingleton.device_.logicalDevice_.allocateCommandBuffers(allocInfo));
+		MRK_CATCH(commandBuffer = g_graphicsSystemSingleton.device.logicalDevice_.allocateCommandBuffers(allocInfo));
 
 		auto beginInfo = vk::CommandBufferBeginInfo()
 			.setFlags(vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
@@ -134,14 +134,14 @@ namespace mrk
 		deviceQueue.submit(submitInfo, {});
 		deviceQueue.waitIdle();
 
-		g_graphicsSystemSingleton.device_.logicalDevice_.freeCommandBuffers(commandPool, commandBuffer);
+		g_graphicsSystemSingleton.device.logicalDevice_.freeCommandBuffers(commandPool, commandBuffer);
 	}
 
 	void Resource::freeMemory()
 	{
 		if (mSize > 0)
 		{
-			g_graphicsSystemSingleton.device_.logicalDevice_.freeMemory(mMemory);
+			g_graphicsSystemSingleton.device.logicalDevice_.freeMemory(mMemory);
 
 			mSize = 0;
 		}
@@ -149,11 +149,11 @@ namespace mrk
 
 	void Resource::map(void *& data) const
 	{
-		data = g_graphicsSystemSingleton.device_.logicalDevice_.mapMemory(mMemory, 0, mSize, vk::MemoryMapFlags());
+		data = g_graphicsSystemSingleton.device.logicalDevice_.mapMemory(mMemory, 0, mSize, vk::MemoryMapFlags());
 	}
 
 	void Resource::unmap() const
 	{
-		g_graphicsSystemSingleton.device_.logicalDevice_.unmapMemory(mMemory);
+		g_graphicsSystemSingleton.device.logicalDevice_.unmapMemory(mMemory);
 	}
 }
