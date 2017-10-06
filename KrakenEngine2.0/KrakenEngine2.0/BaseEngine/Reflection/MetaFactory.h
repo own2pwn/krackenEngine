@@ -23,16 +23,20 @@ namespace Framework
 	public:
 		static MetaTypesMap& Get()
 		{
-			static MetaTypesMap map;
-			return map;
+			static MetaTypesMap allTypes;
+			return allTypes;
 		}
 
 		static void RegisterType(MetaType* metaType)
 		{
 			MetaTypesMap &map = Get();
 				// Assertion: Type already registered
-			ASSERT(map[metaType->Name()] == nullptr);
-			map[metaType->Name()] = metaType;
+			//ASSERT(map[metaType->Name()] == nullptr);
+				// if type already registered, silently continue
+			if (map[metaType->Name()] == nullptr)
+			{
+				map[metaType->Name()] = metaType;
+			}
 		}
 	};
 

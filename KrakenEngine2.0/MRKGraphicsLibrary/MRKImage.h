@@ -29,7 +29,14 @@ namespace mrk
 		vk::Sampler mSampler;
 
 		explicit Image(mrk::Image::CreateInfo createInfo);
-		Image() = default;
+
+		Image() : info_(),
+            mImage(),
+            mImageView(),
+            mSampler()
+        {}
+
+        Image & operator=(Image && other) noexcept;
 		~Image();
 		vk::Image & Image::createImage(mrk::Image::CreateInfo & createInfo);
 		vk::ImageView createImageView(vk::Format format, vk::ImageAspectFlags aspectFlags);

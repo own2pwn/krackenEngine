@@ -9,7 +9,6 @@
 
 namespace mrk
 {
-
     struct WindowSystemCreateInfo
     {
         char *title;
@@ -26,9 +25,10 @@ namespace mrk
         WindowSystemCreateInfo winCreateInfo;
     };
 
-    void initializeGraphicsSystem(); // fix these conflicting names
+    void initializeGraphicsSystem(GraphicsSystemCreateInfo  const & createInfo); 
     void LoadResources();
     void Draw();
     void StopDrawing();
+    void CleanUp();
 	GLFWwindow * getWindow();
 }

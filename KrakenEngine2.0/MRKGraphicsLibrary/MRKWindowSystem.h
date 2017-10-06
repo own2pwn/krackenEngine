@@ -28,34 +28,36 @@ class WindowSystem
 {
 private:
     friend class GraphicsSystem;
-    GLFWwindow * const _window;
-
-    explicit WindowSystem(createInfo const &info);
+    GLFWwindow * window_;
 
     static GLFWwindow * createWindow(createInfo const& info);
     static std::vector<char const *> getExtensions();
 
 public:
+    WindowSystem() = default;
+    explicit WindowSystem(createInfo const &info);
+    WindowSystem & operator=(WindowSystem && other) noexcept;
+    ~WindowSystem();
+
+    static void init();
+    static void clean();
+
     /**
      * \brief 
      * Contains the strings needed to display a surface
      * EX: VK_KHR_surface, VK_KHR_win32_surface
      */
-    std::vector<char const *> const requiredExtensions_;
+    std::vector<char const *> mRequiredExtensions;
 
     /**
      * \brief 
-     * Should be called after the drawing in order to poll events for the next frame
+     * Should be called before any drawing
      */
     static void update();
 
     glm::ivec2 getWindowSize() const;
-
 	GLFWwindow * getWindow() const;
-
 	vk::SurfaceKHR createSurface(vk::Instance const& instance) const;
-
-    ~WindowSystem();
 
     // Note: Scott Meyers mentions in his Effective Modern
     //       C++ book, that deleted functions should generally
@@ -65,7 +67,6 @@ public:
     WindowSystem(WindowSystem const &) = delete;
     WindowSystem& operator=(const WindowSystem&) = delete;
     WindowSystem(WindowSystem &&) = delete;
-    WindowSystem & operator=(WindowSystem &&) = delete;
 };
 
 }

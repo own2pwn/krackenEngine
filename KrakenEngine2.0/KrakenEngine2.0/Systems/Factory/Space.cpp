@@ -108,4 +108,9 @@ namespace Framework
 		return m_objects.at(id);
 	}
 
+	GameObject* Space::operator[](unsigned int id)
+	{
+		return GetObject(id);
+	}
+
 } // Framework
