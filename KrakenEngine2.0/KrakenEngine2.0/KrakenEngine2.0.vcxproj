@@ -173,6 +173,7 @@
     <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseEngine\Core\CoreStates.h" />
     <ClInclude Include="BaseEngine\Reflection\Function.h" />
     <ClInclude Include="BaseEngine\Reflection\MetaFactory.h" />
     <ClInclude Include="BaseEngine\Reflection\MetaVariable.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Systems\Factory\Space.h" />
     <ClInclude Include="Systems\Interface\ISystem.h" />
     <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
     <ClInclude Include="Systems\ScriptingSystem\Script.h" />
     <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
     <ClInclude Include="Systems\Physics\Physics.h" />

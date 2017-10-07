@@ -56,5 +56,7 @@
     <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
     <ClInclude Include="Systems\Physics\Physics.h" />
     <ClInclude Include="Systems\Input\Input.h" />
+    <ClInclude Include="BaseEngine\Core\CoreStates.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
   </ItemGroup>
 </Project>

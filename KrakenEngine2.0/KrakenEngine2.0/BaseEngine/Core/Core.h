@@ -12,16 +12,8 @@ Core of the engine, stores all the systems, updates them, runs the engine.
 
 namespace Framework
 {
-	enum CoreStatusEnum
-	{
-		cse_exiting = 0,
-		cse_running,
-		cse_paused
-	};
-
 	class Core
 	{
-
 	public:
 			// initilializes all the systems
 		void Initialize();
@@ -35,7 +27,7 @@ namespace Framework
 		MetaVariable& Meta();
 			// gets current state of the Core, notice that it return by reference, 
 			// so you can set to pause for example using this function
-		CoreStatusEnum& State();
+		CoreStatesEnum& State();
 			// gets current fps
 		time_t FPS() const;
 	private:
@@ -48,7 +40,7 @@ namespace Framework
 		
 		std::vector<ISystem*> m_Systems; // all the systems
 		MetaVariable m_MetaCore;		 // MetaVariable for Core(which has whole engine info inside)
-		CoreStatusEnum m_state;			 // current state of the engine
+		CoreStatesEnum m_state;			 // current state of the engine
 		
 		time_t m_FPS; // current fps
 		std::chrono::time_point<std::chrono::system_clock> m_current_time;  // current time
