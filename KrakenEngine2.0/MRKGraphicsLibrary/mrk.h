@@ -26,9 +26,33 @@ namespace mrk
     };
 
     void initializeGraphicsSystem(GraphicsSystemCreateInfo  const & createInfo); 
-    void LoadResources();
+
+    struct ModelInfoCreateInfo
+    {
+        char const * modelPath;
+        std::vector<char const *> texturePath;
+        unsigned modelID;
+    };
+
+    enum class ShaderType
+    {
+        DEFAULT, // Only uses textures and vertices, doesn't use normals for lighting
+        SHADER_COUNT
+    };
+
+    struct LoadResourcesCreateInfo
+    {
+        std::vector<ModelInfoCreateInfo> modelsToLoad;
+        ShaderType shaderType;
+    };
+
+    void LoadResources(LoadResourcesCreateInfo const & loadInfo);
+
     void Draw();
+
     void StopDrawing();
+
     void CleanUp();
+
 	GLFWwindow * getWindow();
 }
