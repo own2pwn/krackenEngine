@@ -48,8 +48,11 @@ namespace Framework
 	Space* SpaceFactory::AddSpace(std::string name)
 	{
 		m_uniqueFactoryID++;
-		m_spaces[m_uniqueFactoryID] = new Space(name);
+		Space* space = new Space(name);
+		space->SetID(m_uniqueFactoryID);
+		m_spaces[m_uniqueFactoryID] = space;
 		ASSERT(m_spaces.at(m_uniqueFactoryID) != nullptr); // fail to create
+		
 		return m_spaces.at(m_uniqueFactoryID);
 	}
 
