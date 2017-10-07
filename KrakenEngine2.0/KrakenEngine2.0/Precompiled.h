@@ -21,7 +21,11 @@ All the includes are listed here to avoid multiple includes in any other files
 //#include <Xinput.h> // Controller input
 
 ///////////////////////// other files ////////////////
-#include "include/physx/PxPhysicsAPI.h" // PhysX library
+//glm
+#include "include/glm/glm.hpp"
+#include "include/glm/gtc/quaternion.hpp"
+//PhysX
+#include "include/physx/PxPhysicsAPI.h"
 
 ///////////////////////// our files //////////////////
 /////// care of the order they are included //////////
@@ -44,16 +48,23 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "BaseEngine/Reflection/MetaUserInterface.h"
 #include "BaseEngine/Core/Core.h"
 
+// game objects
+	// base classes
+#include "Systems/ScriptingSystem/ComponentID.h"
+#include "Systems/ScriptingSystem/Component.h"
+#include "Systems/ScriptingSystem/Script.h"
+#include "Systems/Factory/GameObject.h"
+	// components
+#include "Components/Transform/Transform.h"
+#include "Components/Physics/DynamicBody.h"
+	// scripts
+
 // systems
 					// Input System
 #include "Systems/Input/Input.h"
 					// Scripting system
-#include "Systems/ScriptingSystem/ComponentID.h"
-#include "Systems/ScriptingSystem/Component.h"
-#include "Systems/ScriptingSystem/Script.h"
 #include "Systems/ScriptingSystem/ScriptingSystem.h"
 					// Factory
-#include "Systems/Factory/GameObject.h"
 #include "Systems/Factory/Space.h"
 #include "Systems/Factory/SpaceFactory.h"
 					// Physics

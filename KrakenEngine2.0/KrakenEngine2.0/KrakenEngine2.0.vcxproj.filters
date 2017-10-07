@@ -27,6 +27,7 @@
     <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
     <ClCompile Include="Systems\Physics\Physics.cpp" />
     <ClCompile Include="Systems\Input\Input.cpp" />
+    <ClCompile Include="Components\Physics\DynamicBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -56,5 +57,8 @@
     <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
     <ClInclude Include="Systems\Physics\Physics.h" />
     <ClInclude Include="Systems\Input\Input.h" />
+    <ClInclude Include="Components\Body\RigidBody.h" />
+    <ClInclude Include="Components\Transform\Transform.h" />
+    <ClInclude Include="Components\Physics\DynamicBody.h" />
   </ItemGroup>
 </Project>

@@ -31,9 +31,9 @@ namespace Framework
 	//	// TODO Keyboard state
 	//	// TODO Mouse state
 	//	unsigned int num_controllers_;
+	//	// TODO Controller array
 	//	_XINPUT_STATE controller_state_[MAX_CONTROLLERS];
 	//	bool controller_connected_[MAX_CONTROLLERS] = { false };
-	//};
 	//}; //end class Input
 } // end namespace Framework
 
