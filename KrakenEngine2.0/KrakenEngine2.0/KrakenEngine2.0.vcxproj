@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseEngine\Reflection\Function.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaFactory.cpp" />
     <ClCompile Include="BaseEngine\Reflection\MetaVariable.cpp" />
     <ClCompile Include="BaseEngine\Reflection\MetaType.cpp" />
     <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
