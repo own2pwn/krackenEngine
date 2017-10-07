@@ -7,15 +7,8 @@
 *  @author Juan Ramos 
 */
 #pragma once
-#include <iostream>
-#include <exception>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <chrono>
-#include <thread>
 
-
+#include "Precompiled.h"
 
 constexpr bool ifProjectIsBuiltInDebugMode()
 {

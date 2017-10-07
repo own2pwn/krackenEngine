@@ -1,6 +1,6 @@
 #pragma once
-#include <vulkan/vulkan.hpp>
 #include "MRKResource.h"
+#include "Precompiled.h"
 
 namespace mrk
 {
@@ -28,10 +28,18 @@ namespace mrk
 		// texture specific information
 		vk::Sampler mSampler;
 
-		explicit Image(mrk::Image::CreateInfo createInfo);
-		Image() = default;
-		~Image();
-		vk::Image & Image::createImage(mrk::Image::CreateInfo & createInfo);
+		explicit Image(mrk::Image::CreateInfo const & createInfo);
+		Image(mrk::Image && other) noexcept;
+
+		Image() : info_(),
+            mImage(),
+            mImageView(),
+            mSampler()
+        {}
+
+        Image & operator=(Image && other) noexcept;
+		~Image();;
+		vk::Image & Image::createImage(mrk::Image::CreateInfo const & createInfo);
 		vk::ImageView createImageView(vk::Format format, vk::ImageAspectFlags aspectFlags);
 		vk::Sampler & createImageSampler();
 		static void createImageViews(vk::Format format, vk::ImageAspectFlags aspectFlags, std::vector<vk::Image>& images, std::vector<vk::ImageView>& views);

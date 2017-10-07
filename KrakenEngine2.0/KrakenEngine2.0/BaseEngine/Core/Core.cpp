@@ -25,7 +25,6 @@ namespace Framework
 		REGISTER_TYPE(Core);
 		ADD_MEMBER(Core, m_Systems);
 
-		m_MetaCore.Set(Get(), "m_MetaCore");
 
 		// AddSystem(AudioSystem::Get());
 		// AddSystem(Input::Get());
@@ -42,6 +41,7 @@ namespace Framework
 		{
 			system->Initialize();
 		}
+		m_MetaCore.Set(Get(), "m_MetaCore");
 	}
 
 	void Core::Run()
@@ -64,7 +64,7 @@ namespace Framework
 
 				// updating dt and FPS
 				// locking FPS to 60(wait if more)
-			while (UpdateFPS(dt) > 60) {}
+			while (UpdateFPS(dt) > 60) { /*do nothing*/ }
 
 			m_previous_time = m_current_time;
 			std::cout << m_FPS << std::endl;
@@ -121,7 +121,7 @@ namespace Framework
 		return m_MetaCore;
 	}
 
-	CoreStatusEnum& Core::State()
+	CoreStatesEnum& Core::State()
 	{
 		return m_state;
 	}

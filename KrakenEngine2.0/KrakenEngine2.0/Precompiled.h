@@ -34,6 +34,7 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "Tools/TextFormator/TextFormator.h"
 
 // base engine
+#include "BaseEngine/Core/CoreStates.h"
 #include "Systems/Interface/ISystem.h"
 #include "BaseEngine/Reflection/MetaUserInterface.h"
 #include "BaseEngine/Reflection/RemoveQualifier.h"
@@ -51,6 +52,7 @@ All the includes are listed here to avoid multiple includes in any other files
 #include "Systems/ScriptingSystem/ComponentID.h"
 #include "Systems/ScriptingSystem/Component.h"
 #include "Systems/ScriptingSystem/Script.h"
+#include "Systems/ScriptingSystem/ComponentVector.h"
 #include "Systems/ScriptingSystem/ScriptingSystem.h"
 					// Factory
 #include "Systems/Factory/GameObject.h"

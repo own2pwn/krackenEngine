@@ -5,8 +5,7 @@
 *  @author Juan Ramos 
 */
 #pragma once
-#include <vulkan/vulkan.hpp>
-#include <vector>
+#include "Precompiled.h"
 #include "MRKImage.h"
 
 namespace mrk
@@ -41,6 +40,10 @@ namespace mrk
 		*  windowSystem: Needed for choosing the swap extent.
 		*/
 		explicit Swapchain(createInfo const &info);
+
+        Swapchain() = default;
+
+        mrk::Swapchain & operator=(mrk::Swapchain && other) noexcept;
 
 		/**
 		* \brief
@@ -111,7 +114,6 @@ namespace mrk
 
 		vk::Format depthFormat_;
 		mrk::Image depthImage_;
-
         
         vk::RenderPassBeginInfo renderBeginPassInfo_;
         vk::RenderPassBeginInfo createRenderPassInfo() const;	

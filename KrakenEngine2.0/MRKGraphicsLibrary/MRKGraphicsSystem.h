@@ -5,7 +5,7 @@
 #include "MRKInstance.h"
 #include "MRKResourceManager.h"
 #include "MRKPipeline.h"
-#include <vulkan/vulkan.hpp>
+#include "Precompiled.h"
 
 namespace mrk
 {
@@ -14,40 +14,42 @@ namespace mrk
 
     class GraphicsSystem
 	{
-	public:
-
-		explicit GraphicsSystem(CreateInfo const& createInfo); 
-        void loadResources();
-		void draw();
-        static void recreateWindowDependentResources(GLFWwindow * window, int width, int height);
-        ~GraphicsSystem();
-
+    public:
         // Note: Scott Meyers mentions in his Effective Modern
         //       C++ book, that deleted functions should generally
         //       be public as it results in better error messages
         //       due to the compilers behavior to check accessibility
         //       before deleted status
         GraphicsSystem(GraphicsSystem const &) = delete;
-        GraphicsSystem& operator=(const GraphicsSystem&) = delete;
+        GraphicsSystem& operator=(GraphicsSystem const &) = delete;
         GraphicsSystem(GraphicsSystem &&) = delete;
-        GraphicsSystem & operator=(GraphicsSystem &&) = delete;
+        GraphicsSystem& operator=(GraphicsSystem &&) = delete;
 
-		// Data
-		WindowSystem const windowSystem_;
-        mrk::Instance const instance_;
-		vk::SurfaceKHR const surface_;
+        // Needed for singleton
+        GraphicsSystem() = default;
 
-		mrk::Device const device_;
+        ~GraphicsSystem()
+        {
+            pipeline.cleanUp();
+            device.logicalDevice_.destroyCommandPool(graphicsPool);
+        }
 
-        vk::Queue const graphicsQueue_;
-        vk::Queue const presentQueue_;
-        vk::CommandPool const graphicsPool_;
+        // Order of members is crucial for destruction
+		WindowSystem windowSystem;
+        mrk::Instance instance;
+		vk::SurfaceKHR surface;
 
-		mrk::Swapchain swapchain_;
-        mrk::ResourceManager resourceManager_;
-        mrk::Pipeline pipeline_;
+		mrk::Device device;
+
+        vk::Queue graphicsQueue;
+        vk::Queue presentQueue;
+        vk::CommandPool graphicsPool;
+
+		mrk::Swapchain swapChain;
+        mrk::ResourceManager resourceManager;
+        mrk::Pipeline pipeline;
 	};
 
-    extern mrk::GraphicsSystem g_graphicsSystemSingleton;
+    extern GraphicsSystem g_graphicsSystemSingleton;
 }
 

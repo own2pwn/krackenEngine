@@ -31,6 +31,8 @@ namespace Framework
 		std::unordered_map<unsigned int, Space*>* GetSpaces();
 			// get a specific space
 		Space* GetSpace(unsigned int id);
+			// get a specific space
+		Space* operator[](unsigned int id);
 	private:
 
 		std::unordered_map<unsigned int, Space*> m_spaces;

@@ -1,30 +1,30 @@
 #include "MRKDescriptor.h"
 #include "MRKVulkanTools.h"
 #include "MRKGraphicsSystem.h"
-#include <array>
-#include <vector>
+#include "Precompiled.h"
 
 namespace mrk
 {
 Descriptor::Descriptor(createInfo const & info) :
-    mPool(createPool()),
-    mLayout(createLayout()),
+    mPool(createPool(info)),
+    mLayout(createLayout(info)),
     mSet(createSets(info))
 {
 }
 
 void Descriptor::setup(createInfo const& info)
 {
-	createPool();
-	createLayout();
-	createSets(info);
+	mPool = createPool(info);
+	mLayout = createLayout(info);
+	mSet = createSets(info);
 }
 
-vk::DescriptorPool Descriptor::createPool()
+vk::DescriptorPool Descriptor::createPool(createInfo const& info)
 {
     // Create descriptors pools for uniform buffer and sampler
     vk::DescriptorPoolSize uniformPool(vk::DescriptorType::eUniformBuffer, 1);
-    vk::DescriptorPoolSize samplerPool(vk::DescriptorType::eCombinedImageSampler, 1);
+	// as many image sampler as there are images on the model
+    vk::DescriptorPoolSize samplerPool(vk::DescriptorType::eCombinedImageSampler, static_cast<uint32_t>(info.textures->size()));
 
     std::array<vk::DescriptorPoolSize, 2> poolSizes = { uniformPool, samplerPool };
 
@@ -33,11 +33,11 @@ vk::DescriptorPool Descriptor::createPool()
         .setPPoolSizes(poolSizes.data())
         .setMaxSets(1);
 
-    MRK_CATCH(mPool = g_graphicsSystemSingleton.device_.logicalDevice_.createDescriptorPool(poolInfo))
+    MRK_CATCH(mPool = g_graphicsSystemSingleton.device.logicalDevice_.createDescriptorPool(poolInfo))
     return mPool;
 }
 
-vk::DescriptorSetLayout Descriptor::createLayout()
+vk::DescriptorSetLayout Descriptor::createLayout(createInfo const& info)
 {
     // Create descriptor set layouts for uniform buffer and sampling
     auto uboLayoutBinding = vk::DescriptorSetLayoutBinding()
@@ -48,7 +48,7 @@ vk::DescriptorSetLayout Descriptor::createLayout()
 
     auto samplerLayoutBinding = vk::DescriptorSetLayoutBinding()
         .setBinding(1)
-        .setDescriptorCount(1)
+        .setDescriptorCount(static_cast<uint32_t>(info.textures->size()))
         .setDescriptorType(vk::DescriptorType::eCombinedImageSampler)
         .setStageFlags(vk::ShaderStageFlagBits::eFragment);
 
@@ -58,7 +58,7 @@ vk::DescriptorSetLayout Descriptor::createLayout()
         .setBindingCount(static_cast<uint32_t>(bindings.size()))
         .setPBindings(bindings.data());
 
-    MRK_CATCH(mLayout = g_graphicsSystemSingleton.device_.logicalDevice_.createDescriptorSetLayout(layoutInfo))
+    MRK_CATCH(mLayout = g_graphicsSystemSingleton.device.logicalDevice_.createDescriptorSetLayout(layoutInfo))
 
     return mLayout;
 }
@@ -73,7 +73,7 @@ vk::DescriptorSet Descriptor::createSets(createInfo const & info)
         .setPSetLayouts(layouts);
 
     std::vector<vk::DescriptorSet> sets;
-    MRK_CATCH(sets = g_graphicsSystemSingleton.device_.logicalDevice_.allocateDescriptorSets(allocInfo))
+    MRK_CATCH(sets = g_graphicsSystemSingleton.device.logicalDevice_.allocateDescriptorSets(allocInfo))
     vk::DescriptorSet set = sets[0];
 
     auto bufferInfo = vk::DescriptorBufferInfo()
@@ -81,10 +81,15 @@ vk::DescriptorSet Descriptor::createSets(createInfo const & info)
         .setOffset(0)
         .setRange(sizeof(UniformBufferObject));
 
-    auto imageInfo = vk::DescriptorImageInfo()
-        .setImageLayout(vk::ImageLayout::eShaderReadOnlyOptimal)
-        .setImageView(*info.textureView)
-        .setSampler(*info.textureSampler);
+	std::vector<vk::DescriptorImageInfo> imageInfo;
+	imageInfo.resize(info.textures->size());
+
+	for (size_t i = 0; i < info.textures->size(); ++i)
+	{
+		imageInfo[i].setImageLayout(vk::ImageLayout::eShaderReadOnlyOptimal);
+		imageInfo[i].setImageView((*info.textures)[i].mImageView);
+		imageInfo[i].setSampler((*info.textures)[i].mSampler);
+	}
 
     std::array<vk::WriteDescriptorSet, 2> descriptorWrites = {};
         descriptorWrites[0].dstSet = set;
@@ -100,20 +105,20 @@ vk::DescriptorSet Descriptor::createSets(createInfo const & info)
         descriptorWrites[1].dstBinding = 1;
         descriptorWrites[1].dstArrayElement = 0;
         descriptorWrites[1].descriptorType = vk::DescriptorType::eCombinedImageSampler;
-        descriptorWrites[1].descriptorCount = 1;
+        descriptorWrites[1].descriptorCount = static_cast<uint32_t>(info.textures->size());
         descriptorWrites[1].pBufferInfo = nullptr;
-        descriptorWrites[1].pImageInfo = &imageInfo;
+        descriptorWrites[1].pImageInfo = imageInfo.data();
         descriptorWrites[1].pTexelBufferView = nullptr;
 
-    g_graphicsSystemSingleton.device_.logicalDevice_.updateDescriptorSets(descriptorWrites, nullptr);
+    g_graphicsSystemSingleton.device.logicalDevice_.updateDescriptorSets(descriptorWrites, nullptr);
 	mSet = set;
     return set;
 }
 
 Descriptor::~Descriptor()
 {
-    g_graphicsSystemSingleton.device_.logicalDevice_.destroyDescriptorPool(mPool);
-    g_graphicsSystemSingleton.device_.logicalDevice_.destroyDescriptorSetLayout(mLayout);
+    g_graphicsSystemSingleton.device.logicalDevice_.destroyDescriptorPool(mPool);
+    g_graphicsSystemSingleton.device.logicalDevice_.destroyDescriptorSetLayout(mLayout);
 }
 
 }

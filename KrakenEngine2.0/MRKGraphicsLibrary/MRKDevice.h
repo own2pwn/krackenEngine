@@ -5,8 +5,7 @@
 *  @author Juan Ramos
 */
 #pragma once
-#include <vulkan/vulkan.hpp>
-#include <vector>
+#include "Precompiled.h"
 
 namespace mrk
 {
@@ -56,6 +55,9 @@ namespace mrk
                   presentFamilyIndex(present_family)
             {
             }
+            QueueFamilyIndices() = default;
+
+            QueueFamilyIndices & operator=(QueueFamilyIndices & other) = default;
 
             static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice const &physicalDevice, vk::SurfaceKHR const &surface);
             static bool isComplete(uint32_t graphicsFamilyIndex, uint32_t presentFamilyIndex);
@@ -68,7 +70,7 @@ namespace mrk
              *      Look for a flag that says GRAPHICS_BIT
              *      http://vulkan.gpuinfo.org/displayreport.php?id=1593#queuefamilies
              */
-            uint32_t const graphicsFamilyIndex;
+            uint32_t graphicsFamilyIndex;
             /**
              * \brief
              *  Contains the index for the family that contains presentation capability
@@ -76,7 +78,7 @@ namespace mrk
              *      Look for supportsPresent = 1
              *      http://vulkan.gpuinfo.org/displayreport.php?id=1593#queuefamilies
              */
-            uint32_t const presentFamilyIndex;
+            uint32_t presentFamilyIndex;
         };
 
 	    /**
@@ -88,6 +90,9 @@ namespace mrk
 		 *  See create info struct 
 		 */
 		explicit Device(createInfo const& info);
+        Device() = default;
+
+        Device & operator=(Device && other) noexcept;
 
 	    /**
 		 * \brief 
@@ -136,12 +141,12 @@ namespace mrk
         vk::Format findDepthFormat() const;
         vk::Format findSupportedFormat(std::vector<vk::Format> const &canidates, vk::ImageTiling const &tiling, vk::FormatFeatureFlagBits const & formatFeature) const; 
 
-		vk::PhysicalDevice const physicalDevice_;
-	    QueueFamilyIndices const queueFamilyIndices_;
-		vk::PhysicalDeviceProperties const physicalDeviceProperties_;
-		vk::PhysicalDeviceMemoryProperties const physicalDeviceMemoryProperties_;
-		vk::PhysicalDeviceFeatures const physicalDeviceFeatures_;
-		vk::Device const logicalDevice_;
+		vk::PhysicalDevice physicalDevice_;
+	    QueueFamilyIndices queueFamilyIndices_;
+		vk::PhysicalDeviceProperties physicalDeviceProperties_;
+		vk::PhysicalDeviceMemoryProperties physicalDeviceMemoryProperties_;
+		vk::PhysicalDeviceFeatures physicalDeviceFeatures_;
+		vk::Device logicalDevice_;
 
 	private:
         static vk::PhysicalDevice pickPhysicalDevice(createInfo const &info);

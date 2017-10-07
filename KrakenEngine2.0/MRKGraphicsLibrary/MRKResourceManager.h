@@ -10,7 +10,6 @@
  * 
  * This is done in the Visual Studio pre-processor settings
  */
-#include "glm/glm.hpp"
 #include "MRKDescriptor.h"
 
 namespace mrk
@@ -41,7 +40,7 @@ namespace mrk
             char const * const fragmentShaderPath;
         };
 
-        explicit ResourceManager();
+        explicit ResourceManager() = default;
         ~ResourceManager();
         void load(loadInfo const & info);
 
@@ -52,7 +51,6 @@ namespace mrk
 		mrk::Buffer const & getVertexBuffer() const;
 		mrk::Buffer const & getIndexBuffer() const;
 
-
     private:
         Model houseModel_; // Obviously this is NOT final. We will have an array of Models
         vk::ShaderModule vertexShader_;
@@ -60,7 +58,7 @@ namespace mrk
         mrk::Buffer houseVertexBuffer_;
         mrk::Buffer houseIndexBuffer_;
         mrk::Buffer houseUniformBuffer_;
-        mrk::Image houseTexture_;
+        std::vector<mrk::Image> houseTextures_;
         mrk::Descriptor descriptor_;
 
         static vk::ShaderModule loadShaderModule(char const * const shaderPath);

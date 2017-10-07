@@ -1,5 +1,5 @@
 #pragma once
-#include <vulkan/vulkan.hpp>
+#include "Precompiled.h"
 #include "MRKResource.h"
 #include "MRKModel.h"
 
@@ -14,9 +14,10 @@ namespace mrk
 		//functions
 		Buffer();
 		Buffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties);
+        Buffer & operator=(Buffer && other) noexcept;
 		~Buffer();
 		void destroy();
-		void createVertexBuffer(std::vector<Model::Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue);
+		void createVertexBuffer(std::vector<Vertex> const & vertices, vk::CommandPool commandPool, vk::Queue deviceQueue);
 		void createIndexBuffer(std::vector<uint32_t> const & indices, vk::CommandPool commandPool, vk::Queue deviceQueue);
 		void copyBuffer(mrk::Buffer & source, vk::DeviceSize size, vk::CommandPool commandPool, vk::Queue deviceQueue);
 	};

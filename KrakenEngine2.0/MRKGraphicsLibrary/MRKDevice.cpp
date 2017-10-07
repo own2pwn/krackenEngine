@@ -8,11 +8,7 @@
 #include "MRKVulkanTools.h"
 #include "MRKDebugCallback.h"
 
-#include <set>
-#include <iostream>
-#include <vector>
-#include <array>
-#include <string>
+#include "Precompiled.h"
 #include "MRKGraphicsSystem.h"
 
 namespace
@@ -31,6 +27,21 @@ namespace mrk
       logicalDevice_(getLogicalDevice())
 	{
 	}
+
+    Device& Device::operator=(Device&& other) noexcept
+    {
+        physicalDevice_ = other.physicalDevice_;
+        queueFamilyIndices_ = other.queueFamilyIndices_;
+        physicalDeviceProperties_ = other.physicalDeviceProperties_;
+        physicalDeviceMemoryProperties_ = other.physicalDeviceMemoryProperties_;
+        physicalDeviceFeatures_ = other.physicalDeviceFeatures_;
+        logicalDevice_ = other.logicalDevice_;
+
+        other.physicalDevice_ = nullptr;
+        other.logicalDevice_ = nullptr;
+
+        return *this;
+    }
 
     Device::~Device()
 	{

@@ -18,6 +18,12 @@ namespace Framework
 			// adds a new component by template
 		template <typename T>
 		void AddComponent();
+			// adds a new component by template
+		template <typename T>
+		void AddComponent(Component* component);
+			// removes a component
+		template <typename T>
+		void RemoveComponent();
 			// get a component by template
 		template <typename T>
 		T* GetComponent();
@@ -37,6 +43,7 @@ namespace Framework
 		std::unordered_map<int, Component*> m_components;
 	};
 
+
 ///////////////////////////////////////////
 // implementation of templated functions // 
 ///////////////////////////////////////////
@@ -51,11 +58,54 @@ namespace Framework
 		ASSERT(component != nullptr); // did not allocate
 		m_components[id] = component;
 
+		// register with the ComponentVector
+		ComponentVector<T>::AddComponent(component);
+
 			// initialization
 		component->SetID(id);
 		component->SetOwner(this);
 		component->Initialize();
+	}
 
+	template <typename T>
+	void GameObject::AddComponent(Component* component)
+	{
+		// getting unque id corresponding to this type of component
+		int id = ComponentID<T>::GetID();
+
+		// creation
+		m_components[id] = component;
+
+		// register with the ComponentVector
+		ComponentVector<T>::AddComponent(component);
+
+		// initialization
+		component->SetID(id);
+		component->SetOwner(this);
+	}
+
+	template <typename T>
+	void GameObject::RemoveComponent()
+	{
+		int id = ComponentID<T>::GetID();
+		Component * component = nullptr;
+
+		try
+		{
+			component = dynamic_cast<T*>(m_components.at(id));
+		}
+		catch (std::out_of_range ex)
+		{
+			ASSERT(false); // on debug saying that component not found, on release silintly move on
+		}
+
+		if (component)
+		{
+			ComponentVector<T>::Remove(component);
+			delete component;
+				// in case somone trys to access deleted element later
+			component = nullptr;
+		}
 	}
 
 	template <typename T>

@@ -1,5 +1,5 @@
 #pragma once
-#include <vulkan/vulkan.hpp>
+#include "Precompiled.h"
 
 namespace mrk
 {
@@ -14,14 +14,15 @@ namespace mrk
 		vk::Semaphore imageAvailable;
 		vk::Semaphore renderFinished;
 
-		Pipeline(bool dynamic = true);
+        explicit Pipeline();
+        Pipeline & operator=(Pipeline && other) noexcept;
         void load();
 		void recreate();
 		void cleanUp();
         ~Pipeline();
 
     private:
-        const bool dynamic_;
+        const bool dynamic_ = ifProjectIsBuiltInDebugMode();
 
 		void createCommandBuffers();
 		void createSemaphores();
