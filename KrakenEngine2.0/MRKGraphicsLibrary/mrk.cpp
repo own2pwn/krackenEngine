@@ -8,7 +8,6 @@
 #include "MRKGraphicsSystem.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include <iostream>
 
 namespace mrk
 {
@@ -51,8 +50,8 @@ namespace mrk
 
    void LoadResources()
     {
-        char const * const MODEL_PATH = "Assets/models/barrel.obj";
-        char const * const TEXTURE_PATH = "Assets/textures/barrelUV.01.jpg";
+        char const * const MODEL_PATH = "Assets/models/Crate1.obj";
+        char const * const TEXTURE_PATH = "Assets/textures/chalet.jpg";
         char const * const VERTEX_SHADER_PATH = "Assets/shaders/vert.spv";
         char const * const FRAGMENT_SHADER_PATH = "Assets/shaders/frag.spv";
 		
@@ -76,7 +75,8 @@ namespace mrk
 
         UniformBufferObject ubo;
         // Third parameter: Rotating about z axis
-        ubo.model = glm::translate(glm::mat4(1), glm::vec3(-3.0f, -3.0f, -3.0f)) * glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::rotate(glm::mat4(), time * glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), // cameraPosition
             glm::vec3(0.0f, 0.0f, 0.0f), // cameraTarget
             glm::vec3(0.0f, 0.0f, 1.0f) // cameraUp
@@ -84,9 +84,9 @@ namespace mrk
 
         vk::Extent2D extent = g_graphicsSystemSingleton.swapChain.getExtent();
         const float nearPlane = 0.1f;
-        const float farPlane = 10.0f;
+        const float farPlane = 200.0f;
 
-        ubo.proj = glm::perspective(glm::radians(45.0f),
+        ubo.proj = glm::perspective(glm::radians(90.0f),
             static_cast<float>(extent.width) / static_cast<float>(extent.height),
             nearPlane, farPlane);
         // GLM was originally designed for opengl where the y coordinate of the clip coordinates is inverted

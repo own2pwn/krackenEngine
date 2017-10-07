@@ -17,7 +17,7 @@ namespace mrk
 	 * texturePath = path to texture
 	 * \param createInfo 
 	 */
-	Image::Image(mrk::Image::CreateInfo createInfo) :
+	Image::Image(mrk::Image::CreateInfo const & createInfo) :
 		Resource(),
 		info_(createInfo),
 	    mImage(createImage(createInfo)),
@@ -26,7 +26,12 @@ namespace mrk
 	{
 	}
 
-    Image& Image::operator=(Image&& other) noexcept
+	Image::Image(mrk::Image&& other) noexcept
+	{
+		*this = std::move(other); // NOT USED: required by stl
+	}
+
+	Image& Image::operator=(Image&& other) noexcept
     {
         mSampler = other.mSampler;
         mImageView = other.mImageView;
@@ -48,7 +53,7 @@ namespace mrk
 			destroy();
 	}
 
-	vk::Image & Image::createImage(mrk::Image::CreateInfo & createInfo)
+	vk::Image & Image::createImage(mrk::Image::CreateInfo const & createInfo)
 	{
         // TODO look into getting rid of these dimension parameters
 		int width = static_cast<int>(createInfo.width);

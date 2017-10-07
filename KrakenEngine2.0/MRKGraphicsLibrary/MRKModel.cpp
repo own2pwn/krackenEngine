@@ -2,16 +2,12 @@
 #include <tinyobjloader-master/tiny_obj_loader.h>
 #include <glm/gtx/hash.hpp>
 
-#include <unordered_map>
-
 #include "MRKVulkanTools.h"
 #include "MRKModel.h"
 
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
-
-#define ASSIM
 
 // Needed for hashing vertices parsing for unique vertices using std::unordered_map, this looks like it should be replaced with a lamda
 namespace std
@@ -32,11 +28,8 @@ namespace mrk
 {
 	void Model::load(char const* modelPath)
 	{
-		std::unordered_map<mrk::Vertex, uint32_t> uniqueVertices = {};
-
-#ifdef ASSIM
 		Assimp::Importer importer;
-		const aiScene *scene = importer.ReadFile(modelPath, aiProcessPreset_TargetRealtime_Fast);
+		const aiScene *scene = importer.ReadFile(modelPath, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
@@ -44,75 +37,6 @@ namespace mrk
 		}
 
 		processNode(scene->mRootNode, scene);
-
-#else
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-		std::string err;
-
-		/*
-		* An OBJ file consists of positions, normals, texture coordinates and faces.
-		*
-		* Faces consist of an arbitrary amount of vertices, where each vertex refers to a position, normal and/or texture coordinate
-		* by index. This makes it possible to not just reuse entire vertices, but also individual attributes.
-		*
-		* The attrib container holds all of the positions, normals and texture coordinates in its attrib.vertices,
-		* attrib.normals and attrib.texcoords vectors. The shapes container contains all of the separate objects and their faces.
-		* Each face consists of an array of vertices, and each vertex contains the indices of the position,
-		* normal and texture coordinate attributes. OBJ models can also define a material and texture per face, but we
-		* will be ignoring those.
-		*
-		* The err string contains errors and warnings that occurred while loading the file, like a missing material definition.
-		* Loading only really failed if the LoadObj function returns false. As mentioned above, faces in OBJ files can
-		* actually contain an arbitrary number of vertices, whereas our application can only render triangles. Luckily
-		* the LoadObj has an optional parameter to automatically triangulate such faces, which is enabled by default.
-		*/
-
-		if (tinyobj::LoadObj(&attrib, &shapes, &materials, &err, modelPath) == false)
-		{
-			throw_line(err.c_str())
-		}
-
-#ifdef _DEBUG
-		uniqueVertices.reserve(1000000);
-		vertices.reserve(500000);
-		indices.reserve(500000);
-#endif
-
-		for (auto const & shape : shapes)
-		{
-			for (const auto & index : shape.mesh.indices)
-			{
-				Vertex vertex = {};
-
-				vertex.pos =
-				{
-					attrib.vertices[3 * index.vertex_index + 0],
-					attrib.vertices[3 * index.vertex_index + 1],
-					attrib.vertices[3 * index.vertex_index + 2]
-				};
-
-				vertex.texCoord = {
-					attrib.texcoords[2 * index.texcoord_index + 0],
-					// The problem is that the origin of texture coordinates in Vulkan is the 
-					// top-left corner, whereas the OBJ format assumes the bottom-left corner. 
-					// Solve this by flipping the vertical component of the texture coordinates:
-					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-				};
-
-				vertex.color = { 1.0f, 1.0f, 1.0f };
-
-				if (uniqueVertices.count(vertex) == 0)
-				{
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
-				}
-
-				indices.push_back(uniqueVertices[vertex]);
-			}
-		}
-#endif
 	}
 
 	void Model::processNode(aiNode const * node, aiScene const * scene)
@@ -184,7 +108,7 @@ namespace mrk
 
 	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
-		aiString dir("Assets/textures/");
+		aiString path("Assets/textures/");
 		std::vector<Texture> textures;
 
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -192,13 +116,13 @@ namespace mrk
 			aiString str;
 			mat->GetTexture(type, i, &str);
 
-			dir.Append(str.C_Str());
+			path.Append(str.C_Str());
 
 			bool skip = false;
 
-			for (unsigned int j = 0; j < loadedTextures.size(); j++)
+			for (unsigned int j = 0; j < loadedTextures.size(); ++j)
 			{
-				if (std::strcmp(loadedTextures[j].path.C_Str(), dir.C_Str()) == 0)
+				if (std::strcmp(loadedTextures[j].path.C_Str(), path.C_Str()) == 0)
 				{
 					textures.push_back(loadedTextures[j]);
 					skip = true;
@@ -210,7 +134,7 @@ namespace mrk
 			{   // if texture hasn't been loaded already, load it
 				Texture texture;
 				texture.type = typeName;
-				texture.path = dir;
+				texture.path = path;
 				textures.push_back(texture);
 				loadedTextures.push_back(texture); // add to loaded textures
 			}
