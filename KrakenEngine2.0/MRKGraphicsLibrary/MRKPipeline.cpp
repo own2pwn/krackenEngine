@@ -2,10 +2,11 @@
 #include "MRKGraphicsSystem.h"
 #include "MRKPipeline.h"
 #include "MRKVulkanTools.h"
+#include "mrk.h"
 
 namespace mrk
 {
-    Pipeline::Pipeline()
+    Pipeline::Pipeline() : type_(ShaderType::DEFAULT)
     {
         commandBuffers_.reserve(10);
     }
@@ -21,24 +22,37 @@ namespace mrk
         return *this;
     }
 
-    void Pipeline::load()
+    void Pipeline::load(ShaderType type)
     {
+        type_ = type;
         createSemaphores();
 
 		const ResourceManager & resourceManager = g_graphicsSystemSingleton.resourceManager;
 
 		// create shader stages
-		vk::PipelineShaderStageCreateInfo vertStageInfo = vk::PipelineShaderStageCreateInfo()
-			.setStage(vk::ShaderStageFlagBits::eVertex)
-			.setModule(resourceManager.getVertexShader())
-			.setPName("main");
+		//vk::PipelineShaderStageCreateInfo vertStageInfo = vk::PipelineShaderStageCreateInfo()
+		//	.setStage(vk::ShaderStageFlagBits::eVertex)
+		//	.setModule(resourceManager.getVertexShader())
+		//	.setPName("main");
 
-		vk::PipelineShaderStageCreateInfo fragStageInfo = vk::PipelineShaderStageCreateInfo()
-			.setStage(vk::ShaderStageFlagBits::eFragment)
-			.setModule(resourceManager.getFragmentShader())
-			.setPName("main");
+		//vk::PipelineShaderStageCreateInfo fragStageInfo = vk::PipelineShaderStageCreateInfo()
+		//	.setStage(vk::ShaderStageFlagBits::eFragment)
+		//	.setModule(resourceManager.getFragmentShader())
+		//	.setPName("main");
 
-		std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStages = { vertStageInfo, fragStageInfo };
+		//std::array<vk::PipelineShaderStageCreateInfo, 2> shaderStages = { vertStageInfo, fragStageInfo };
+
+        std::vector<vk::PipelineShaderStageCreateInfo> shaderStages;
+
+        auto shaders = g_graphicsSystemSingleton.resourceManager.getShadersFromShaderType(type);
+        for (std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, const char*> const &tuple : shaders)
+        {
+            shaderStages.emplace_back(vk::PipelineShaderStageCreateInfo()
+                                        .setModule(std::get<0>(tuple))
+                                        .setStage(std::get<1>(tuple))
+                                        .setPName(std::get<2>(tuple))
+            );
+        }
 
 		// vertex input
 		vk::VertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
@@ -174,7 +188,7 @@ namespace mrk
 
         if (dynamic_ == false)
         {
-            load();
+            load(type_);
         }
         else
         {
