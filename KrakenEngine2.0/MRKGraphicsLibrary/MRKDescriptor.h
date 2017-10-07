@@ -3,6 +3,7 @@
 
 namespace mrk
 {
+	class Image;
 
 class Descriptor
 {
@@ -10,8 +11,7 @@ public:
     struct createInfo
     {
         vk::Buffer* uniformBuffer;
-        vk::ImageView* textureView;
-        vk::Sampler* textureSampler;
+		std::vector<mrk::Image>* textures;
     };
 
     Descriptor() = default;
@@ -25,8 +25,8 @@ public:
 	void setup(createInfo const & info);
 
 private:
-    vk::DescriptorPool createPool();
-    vk::DescriptorSetLayout createLayout();
+    vk::DescriptorPool createPool(createInfo const& info);
+    vk::DescriptorSetLayout createLayout(createInfo const& info);
     vk::DescriptorSet createSets(createInfo const & info);
 };
 
