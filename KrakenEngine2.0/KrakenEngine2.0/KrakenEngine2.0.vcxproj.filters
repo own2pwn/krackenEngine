@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{6942d620-0a4f-41c4-8d07-3a9f8e9817ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools\String\String.cpp" />
+    <ClCompile Include="BaseEngine\Core\Core.cpp" />
+    <ClCompile Include="Tools\TextFormator\TextFormator.cpp" />
+    <ClCompile Include="Systems\Factory\SpaceFactory.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\Function.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaType.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaVariable.cpp" />
+    <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
+    <ClCompile Include="Tools\CodeTests\StringTest.cpp" />
+    <ClCompile Include="Precompiled.cpp" />
+    <ClCompile Include="Systems\Factory\Space.cpp" />
+    <ClCompile Include="Systems\Factory\GameObject.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Component.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
+    <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaFactory.cpp" />
+    <ClCompile Include="Systems\Physics\Physics.cpp" />
+    <ClCompile Include="Systems\Input\Input.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precompiled.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\String\String.h" />
+    <ClInclude Include="Tools\Assert\Assert.h" />
+    <ClInclude Include="BaseEngine\Core\Core.h" />
+    <ClInclude Include="Tools\NameGenerator\NameGenerator.h" />
+    <ClInclude Include="Tools\TextFormator\TextFormator.h" />
+    <ClInclude Include="Systems\Factory\SpaceFactory.h" />
+    <ClInclude Include="BaseEngine\Reflection\Function.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaFactory.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaType.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaUserInterface.h" />
+    <ClInclude Include="BaseEngine\Reflection\MetaVariable.h" />
+    <ClInclude Include="BaseEngine\Reflection\RemoveQualifier.h" />
+    <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
+    <ClInclude Include="Systems\Interface\ISystem.h" />
+    <ClInclude Include="Tools\CodeTests\StringTest.h" />
+    <ClInclude Include="Tools\uniqueID\UniqueID.h" />
+    <ClInclude Include="Systems\Factory\Space.h" />
+    <ClInclude Include="Systems\Factory\GameObject.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Component.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
+    <ClInclude Include="Systems\ScriptingSystem\Script.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
+    <ClInclude Include="Systems\Physics\Physics.h" />
+    <ClInclude Include="Systems\Input\Input.h" />
+    <ClInclude Include="BaseEngine\Core\CoreStates.h" />
+    <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
+  </ItemGroup>
+</Project>

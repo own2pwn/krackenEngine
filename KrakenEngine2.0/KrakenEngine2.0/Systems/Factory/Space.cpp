@@ -12,14 +12,14 @@ Implementation of Object Factory
 
 namespace Framework
 {
-	Space::Space() : m_uniqueObjectID(0)
+	Space::Space() : m_uniqueObjectID(0), m_ID(0)
 	{
 		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, GameObject*);
 		REGISTER_TYPE(Space);
 		ADD_MEMBER(Space, m_objects);
 	}
 
-	Space::Space(std::string name) : m_uniqueObjectID(0), m_name(name)
+	Space::Space(std::string name) : m_uniqueObjectID(0), m_ID(0), m_name(name)
 	{
 		REGISTER_UNORDERED_MAP_OF_TYPE(unsigned int, GameObject*);
 		REGISTER_TYPE(Space);
@@ -80,6 +80,7 @@ namespace Framework
 		m_uniqueObjectID++;
 		GameObject* gameObject = new GameObject; 
 		gameObject->SetID(m_uniqueObjectID);
+		gameObject->SetOwner(this);
 		m_objects[m_uniqueObjectID] = gameObject;
 		ASSERT(m_objects.at(m_uniqueObjectID) != nullptr); // fail to create
 		
@@ -113,4 +114,13 @@ namespace Framework
 		return GetObject(id);
 	}
 
+	void Space::SetID(unsigned int id)
+	{
+		m_ID = id;
+	}
+
+	unsigned int Space::GetID() const
+	{
+		return m_ID;
+	}
 } // Framework

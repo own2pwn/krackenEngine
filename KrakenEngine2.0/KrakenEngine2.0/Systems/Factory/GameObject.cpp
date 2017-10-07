@@ -44,4 +44,18 @@ namespace Framework
 		return m_ID;
 	}
 
+	unsigned int GameObject::SpaceID() const 
+	{
+		return m_owner->GetID();
+	}
+
+	void GameObject::SetOwner(Space* space)
+	{
+		m_owner = space;
+	}
+	
+	Space* GameObject::GetOwner()
+	{
+		return m_owner;
+	}
 } // Framework

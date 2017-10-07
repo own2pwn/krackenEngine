@@ -164,7 +164,6 @@ namespace Framework
 			MetaVariable metaIndex("key", (char*)(&(it.first)), MetaFactory<T1>::Get());
 			MetaVariable metaData("data", &(it.second), MetaFactory<T2>::Get());
 			os << metaIndex << metaData << std::endl;
-
 		}
 		tab_lvl--;
 		TextFormator::Padding(os, tab_lvl);
