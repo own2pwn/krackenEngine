@@ -38,6 +38,7 @@ namespace mrk
         mImage = other.mImage;
         mMemory = other.mMemory;
         mSize = other.mSize;
+        info_ = other.info_;
 
         other.mSampler = nullptr;
         other.mImageView = nullptr;

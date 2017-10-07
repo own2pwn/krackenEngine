@@ -57,7 +57,7 @@ namespace mrk
 		// this will use the passed in path instead
 		if (textureCount == 0)
 		{
-			createInfo.texturePath = info.houseModelTexturePath;
+			createInfo.texturePath = info.modelsToLoad[0].texturePath[0];
 			houseTextures_.push_back(mrk::Image(createInfo));
 		}
 

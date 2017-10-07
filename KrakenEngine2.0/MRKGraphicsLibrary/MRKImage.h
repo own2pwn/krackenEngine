@@ -38,7 +38,7 @@ namespace mrk
         {}
 
         Image & operator=(Image && other) noexcept;
-		~Image();;
+		~Image();
 		vk::Image & Image::createImage(mrk::Image::CreateInfo const & createInfo);
 		vk::ImageView createImageView(vk::Format format, vk::ImageAspectFlags aspectFlags);
 		vk::Sampler & createImageSampler();
