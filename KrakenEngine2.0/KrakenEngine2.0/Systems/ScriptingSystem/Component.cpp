@@ -48,4 +48,15 @@ namespace Framework
 		return m_owner;
 	}
 
+
+	unsigned int Component::ObjectID() const
+	{
+		return m_owner->GetID();
+	}
+
+	unsigned int Component::SpaceID() const
+	{
+		return m_owner->SpaceID();
+	}
+
 } // Framework

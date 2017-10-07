@@ -7,8 +7,8 @@
 Stores information about types
 */
 /******************************************************************************/
-#ifndef REFLECTION_H
-#define REFLECTION_H
+#ifndef META_TYPE_H
+#define META_TYPE_H
 
 namespace Framework
 {

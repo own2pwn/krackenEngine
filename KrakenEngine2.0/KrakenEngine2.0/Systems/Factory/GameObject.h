@@ -12,6 +12,9 @@ Inteface for GameObject
 
 namespace Framework
 {
+		// forward declaration
+	class Space;
+
 	class GameObject
 	{
 	public:
@@ -37,10 +40,17 @@ namespace Framework
 		void SetID(int id);
 		  // Gets ID
 		int GetID() const;
+			// Gets Space ID
+		unsigned int SpaceID() const;
+			// sets Owner
+		void SetOwner(Space* space);
+			// gets Owner
+		Space* GetOwner();
 	private:
-		unsigned int m_ID;
-		std::string m_name;
-		std::unordered_map<int, Component*> m_components;
+		unsigned int m_ID;	// id corresponding to this gameobject in current space
+		Space* m_owner;			// pointer to the space object in
+		std::string m_name;	// name of the object
+		std::unordered_map<int, Component*> m_components;	// all the components
 	};
 
 

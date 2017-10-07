@@ -12,6 +12,8 @@ Creates and manages Game Objects
 
 namespace Framework
 {
+	class SpaceFactory;
+
 	class Space
 	{
 	public:
@@ -39,14 +41,18 @@ namespace Framework
 		GameObject* GetObject(unsigned int id);
 			// get a specific space
 		GameObject* operator[](unsigned int id);
-
+			// sets space id
+		void SetID(unsigned int id);
+			// gets space id
+		unsigned int GetID() const;
 	private:
 		Space();
 
-		std::unordered_map<unsigned int, GameObject*> m_objects;
-		unsigned int m_uniqueObjectID;
-		std::string m_name;
-		std::vector<unsigned int> m_objectsIDsToDestroy;
+		std::unordered_map<unsigned int, GameObject*> m_objects; // all the objects in this space
+		unsigned int m_uniqueObjectID;													 // makes unique IDs for objects
+		unsigned int m_ID;																			 // id of this space in the spacefactory
+		std::string m_name;																			 // name of this sapce
+		std::vector<unsigned int> m_objectsIDsToDestroy;				 // objects to destroy this frame
 	};
 } // Framework
 #endif
