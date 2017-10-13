@@ -52,7 +52,7 @@ namespace Framework
 		space->SetID(m_uniqueFactoryID);
 		m_spaces[m_uniqueFactoryID] = space;
 		ASSERT(m_spaces.at(m_uniqueFactoryID) != nullptr); // fail to create
-		
+		Physics::Get()->CreateScene(m_uniqueFactoryID);
 		return m_spaces.at(m_uniqueFactoryID);
 	}
 

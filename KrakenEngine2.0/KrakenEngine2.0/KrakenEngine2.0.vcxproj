@@ -108,6 +108,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\KrakenEngine2.0\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../../Precompiled.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4201</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>PhysX3DEBUG_x64.lib;PhysX3CommonDEBUG_x64.lib;PxFoundationDEBUG_x64.lib;PxPvdSDKDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -150,6 +151,8 @@
     <ClCompile Include="BaseEngine\Reflection\MetaType.cpp" />
     <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
     <ClCompile Include="BaseEngine\Core\Core.cpp" />
+    <ClCompile Include="Components\Physics\DynamicBody.cpp" />
+    <ClCompile Include="Components\Transform\Transform.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
@@ -183,6 +186,8 @@
     <ClInclude Include="BaseEngine\Reflection\MetaUserInterface.h" />
     <ClInclude Include="BaseEngine\Serialization\Serialization.h" />
     <ClInclude Include="BaseEngine\Core\Core.h" />
+    <ClInclude Include="Components\Physics\DynamicBody.h" />
+    <ClInclude Include="Components\Transform\Transform.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="Systems\Input\Input.h" />
     <ClInclude Include="Systems\ScriptingSystem\Component.h" />

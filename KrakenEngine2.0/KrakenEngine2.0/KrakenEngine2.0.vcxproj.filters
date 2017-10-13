@@ -26,6 +26,10 @@
     <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
     <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
     <ClCompile Include="BaseEngine\Reflection\MetaFactory.cpp" />
+    <ClCompile Include="Systems\Physics\Physics.cpp" />
+    <ClCompile Include="Systems\Input\Input.cpp" />
+    <ClCompile Include="Components\Physics\DynamicBody.cpp" />
+    <ClCompile Include="Components\Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -53,9 +57,12 @@
     <ClInclude Include="Systems\ScriptingSystem\ComponentID.h" />
     <ClInclude Include="Systems\ScriptingSystem\Script.h" />
     <ClInclude Include="Systems\ScriptingSystem\ScriptingSystem.h" />
-    <ClInclude Include="Systems\Physics\Physics.h" />
-    <ClInclude Include="Systems\Input\Input.h" />
+    <ClInclude Include="BaseEngine\Core\CoreStates.h" />
     <ClInclude Include="BaseEngine\Core\CoreStates.h" />
     <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
+    <ClInclude Include="Components\Transform\Transform.h" />
+    <ClInclude Include="Components\Physics\DynamicBody.h" />
+    <ClInclude Include="Systems\Input\Input.h" />
+    <ClInclude Include="Systems\Physics\Physics.h" />
   </ItemGroup>
 </Project>
