@@ -31,9 +31,9 @@ DynamicBody::DynamicBody(unsigned int scene_id,
 	: rigid_dynamic_(nullptr)
 {
 	//Setup aliases for readability
-	glm::vec3 const & position = transform.position;
-	glm::vec3 const & scale = transform.scale;
-	glm::quat const & rotation = transform.rotation;
+	glm::vec3 const & position = transform.GetPosition();
+	glm::vec3 const & scale = transform.GetScale();
+	glm::quat const & rotation = transform.GetRotation();
 	PxPhysics & physx_physics = *Physics::Get()->physx_physics_;
 
 	switch (collider_type)
@@ -41,9 +41,8 @@ DynamicBody::DynamicBody(unsigned int scene_id,
 	case e_sphere:
 		//Create physx object
 		rigid_dynamic_ = PxCreateDynamic(physx_physics,
-			PxTransform(PxVec3(position.x, position.y, position.z)),
-			PxSphereGeometry(transform.scale.x / 2),
-			//TODO - Make material local
+			PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotation.x, rotation.y, rotation.z, rotation.w)),
+			PxSphereGeometry(scale.x),
 			*physx_physics.createMaterial(0.5f, 0.5f, 0.6f),
 			mass / ((4.f / 3.f) * glm::pi<float>() * scale.x * scale.x * scale.x));
 		break;
@@ -52,6 +51,11 @@ DynamicBody::DynamicBody(unsigned int scene_id,
 		break;
 
 	case e_capsule:
+		rigid_dynamic_ = PxCreateDynamic(physx_physics,
+			PxTransform(PxVec3(position.x, position.y, position.z), PxQuat(rotation.x, rotation.y, rotation.z, rotation.w)),
+			PxCapsuleGeometry(scale.x, scale.y),
+			*physx_physics.createMaterial(0.5f, 0.5f, 0.6f),
+			mass / ((glm::pi<float>() * scale.x * scale.x * scale.y) + (4.f / 3.f) * glm::pi<float>() * scale.x * scale.x * scale.x));
 		break;
 
 	case e_box:
@@ -66,7 +70,7 @@ DynamicBody::DynamicBody(unsigned int scene_id,
 	{
 		rigid_dynamic_->setAngularDamping(0.5f);
 		rigid_dynamic_->setLinearVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
-		Physics::Get()->AddActor(*rigid_dynamic_, scene_id);
+		Physics::Get()->AddActor(*rigid_dynamic_, scene_id, transform.Owner());
 	}
 #ifdef _DEBUG
 	else

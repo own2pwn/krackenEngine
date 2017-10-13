@@ -31,25 +31,28 @@ namespace Framework
 		void CreateScene(unsigned int space_id);
 
 		//Add an actor to the simulation
-		void AddActor(physx::PxActor & actor, unsigned int scene_id);
+		void AddActor(physx::PxActor & actor, unsigned int scene_id, GameObject * object);
 
 		//Special access for Physics related components
-		friend DynamicBody::DynamicBody(unsigned int scene,
-			ColliderType collider_type,
-			float mass,
-			Transform const & transform,
-			glm::vec3 const & velocity);
+		friend class DynamicBody;
 	
 	private:
 		Physics();
+
+		//Access the transforms that updated last frame
+		//Key is the space id
+		//Data is a vector of pointers to the updated transforms
+		std::unordered_map<unsigned int, std::vector<Transform * > > const & GetUpdatedTransforms(void) const;
+
 		const float fastest_simulation_rate_ = 1.0f / 80.0f;
 		const float slowest_simulation_rate_ = 1.0f / 20.0f;
+		//TEMP - get rid of this after testing
 		unsigned int test_space_id;
 		//TODO - Implement rate averaging/fixed rate
 		//float average_simulation_rate_ = -1.0f;
-
-		std::unordered_map<physx::PxActor *, GameObject *> actor_to_object_;
-		std::unordered_map<GameObject *, physx::PxActor *> object_to_actor_;
+		
+		//Stores transforms that moved during last simulation
+		std::unordered_map<unsigned int, std::vector<Transform *> > spaceid_to_updated_transforms_;
 
 		//Controls simulation speed
 		float Throttle(float dt) const;
@@ -67,10 +70,6 @@ namespace Framework
 		//NOTE: Might need refactoring
 		physx::PxDefaultAllocator		allocator_;
 		physx::PxDefaultErrorCallback	error_callback_;
-
-		//TODO - Make these variables unnecessary
-		//physx::PxMaterial*				material_ = nullptr;
-		physx::PxReal					stack_z_ = 10.0f;
 
 		//Methods for testing
 		void RunTests(void);

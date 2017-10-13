@@ -28,6 +28,8 @@
     <ClCompile Include="BaseEngine\Reflection\MetaFactory.cpp" />
     <ClCompile Include="Systems\Physics\Physics.cpp" />
     <ClCompile Include="Systems\Input\Input.cpp" />
+    <ClCompile Include="Components\Physics\DynamicBody.cpp" />
+    <ClCompile Include="Components\Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">
@@ -59,5 +61,7 @@
     <ClInclude Include="Systems\Input\Input.h" />
     <ClInclude Include="BaseEngine\Core\CoreStates.h" />
     <ClInclude Include="Systems\ScriptingSystem\ComponentVector.h" />
+    <ClInclude Include="Components\Physics\DynamicBody.h" />
+    <ClInclude Include="Components\Transform\Transform.h" />
   </ItemGroup>
 </Project>

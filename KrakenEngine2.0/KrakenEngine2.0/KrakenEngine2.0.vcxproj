@@ -152,6 +152,7 @@
     <ClCompile Include="BaseEngine\Serialization\Serialization.cpp" />
     <ClCompile Include="BaseEngine\Core\Core.cpp" />
     <ClCompile Include="Components\Physics\DynamicBody.cpp" />
+    <ClCompile Include="Components\Transform\Transform.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>

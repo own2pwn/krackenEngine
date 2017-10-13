@@ -53,6 +53,7 @@ All the includes are listed here to avoid multiple includes in any other files
 	// base classes
 #include "Systems/ScriptingSystem/ComponentID.h"
 #include "Systems/ScriptingSystem/Component.h"
+#include "Systems/ScriptingSystem/ComponentVector.h"
 #include "Systems/ScriptingSystem/Script.h"
 #include "Systems/Factory/GameObject.h"
 	// components

@@ -34,7 +34,7 @@ namespace Framework
 using namespace physx;
 
 //////////////////////////////
-
+//Copied from PhysX HelloWorld example
 PxRigidDynamic* Physics::TestDynamic(const PxTransform& t,
 	const PxGeometry& geometry,
 	const PxVec3& velocity,
@@ -48,6 +48,7 @@ PxRigidDynamic* Physics::TestDynamic(const PxTransform& t,
 	return dynamic;
 }
 
+//Copied from PhysX HelloWorld example
 void Physics::TestStack(const PxTransform& t, PxU32 size, PxReal halfExtent, unsigned int space_id)
 {
 
@@ -58,7 +59,7 @@ void Physics::TestStack(const PxTransform& t, PxU32 size, PxReal halfExtent, uns
 	{
 		for (PxU32 j = 0; j < size - i; j++)
 		{
-			PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1), 0) * halfExtent);
+			PxTransform const localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1), 0) * halfExtent);
 			PxRigidDynamic* body = physx_physics_->createRigidDynamic(t.transform(localTm));
 			body->attachShape(*shape);
 			PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
@@ -91,30 +92,26 @@ void Physics::Initialize()
 
 } //end Initialize()
 
-void Physics::CreateScene(unsigned int space_id)
+	void Physics::CreateScene(unsigned int space_id)
 {
 	//Init PhysX scene
 	PxSceneDesc sceneDesc(physx_physics_->getTolerancesScale());
+	//TODO - make gravity not hardcoded
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 	dispatcher_ = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = dispatcher_;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVE_ACTORS;
 	scenes_[space_id] = physx_physics_->createScene(sceneDesc);
+
+	//Try to minimize resizing this vector later
+	spaceid_to_updated_transforms_[space_id].reserve(64);
 }
 
-void Physics::AddActor(PxActor & actor, unsigned int scene_id)
+void Physics::AddActor(PxActor & actor, unsigned int scene_id, GameObject * object)
 {
 	scenes_[scene_id]->addActor(actor);
-}
-
-void CreateDynamic(unsigned int space_id, GameObject * object)
-{
-	// TODO
-}
-
-void CreateStatic(unsigned int space_id, GameObject * object)
-{
-	// TODO
+	actor.userData = object;
 }
 
 //Controls simulation speed
@@ -146,10 +143,8 @@ void Physics::RunTests(void)
 	static bool test_done = false;
 	if (test_done == false)
 	{
-		//TEMP - create test space
-		SpaceFactory::Get()->AddSpace("physics_test_space");
-		test_space_id = SpaceFactory::Get()->GetSpaces()->begin()->first;
-		//CreateScene(0);
+		//Create test space
+		test_space_id = SpaceFactory::Get()->AddSpace("physics_test_space")->GetID();
 
 		//PhysX Visual Debugger only exists in debug mode
 #ifdef _DEBUG
@@ -164,13 +159,14 @@ void Physics::RunTests(void)
 
 		////////////////////
 		//Create test material and objects
-		PxMaterial * material = physx_physics_->createMaterial(0.5f, 0.5f, 0.6f);
+		//PxMaterial * material = physx_physics_->createMaterial(0.5f, 0.5f, 0.6f);
 
-		PxRigidStatic* groundPlane = PxCreatePlane(*physx_physics_, PxPlane(0, 1, 0, 0), *material);
-		scenes_[test_space_id]->addActor(*groundPlane);
+		//PxRigidStatic* groundPlane = PxCreatePlane(*physx_physics_, PxPlane(0, 1, 0, 0), *material);
+		//scenes_[test_space_id]->addActor(*groundPlane);
 
-		for (PxU32 i = 0; i < 5; i++)
-			TestStack(PxTransform(PxVec3(0, 0, stack_z_ -= 10.0f)), 10, 2.0f, test_space_id);
+		//PxReal stack_z_ = 10.0f;
+		//for (PxU32 i = 0; i < 5; i++)
+			//TestStack(PxTransform(PxVec3(0, 0, stack_z_ -= 10.0f)), 10, 2.0f, test_space_id);
 
 		//TestDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10), PxVec3(0, -50, -100), test_space_id);
 
@@ -179,9 +175,9 @@ void Physics::RunTests(void)
 		GameObject * game_object = SpaceFactory::Get()->GetSpace(test_space_id)->AddObject();
 		game_object->AddComponent<Transform>();
 		Transform * transform = game_object->GetComponent<Transform>();
-		transform->position = glm::vec3(0, 20, 100);
-		transform->scale = glm::vec3(5, 5, 5);
-		transform->rotation = glm::quat(0, 0, 0, 1);
+		transform->position_ = glm::vec3(0, 20, 100);
+		transform->scale_ = glm::vec3(5, 5, 5);
+		transform->rotation_ = glm::quat(0, 0, 0, 1);
 		DynamicBody * body = new DynamicBody(test_space_id,
 			e_sphere,
 			10000.0f,
@@ -193,11 +189,11 @@ void Physics::RunTests(void)
 		game_object = SpaceFactory::Get()->GetSpace(test_space_id)->AddObject();
 		game_object->AddComponent<Transform>();
 		transform = game_object->GetComponent<Transform>();
-		transform->position = glm::vec3(0, 40, 100);
-		transform->scale = glm::vec3(15, 15, 15);
-		transform->rotation = glm::quat(0, 0, 0, 1);
+		transform->position_ = glm::vec3(0, 40, 100);
+		transform->scale_ = glm::vec3(15, 15, 15);
+		transform->rotation_ = glm::quat(0, 0, 0, 1);
 		body = new DynamicBody(test_space_id,
-			e_sphere,
+			e_capsule,
 			50000.0f,
 			*transform,
 			glm::vec3(0, -50, -100));
@@ -211,14 +207,40 @@ void Physics::RunTests(void)
 
 void Physics::Update(float dt)
 {
+#ifdef _DEBUG
 	RunTests();
+#endif
 
 	if (Throttle(dt))
 	{
 		for (auto pair : scenes_)
 		{
+			//Update physx simulation
 			pair.second->simulate(dt);
 			pair.second->fetchResults(true);
+
+			//Get array of actors that moved
+			std::vector<Transform *> & updated_transforms = spaceid_to_updated_transforms_[pair.first];
+			PxU32 num_active_actors;
+			PxActor ** active_actors = pair.second->getActiveActors(num_active_actors);
+
+			
+			for(PxU32 i = 0; i < num_active_actors; ++i)
+			{
+				//Find pointer to the engine transform
+				PxActor * actor = active_actors[i];
+				GameObject * object = static_cast<GameObject*>(actor->userData);
+				Transform * transform = object->GetComponent<Transform>();
+				//Add pointer to container
+				updated_transforms.push_back(transform);
+				//Update engine transform to match simulation transform
+				//NOTE: This static cast make cloth simulation not work
+				PxTransform const & px_transform = static_cast<PxRigidActor*>(active_actors[i])->getGlobalPose();
+				PxVec3 const & px_position = px_transform.p;
+				PxQuat const & px_rotation = px_transform.q;
+				transform->position_ = glm::vec3(px_position.x, px_position.y, px_position.z);
+				transform->rotation_ = glm::quat(px_rotation.x, px_rotation.y, px_rotation.z, px_rotation.w);
+			}
 		}
 	}
 } //end Update()
@@ -247,4 +269,8 @@ Physics::Physics()
 {
 }
 
-}; // Framework
+std::unordered_map<unsigned, std::vector<Transform*>> const & Physics::GetUpdatedTransforms() const
+{
+	return spaceid_to_updated_transforms_;
+}
+} // end Framework
