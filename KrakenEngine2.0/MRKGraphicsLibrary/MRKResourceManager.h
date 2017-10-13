@@ -10,7 +10,6 @@
  * 
  * This is done in the Visual Studio pre-processor settings
  */
-#include "glm/glm.hpp"
 #include "MRKDescriptor.h"
 
 namespace mrk
@@ -59,7 +58,7 @@ namespace mrk
         mrk::Buffer houseVertexBuffer_;
         mrk::Buffer houseIndexBuffer_;
         mrk::Buffer houseUniformBuffer_;
-        mrk::Image houseTexture_;
+        std::vector<mrk::Image> houseTextures_;
         mrk::Descriptor descriptor_;
 
         static vk::ShaderModule loadShaderModule(char const * const shaderPath);

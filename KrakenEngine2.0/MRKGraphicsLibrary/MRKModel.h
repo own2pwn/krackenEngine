@@ -1,16 +1,12 @@
 #pragma once
-#include <vector>
-#include <vulkan/vulkan.hpp>
-#include <glm/glm.hpp>
-#include <assimp/material.h>
+#include "Precompiled.h"
 
+struct aiMaterial;
 //predeclared
 struct aiScene;
 struct aiNode;
 struct aiMesh;
 struct aiString;
-
-	
 
 namespace mrk
 {

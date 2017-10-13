@@ -4,12 +4,11 @@
 *
 *  @author Juan Ramos
 */
- #include "MRKSwapchain.h"
+#include "MRKSwapchain.h"
 #include "MRKDevice.h"
 #include "MRKWindowSystem.h"
 #include "MRKVulkanTools.h"
 #include "MRKImage.h"
-#include <array>
 #include "MRKGraphicsSystem.h"
 
 namespace

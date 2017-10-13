@@ -6,16 +6,7 @@
 */
 #pragma once
 
-// Libs
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
-#include "vulkan/vulkan.hpp"
-#include "glm/glm.hpp"
-
-// Standard
-#include <vector>
-
-// Project
+#include "Precompiled.h"
 
 namespace mrk
 {

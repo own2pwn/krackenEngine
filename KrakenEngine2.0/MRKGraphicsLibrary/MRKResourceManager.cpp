@@ -1,6 +1,6 @@
+#include "Precompiled.h"
 #include "MRKResourceManager.h"
 #include "MRKGraphicsSystem.h"
-#include <fstream>
 
 namespace mrk
 {
@@ -40,15 +40,28 @@ namespace mrk
             vk::ImageTiling::eOptimal, 
             vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, 
             vk::MemoryPropertyFlagBits::eDeviceLocal, 
-            vk::ImageAspectFlagBits::eColor, 
-            info.houseModelTexturePath};
+            vk::ImageAspectFlagBits::eColor};
 
-		houseTexture_.info_ = createInfo;
-		houseTexture_.createImage(createInfo);
-		houseTexture_.createImageView(createInfo.format, createInfo.aspectFlags);
-		houseTexture_.createImageSampler();
+		size_t textureCount = houseModel_.loadedTextures.size();
+		
+		houseTextures_.resize(textureCount);
 
-		descriptor_.setup(Descriptor::createInfo{ &houseUniformBuffer_.buffer_, &houseTexture_.mImageView, &houseTexture_.mSampler });
+		// the chalet does not have a mtl so assimp will not get its textures
+		// this will use the passed in path instead
+		if (textureCount == 0)
+		{
+			createInfo.texturePath = info.houseModelTexturePath;
+			houseTextures_.push_back(mrk::Image(createInfo));
+		}
+
+		for (size_t i = 0; i < textureCount; ++i)
+		{
+			createInfo.texturePath = houseModel_.loadedTextures[i].path.C_Str();
+
+			houseTextures_[i] = (mrk::Image(createInfo));
+		}
+
+		descriptor_.setup(Descriptor::createInfo{ &houseUniformBuffer_.buffer_, &houseTextures_ });
     }
 
     vk::ShaderModule const& ResourceManager::getVertexShader() const
