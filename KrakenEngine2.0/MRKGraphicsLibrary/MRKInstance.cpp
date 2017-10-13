@@ -38,7 +38,7 @@ Instance& Instance::operator=(Instance&& other) noexcept
     return *this;
 }
 
-    vk::Instance Instance::createInstance(createInfo const & info) const
+vk::Instance Instance::createInstance(createInfo const & info) const
 {
     checkValidationLayers();
     printOutAvailableExtensions();

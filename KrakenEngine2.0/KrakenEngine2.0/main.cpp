@@ -18,14 +18,14 @@ int main()
 #if _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-		// create and initialize core of the engine
+	// create and initialize core of the engine
 	Core::Get().Initialize();
-		// start running the engine
+	// start running the engine
 	Core::Get().Run();
-		// everything dealocated automaticly when leaving scope
-	
+	// everything dealocated automaticly when leaving scope
+
 #if _DEBUG
-		
+
 	//std::cout <<  << std::endl;
 	GET_TYPE_BY_STRING("int")->Print();
 	MetaType* a = GET_TYPE_BY_TEMPLATE(double);
@@ -40,8 +40,8 @@ int main()
 
 	std::cout << var << std::endl;
 	std::cout << GET_TYPE_BY_STRING("int");
-	
-										  // Register a structure
+
+	// Register a structure
 	struct Object
 	{
 		int x;
@@ -54,11 +54,11 @@ int main()
 
 	REGISTER_TYPE(MetaType);
 	std::cout << GET_TYPE_BY_TEMPLATE(int);
-	
+
 	class A
 	{
 	public:
-		A() : b(1.1f){}
+		A() : b(1.1f) {}
 		float b;
 	};
 
@@ -66,7 +66,7 @@ int main()
 	class B
 	{
 	public:
-		B() : c(false),b(2.2f)  {}
+		B() : c(false), b(2.2f) {}
 		A a;
 		const bool c;
 		float b;
@@ -75,7 +75,7 @@ int main()
 	class C
 	{
 	public:
-		C() : a(),c('c'), s("string")
+		C() : a(), c('c'), s("string")
 		{
 			vec.push_back(new B());
 			vec.push_back(new B());
@@ -115,7 +115,7 @@ int main()
 
 	REGISTER_TYPE(A);
 	ADD_MEMBER(A, b);
-	
+
 	REGISTER_TYPE(C);
 	ADD_MEMBER(C, a);
 	ADD_MEMBER(C, b);
@@ -123,7 +123,7 @@ int main()
 	ADD_MEMBER(C, s);
 	ADD_MEMBER(C, vec);
 	ADD_MEMBER(C, map);
-	
+
 
 	C c;
 	B b;
@@ -132,12 +132,12 @@ int main()
 	varB.Set(b, "b");
 	varC.Set(c, "c");
 	std::cout << varC;
-	
+
 	std::cout << "BLAAAAHHHH " << std::endl;
 	// example of how to get data out of member in a class
 	MetaVariable member_b("b", ((float*)((char*)varC.GetRowData() + GET_OFFSET(C, b))), GET_TYPE_BY_STRING("B"));
 	std::cout << member_b << std::endl;
-	
+
 	SpaceFactory* factory = SpaceFactory::Get();
 	factory->AddSpace("WorldSpace");
 	factory->AddSpace("UIspace");
@@ -149,15 +149,15 @@ int main()
 	class Controller : public Script
 	{
 	public:
-		Controller() :x(1.0f), y(2.2f), z(3.4f) { REGISTER_TYPE(Controller); ADD_MEMBER(Controller, x); ADD_MEMBER(Controller, y); ADD_MEMBER(Controller, z);}
-		void Update(float ) override {}
+		Controller() :x(1.0f), y(2.2f), z(3.4f) { REGISTER_TYPE(Controller); ADD_MEMBER(Controller, x); ADD_MEMBER(Controller, y); ADD_MEMBER(Controller, z); }
+		void Update(float) override {}
 	private:
 		float x, y, z;
 	};
 	class AI : public Script
 	{
 	public:
-		void Update(float ) override {}
+		void Update(float) override {}
 	};
 	Controller controller;
 	AI ai;
@@ -168,7 +168,7 @@ int main()
 	std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n" << stuff << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
 
 	std::ofstream out("test.txt", std::ofstream::out);
-	ASSERT(out.is_open());	
+	ASSERT(out.is_open());
 	if (!out.is_open())
 	{
 		std::cout << "Could not open test.txt" << std::endl;
@@ -176,7 +176,7 @@ int main()
 	}
 	int Int = 5;
 	MetaVariable mInt;
-	mInt.Set(Int,"mInt");
+	mInt.Set(Int, "mInt");
 	out << mInt;
 	out.close();
 
@@ -192,15 +192,14 @@ int main()
 	// thought to deserialize function using template specify
 	// what kind of type we trying to deserialize
 	//////////////////////////////////////////////////////////
-/*	
+/*
 	std::string string;
 	MetaVariable devar;
 	devar.Set(string, "string");
 	in >> devar;
 	//*/
 	in.close();
-//	std::cout << devar.Name();
-
+	//	std::cout << devar.Name();
 	system("PAUSE");
 #endif
 

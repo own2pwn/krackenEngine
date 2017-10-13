@@ -14,6 +14,9 @@
 
 namespace mrk
 {
+    enum class ShaderType;
+    struct LoadResourcesCreateInfo;
+
     struct UniformBufferObject
     {
         glm::mat4 model; // Model to world
@@ -26,40 +29,38 @@ namespace mrk
     public:
         struct loadInfo
         {
-            loadInfo(char const* house_model_path, char const* house_model_texture_path, char const* vertex_shader_path, char const* fragment_shader_path)
+            loadInfo(char const* house_model_path, char const* house_model_texture_path)
                 : houseModelPath(house_model_path),
-                  houseModelTexturePath(house_model_texture_path),
-                  vertexShaderPath(vertex_shader_path),
-                  fragmentShaderPath(fragment_shader_path)
+                  houseModelTexturePath(house_model_texture_path)
             {
             }
 
             char const * const houseModelPath;
             char const * const houseModelTexturePath;
-            char const * const vertexShaderPath;
-            char const * const fragmentShaderPath;
         };
 
         explicit ResourceManager() = default;
         ~ResourceManager();
-        void load(loadInfo const & info);
+        void load(LoadResourcesCreateInfo const & info);
 
-        vk::ShaderModule const & getVertexShader() const;
-        vk::ShaderModule const & getFragmentShader() const;
         mrk::Descriptor const & getDescriptor() const;
         mrk::Buffer const & getUniformBuffer() const;
 		mrk::Buffer const & getVertexBuffer() const;
 		mrk::Buffer const & getIndexBuffer() const;
+        std::vector<std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, char const *>> const & getShadersFromShaderType(ShaderType type);
 
     private:
-        Model houseModel_; // Obviously this is NOT final. We will have an array of Models
-        vk::ShaderModule vertexShader_;
-        vk::ShaderModule fragmentShader_;
+        // Obviously this is NOT final. We will have an array of Models
+        Model houseModel_; 
         mrk::Buffer houseVertexBuffer_;
         mrk::Buffer houseIndexBuffer_;
         mrk::Buffer houseUniformBuffer_;
         std::vector<mrk::Image> houseTextures_;
         mrk::Descriptor descriptor_;
+
+        // ShaderType and all the shaders that associate with it
+        std::unordered_map<ShaderType, std::vector< std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, char const *> > > shaderGroups;
+        void setUpShaderGroups();
 
         static vk::ShaderModule loadShaderModule(char const * const shaderPath);
     };

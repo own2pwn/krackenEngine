@@ -9,54 +9,48 @@
 
 namespace mrk
 {
-
     GraphicsSystem g_graphicsSystemSingleton;
 
-    void initializeGraphicsSystem(GraphicsSystemCreateInfo  const & createInfo)
-    {
-        // Makes code easier to read
-        auto & windowSystem = g_graphicsSystemSingleton.windowSystem;
-        auto & instance = g_graphicsSystemSingleton.instance;
-        auto & surface = g_graphicsSystemSingleton.surface;
-        auto & device = g_graphicsSystemSingleton.device;
-        auto & graphicsQueue = g_graphicsSystemSingleton.graphicsQueue;
-        auto & presentQueue = g_graphicsSystemSingleton.presentQueue;
-        auto & graphicsPool = g_graphicsSystemSingleton.graphicsPool;
-        auto & swapChain = g_graphicsSystemSingleton.swapChain;
+   void initializeGraphicsSystem(GraphicsSystemCreateInfo  const & createInfo)
+   {
+       // Makes code easier to read
+       auto & windowSystem = g_graphicsSystemSingleton.windowSystem;
+       auto & instance = g_graphicsSystemSingleton.instance;
+       auto & surface = g_graphicsSystemSingleton.surface;
+       auto & device = g_graphicsSystemSingleton.device;
+       auto & graphicsQueue = g_graphicsSystemSingleton.graphicsQueue;
+       auto & presentQueue = g_graphicsSystemSingleton.presentQueue;
+       auto & graphicsPool = g_graphicsSystemSingleton.graphicsPool;
+       auto & swapChain = g_graphicsSystemSingleton.swapChain;
 
-        // As of now the default constructor does nothing for the resource manager or pipeline
-        //auto & resourceManager = g_graphicsSystemSingleton.resourceManager;
-        // auto & pipeline = g_graphicsSystemSingleton.pipeline;
+       // As of now the default constructor does nothing for the resource manager or pipeline
+       //auto & resourceManager = g_graphicsSystemSingleton.resourceManager;
+       // auto & pipeline = g_graphicsSystemSingleton.pipeline;
 
-        // Initialization
-        WindowSystem::init();
-        windowSystem = WindowSystem(createInfo.winCreateInfo);
-        instance = Instance(
-            mrk::Instance::createInfo{ createInfo.applicationName, createInfo.engineName, windowSystem });
-        surface = vk::SurfaceKHR(
-            windowSystem.createSurface(static_cast<vk::Instance>(instance)));
-        device = mrk::Device(mrk::Device::createInfo(static_cast<vk::Instance>(instance), surface));
-        graphicsQueue = device.logicalDevice_.getQueue(device.queueFamilyIndices_.graphicsFamilyIndex, 0);
-        presentQueue  = device.logicalDevice_.getQueue(device.queueFamilyIndices_.presentFamilyIndex, 0);
-        graphicsPool = device.createCommandPool(device.queueFamilyIndices_.graphicsFamilyIndex);
-        swapChain = mrk::Swapchain(mrk::Swapchain::createInfo{});
+       // Initialization
+       WindowSystem::init();
+       windowSystem = WindowSystem(createInfo.winCreateInfo);
+       instance = Instance(
+           mrk::Instance::createInfo{ createInfo.applicationName, createInfo.engineName, windowSystem });
+       surface = vk::SurfaceKHR(
+           windowSystem.createSurface(static_cast<vk::Instance>(instance)));
+       device = mrk::Device(mrk::Device::createInfo(static_cast<vk::Instance>(instance), surface));
+       graphicsQueue = device.logicalDevice_.getQueue(device.queueFamilyIndices_.graphicsFamilyIndex, 0);
+       presentQueue  = device.logicalDevice_.getQueue(device.queueFamilyIndices_.presentFamilyIndex, 0);
+       graphicsPool = device.createCommandPool(device.queueFamilyIndices_.graphicsFamilyIndex);
+       swapChain = mrk::Swapchain(mrk::Swapchain::createInfo{});
 
-        // As of now the default constructor does nothing for the resource manager or pipeline
-        //resourceManager = mrk::ResourceManager();
-        //pipeline = mrk::Pipeline();
-    }
+       // As of now the default constructor does nothing for the resource manager or pipeline
+       //resourceManager = mrk::ResourceManager();
+       //pipeline = mrk::Pipeline();
+   }
 
-   void LoadResources()
-    {
-        char const * const MODEL_PATH = "Assets/models/chalet.obj";
-        char const * const TEXTURE_PATH = "Assets/textures/chalet.jpg";
-        char const * const VERTEX_SHADER_PATH = "Assets/shaders/vert.spv";
-        char const * const FRAGMENT_SHADER_PATH = "Assets/shaders/frag.spv";
-		
-        g_graphicsSystemSingleton.resourceManager.load(ResourceManager::loadInfo{ MODEL_PATH, TEXTURE_PATH, VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH });
+   void LoadResources(LoadResourcesCreateInfo const & loadInfo)
+   {
+        g_graphicsSystemSingleton.resourceManager.load(loadInfo);
 
-		g_graphicsSystemSingleton.pipeline.load();
-    }
+		g_graphicsSystemSingleton.pipeline.load(loadInfo.shaderType);
+   }
 
     void Draw()
     {

@@ -34,10 +34,14 @@ namespace Framework
 		void SetOwner(GameObject* gameobject);
 			// Gets owner
 		GameObject* Owner() const;
+			// gets GameObjects ID
+		unsigned int ObjectID() const;
+			// gets SpaceID
+		unsigned int SpaceID() const;
 	private:
-		int m_ID;
-		GameObject* m_owner;
-		std::string m_name;
+		int m_ID;							// id corresponding to this component
+		GameObject* m_owner;	// objects pointer
+		std::string m_name;		// name of the Component
 		//	std::unordered_map<int, Component*> m_components;
 	};
 } // Framework

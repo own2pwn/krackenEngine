@@ -80,3 +80,6 @@ public:
 }
 
 #define throw_line(arg) throw mrk::exception(arg, __FILE__, __LINE__);
+#define throw_line_exp(b, arg) if (b) { throw mrk::exception(arg, __FILE__, __LINE__); }
+
+

@@ -1,23 +1,29 @@
 #include "Precompiled.h"
 #include "MRKResourceManager.h"
 #include "MRKGraphicsSystem.h"
+#include "mrk.h"
 
 namespace mrk
 {
     ResourceManager::~ResourceManager()
     {
-        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(vertexShader_);
-        g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(fragmentShader_);
+        for (auto & shader_group : shaderGroups)
+        {
+            for (std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, const char*> & tuple : shader_group.second)
+            {
+                g_graphicsSystemSingleton.device.logicalDevice_.destroyShaderModule(std::get<0>(tuple));
+            }
+        }
     }
 
-    void ResourceManager::load(loadInfo const& info)
+    void ResourceManager::load(LoadResourcesCreateInfo const& info)
     {
         houseUniformBuffer_ = mrk::Buffer(sizeof(UniformBufferObject), vk::BufferUsageFlagBits::eUniformBuffer,
             vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
-        houseModel_.load(info.houseModelPath);
 
-        vertexShader_ = loadShaderModule(info.vertexShaderPath);
-        fragmentShader_ = loadShaderModule(info.fragmentShaderPath);
+        houseModel_.load(info.modelsToLoad[0].modelPath);
+
+        setUpShaderGroups();
 
 		std::vector<mrk::Vertex> verts;
 		std::vector<uint32_t> inds;
@@ -40,7 +46,8 @@ namespace mrk
             vk::ImageTiling::eOptimal, 
             vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, 
             vk::MemoryPropertyFlagBits::eDeviceLocal, 
-            vk::ImageAspectFlagBits::eColor};
+            vk::ImageAspectFlagBits::eColor, 
+            info.modelsToLoad[0].texturePath[0]};
 
 		size_t textureCount = houseModel_.loadedTextures.size();
 		
@@ -50,7 +57,7 @@ namespace mrk
 		// this will use the passed in path instead
 		if (textureCount == 0)
 		{
-			createInfo.texturePath = info.houseModelTexturePath;
+			createInfo.texturePath = info.modelsToLoad[0].texturePath[0];
 			houseTextures_.push_back(mrk::Image(createInfo));
 		}
 
@@ -62,16 +69,6 @@ namespace mrk
 		}
 
 		descriptor_.setup(Descriptor::createInfo{ &houseUniformBuffer_.buffer_, &houseTextures_ });
-    }
-
-    vk::ShaderModule const& ResourceManager::getVertexShader() const
-    {
-        return vertexShader_;
-    }
-
-    vk::ShaderModule const& ResourceManager::getFragmentShader() const
-    {
-        return fragmentShader_;
     }
 
     mrk::Descriptor const& ResourceManager::getDescriptor() const
@@ -94,7 +91,27 @@ namespace mrk
 		return houseIndexBuffer_;
 	}
 
-	vk::ShaderModule ResourceManager::loadShaderModule(char const* const shaderPath)
+    std::vector<std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, char const*>> const& ResourceManager::getShadersFromShaderType(ShaderType type)
+    {
+        auto search = shaderGroups.find(type);
+        throw_line_exp(search == shaderGroups.end(), "Asked for a non-established shader group")
+
+        return search->second;
+    }
+
+    void ResourceManager::setUpShaderGroups()
+    {
+        char const * const DEFAULT_VERTEX_SHADER_PATH = "Assets/shaders/vert.spv";
+        char const * const DEFAULT_FRAGMENT_SHADER_PATH = "Assets/shaders/frag.spv";
+		
+        std::vector< std::tuple<vk::ShaderModule, vk::ShaderStageFlagBits, char const *> > defaultShaders;
+        defaultShaders.push_back( {loadShaderModule(DEFAULT_VERTEX_SHADER_PATH), vk::ShaderStageFlagBits::eVertex, "main"} );
+        defaultShaders.push_back( {loadShaderModule(DEFAULT_FRAGMENT_SHADER_PATH), vk::ShaderStageFlagBits::eFragment, "main"} );
+
+        shaderGroups.emplace(ShaderType::DEFAULT, std::move(defaultShaders));
+    }
+
+    vk::ShaderModule ResourceManager::loadShaderModule(char const* const shaderPath)
     {
         // ate: Start reading at the end of the file
         // binary: Read the file as a binary
@@ -124,5 +141,5 @@ namespace mrk
 
         return shaderModule;
     }
-
 }
+

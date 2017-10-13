@@ -16,13 +16,14 @@ namespace mrk
 
         explicit Pipeline();
         Pipeline & operator=(Pipeline && other) noexcept;
-        void load();
+        void load(ShaderType type);
 		void recreate();
 		void cleanUp();
         ~Pipeline();
 
     private:
         const bool dynamic_ = ifProjectIsBuiltInDebugMode();
+        ShaderType type_;
 
 		void createCommandBuffers();
 		void createSemaphores();

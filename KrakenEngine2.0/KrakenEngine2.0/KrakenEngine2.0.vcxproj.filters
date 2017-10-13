@@ -25,8 +25,7 @@
     <ClCompile Include="Systems\ScriptingSystem\ComponentID.cpp" />
     <ClCompile Include="Systems\ScriptingSystem\Script.cpp" />
     <ClCompile Include="Systems\ScriptingSystem\ScriptingSystem.cpp" />
-    <ClCompile Include="Systems\Physics\Physics.cpp" />
-    <ClCompile Include="Systems\Input\Input.cpp" />
+    <ClCompile Include="BaseEngine\Reflection\MetaFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled.h">

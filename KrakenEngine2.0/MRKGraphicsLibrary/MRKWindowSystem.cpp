@@ -19,6 +19,11 @@ namespace Callbacks // callbacks
         mrk::g_graphicsSystemSingleton.swapChain.recreate();
         mrk::g_graphicsSystemSingleton.pipeline.recreate();
     }
+
+    void error_callback(int error, const char* description)
+    {
+        std::cerr << "Error " << error << ": " << description << std::endl;
+    }
 }
 
 namespace mrk
@@ -69,7 +74,11 @@ namespace mrk
 
     void WindowSystem::init()
     {
-        glfwInit();
+        glfwSetErrorCallback(Callbacks::error_callback);
+        if (glfwInit() == GLFW_FALSE)
+        {
+            throw_line("GLFW could not initialize")
+        }
     }
 
     void WindowSystem::clean()
